@@ -168,6 +168,11 @@
   border-color: rgba(91, 178, 154, 0.4) !important;
   box-shadow: 0 2px 6px -1px rgba(31, 45, 61, 0.06);
 }
+/* 校验失败时高亮出问题的那张卡片 */
+.admin-card.card-error {
+  border-color: #FCA5A5 !important;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.16) !important;
+}
 .sortable-ghost {
   opacity: 0.4;
   background: rgba(91, 178, 154, 0.08) !important;

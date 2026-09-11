@@ -10,11 +10,15 @@ dist/
 .env
 .env.local
 
+# vite 配置文件热重载时产生的临时文件
+vite.config.js.timestamp-*.mjs
+
 # 内部工作日志（不进公开仓库）
 .workbuddy/
 
 # 本地辅助页与调试产物
 deploy-helper.html
+_diag/
 _chrometmp*/
 _cdp*/
 _s1/
