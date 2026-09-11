@@ -157,6 +157,10 @@
 }
 
 /* ===== 管理后台：拖拽 + 弹窗 ===== */
+/* 注意：这些样式必须放在 @layer components 里。
+   若写成裸 CSS，它们会在 Tailwind utilities 之后输出，
+   从而覆盖 .hidden{display:none}，导致「弹窗关不掉 / 登录页一直显示」。 */
+@layer components {
 .admin-card {
   transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
 }
@@ -182,11 +186,14 @@
   inset: 0;
   background: rgba(31, 45, 61, 0.5);
   backdrop-filter: blur(4px);
-  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 50;
   padding: 1rem;
+}
+/* 只在没有 .hidden 时才显示 —— 双保险，防止再次覆盖掉 Tailwind 的 hidden */
+.modal-mask:not(.hidden) {
+  display: flex;
 }
 .modal-card {
   background: white;
@@ -204,3 +211,5 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+}
+/* ===== /@layer components ===== */
