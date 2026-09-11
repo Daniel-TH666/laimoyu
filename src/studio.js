@@ -472,7 +472,7 @@ async function loadFromGithub() {
     } else if (msg.startsWith('401')) {
       showError('令牌无效或已过期。点「设置」重新填写。');
     } else if (msg.startsWith('403')) {
-      showError('令牌权限不够，需要勾选 public_repo。');
+      showError('令牌权限不足：请确认它对仓库有「读写文件」权限（Fine-grained → Contents: Read and write；Classic → 勾选 repo）。');
     } else {
       showError(msg);
     }
@@ -635,15 +635,36 @@ function bindEvents() {
     showModal('modal-settings');
   });
   document.getElementById('btn-save-config').addEventListener('click', async () => {
-    saveConfig();
-    hideModal('modal-settings');
-    if (!isConfigured()) {
-      toast('需要填写访问令牌才能进入后台', 'error');
-      return;
+    const btn = document.getElementById('btn-save-config');
+    if (btn.disabled) return;
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '连接中…';
+    btn.classList.add('opacity-70', 'cursor-wait');
+    try {
+      saveConfig();
+      if (!isConfigured()) {
+        toast('需要填写访问令牌才能进入后台', 'error');
+        return; // 弹窗保持打开，方便继续填写
+      }
+      hideModal('modal-settings');
+      showAdminView();
+      updateStatus('idle', '已配置 · 加载中…');
+      await loadFromGithub();
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+      btn.classList.remove('opacity-70', 'cursor-wait');
     }
-    showAdminView();
-    updateStatus('idle', '已配置 · 加载中…');
-    await loadFromGithub();
+  });
+  // 在任意输入框按回车 = 点「保存并连接」
+  ['cfg-owner', 'cfg-repo', 'cfg-branch', 'cfg-pat'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('btn-save-config').click();
+      }
+    });
   });
   document.getElementById('btn-clear-config').addEventListener('click', () => {
     if (!confirm('确定清除本地保存的令牌？\n（清除后需要重新粘贴才能进入后台）')) return;
