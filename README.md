@@ -2,6 +2,10 @@
 
 摸鱼资源聚合导航站，66 个精选网站，6 个分类。纯静态站点，部署到任何 CDN/虚拟主机都 OK。
 
+- 线上地址：https://daniel-th666.github.io/laimoyu/
+- 后台地址：https://daniel-th666.github.io/laimoyu/bookmarks.html
+- 代码仓库：https://github.com/Daniel-TH666/laimoyu
+
 ## 本地开发
 
 ```bash
@@ -26,21 +30,28 @@ npm run dev
 
 > **把后台地址存进浏览器书签**，以后从书签直接打开就行，不用记网址。
 
-### 怎么生成登录令牌（只做一次）
+### 怎么生成登录令牌（每台设备一份，做一次）
 
-后台用你的 GitHub 令牌来验证身份——这是唯一的门锁。
+后台用你的 GitHub **Fine-grained 令牌**来验证身份——这是唯一的门锁。
 
 1. 打开 https://github.com/settings/tokens?type=beta
 2. 点 **Generate new token**
-3. 权限**只勾 `public_repo`**，其他都不要勾
-4. 过期时间选 90 天或 No expiration
-5. 生成 → 立即复制那串 `ghp_xxx...`（页面关掉就再也看不到了）
+3. **Repository access** 选 `Only select repositories` → 勾选 **`laimoyu`**
+4. **Permissions** → 展开 `Repository permissions` → 找到 **`Contents`** → 设为 **`Read and write`**（其余权限都不用勾）
+5. 过期时间按需选（想省事就选 No expiration）
+6. 生成 → 立即复制那串 `github_pat_xxx...`（页面关掉就再也看不到了）
+
+> 注意：必须是 **Fine-grained** 令牌 + **Contents: Read and write**。
+> 老的 classic `public_repo` 令牌在这里会报 403。
 
 ### 第一次进后台
 
 1. 打开后台地址 → 看到「需要登录」
 2. 点「🔑 登录」→ 粘贴令牌 → 保存并连接
-3. 令牌存在你自己的浏览器里，**以后打开后台直接进，不用再输**
+3. 令牌存在你自己浏览器的 localStorage 里，**这台设备以后打开后台直接进，不用再输**
+
+> 令牌是**按设备**存的，不会跟仓库同步。换新设备（或换浏览器、清理浏览器数据）后，
+> 需要用同一个令牌（或新生成一个）重新登录一次。
 
 ### 编辑卡片上每个东西是什么意思
 
@@ -75,7 +86,8 @@ npm run dev
 ## 项目结构
 
 ```
-moyu-nav/
+laimoyu/
+├── .github/workflows/deploy.yml   # 推送到 main 后自动发布到 GitHub Pages
 ├── index.html           # 网站首页
 ├── bookmarks.html       # 后台（独立页面，主页无任何链接指向它）
 ├── package.json
@@ -93,6 +105,10 @@ moyu-nav/
         ├── sites.json        # ← 网站数据都在这里
         └── categories.json
 ```
+
+> ⚠️ **数据必须用 `import` 引入，不能运行时 `fetch`。**
+> `src/main.js` / `src/studio.js` 里若把 JSON 改成 `fetch('./data/sites.json')`，
+> 本地开发能跑，但构建后 JSON 不会被打包进 `dist/`，线上会变成空列表。
 
 ## 直接改数据（不走后台也行）
 
@@ -120,3 +136,50 @@ npm run build       # 输出在 dist/
 ```
 
 产物是纯静态文件，把 `dist/` 上传到 GitHub Pages / Cloudflare Pages / 任何静态托管都 OK。
+
+---
+
+## 部署（已在用 GitHub Pages，自动发布）
+
+`main` 分支一有新提交，GitHub Actions（`.github/workflows/deploy.yml`）就会自动
+`npm ci` → `npm run build` → 把 `dist/` 发布上线。**不需要本地构建、不需要上传 dist。**
+
+- 查看发布状态：仓库 **Actions** 标签页，最新一条是绿色 ✓ 就是成功了
+- 手动触发：Actions → Deploy to GitHub Pages → Run workflow
+- 发布源不要手动改：Settings → Pages 里 Source 保持 `GitHub Actions`
+
+> 改 `.github/workflows/` 下的文件需要令牌带 `workflow` 权限。
+> 普通后台令牌没有，遇到 403 就在 GitHub 网页上直接编辑/提交该文件。
+
+## 换设备 / 迁移
+
+**代码和数据全都在 GitHub 上，新设备只要 clone 下来就行**，不存在"漏了哪个文件"的问题。
+
+```bash
+git clone https://github.com/Daniel-TH666/laimoyu.git
+cd laimoyu
+npm install
+npm run dev
+```
+
+不需要迁移的东西（这些要么能重新生成、要么只是本机产物）：
+
+| 不迁移 | 原因 |
+| --- | --- |
+| `node_modules/` | `npm install` 重新装 |
+| `dist/` | CI 自动构建，或本地 `npm run build` |
+| GitHub 登录令牌 | 存在浏览器 localStorage，按设备各存一份 |
+| `.workbuddy/` | 本机内部工作记录，与网站无关，已被 gitignore |
+
+**唯一要额外记的**：后台地址 `bookmarks.html` 和你的 GitHub 令牌（建议存密码管理器）。
+
+## 换自定义域名
+
+免费二级域名 `daniel-th666.github.io/laimoyu/` 后面换成自己的域名（如 `laimoyu.com`）时：
+
+1. 在仓库 Settings → Pages → Custom domain 填入域名并保存
+2. 在域名服务商处按提示配置 DNS（CNAME 指向 `daniel-th666.github.io`）
+3. 勾选 Enforce HTTPS
+
+改一次就永久生效。仓库里的构建、数据、后台地址逻辑都不用动。
+（注意：换域名后后台地址也会跟着变成 `https://你的域名/bookmarks.html`。）
