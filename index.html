@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="摸鱼乐园 - 上班族的摸鱼导航站，一个网址，摸遍所有鱼。" />
+  <meta name="keywords" content="摸鱼导航,上班摸鱼,小游戏,热榜,工具导航" />
+  <title>摸鱼乐园 · 让划水更优雅</title>
+  <link rel="icon" type="image/svg+xml" href="./public/favicon.svg" />
+  <link rel="preconnect" href="https://www.google.com" />
+  <script type="module" src="./src/main.js"></script>
+</head>
+<body class="text-ink-800 font-sans antialiased">
+
+  <!-- ===== Header ===== -->
+  <header class="sticky top-0 z-30 bg-cream-50/85 backdrop-blur border-b border-cream-200">
+    <div class="max-w-7xl mx-auto px-5 lg:px-8 h-16 flex items-center gap-4 lg:gap-6">
+      <a href="#" class="flex items-center gap-2 flex-shrink-0">
+        <span class="text-2xl animate-bob">🎣</span>
+        <span class="font-bold text-lg tracking-tight">摸鱼乐园</span>
+      </a>
+
+      <div class="flex-1 max-w-xl">
+        <div class="relative">
+          <input id="top-search" type="text" placeholder="搜索摸鱼网站..."
+                 title="按 / 快速聚焦搜索框"
+                 class="w-full pl-10 pr-12 py-2 rounded-full bg-white border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none transition text-sm" />
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">🔍</span>
+          <kbd class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-slate-400 bg-cream-100 border border-cream-200 px-1.5 py-0.5 rounded pointer-events-none">/</kbd>
+        </div>
+      </div>
+
+      <button id="btn-stealth"
+              class="hidden md:flex items-center gap-1.5 text-sm text-slate-500 hover:text-mint-600 px-3 py-2 rounded-full hover:bg-mint-50 transition relative"
+              title="按 S 切换伪装模式：标签页标题会变成「员工自助系统」">
+        🎭 <span class="hidden xl:inline">伪装模式</span>
+        <kbd class="hidden xl:inline text-[10px] font-mono text-slate-400 bg-white border border-cream-200 px-1.5 py-0.5 rounded">S</kbd>
+      </button>
+
+      <button id="btn-submit"
+              title="推荐一个摸鱼网站"
+              class="bg-mint-500 hover:bg-mint-600 text-white px-3 lg:px-4 py-2 rounded-full text-sm font-medium transition shadow-card whitespace-nowrap">
+        + 推荐网站
+      </button>
+    </div>
+
+    <nav class="border-t border-cream-200 bg-cream-100/40">
+      <div class="max-w-7xl mx-auto px-5 lg:px-8 h-12 flex items-center gap-2 overflow-x-auto scrollbar-thin">
+        <button data-cat="all"      class="cat-tab active">🌈 全部</button>
+        <button data-cat="games"    class="cat-tab">🎮 摸鱼小游戏</button>
+        <button data-cat="trending" class="cat-tab">🔥 热榜资讯</button>
+        <button data-cat="weird"    class="cat-tab">🤯 抽象创意</button>
+        <button data-cat="cover"    class="cat-tab">🎭 伪装办公</button>
+        <button data-cat="tools"    class="cat-tab">🛠️ 实用工具</button>
+        <button data-cat="media"    class="cat-tab">🎬 影音娱乐</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-20 text-center">
+      <div class="text-6xl lg:text-7xl mb-4 animate-bob">🐟</div>
+      <h1 id="hero-slogan" class="text-3xl lg:text-5xl font-bold tracking-tight text-ink-800 min-h-[1.2em]">
+        摸鱼乐园 · 让划水更优雅<span class="caret"></span>
+      </h1>
+      <p class="mt-4 text-slate-500 text-base lg:text-lg max-w-2xl mx-auto leading-relaxed">
+        收录 <span class="text-mint-600 font-semibold">66</span> 个正经与不正经的网址，从热榜八卦到抽象创意，从伪装工具到白噪音——上班的快乐，一个导航就够。
+      </p>
+
+      <div class="mt-8 max-w-2xl mx-auto">
+        <div class="relative">
+          <input id="big-search" type="text" placeholder="试试搜：摸鱼、热榜、抠图、Hacker…"
+                 title="按 / 聚焦搜索"
+                 class="w-full pl-5 pr-32 py-4 rounded-full bg-white border-2 border-mint-100 focus:border-mint-500 focus:ring-4 focus:ring-mint-100 outline-none transition text-base shadow-card" />
+          <button id="btn-roll"
+                  title="按 R 随机挑一个摸鱼网站（也可点这个按钮）"
+                  class="absolute right-2 top-1/2 -translate-y-1/2 bg-mint-500 hover:bg-mint-600 text-white px-4 py-2 rounded-full font-medium transition shadow-card flex items-center gap-2">
+            🎲 随机摸鱼 <kbd class="text-[10px] font-mono bg-white/20 border border-white/30 px-1.5 py-0.5 rounded">R</kbd>
+          </button>
+        </div>
+      </div>
+
+      <div id="quick-cats" class="mt-10 grid grid-cols-3 lg:grid-cols-6 gap-3 max-w-4xl mx-auto"></div>
+    </div>
+  </section>
+
+  <!-- ===== Main ===== -->
+  <main class="max-w-7xl mx-auto px-5 lg:px-8 pb-8 grid grid-cols-12 gap-6">
+
+    <div class="col-span-12 lg:col-span-9 space-y-10">
+
+      <!-- 顶部广告位 -->
+      <div data-ad-slot="ad-top-banner" class="ad-slot">
+        <div class="text-center">
+          <div class="text-xs uppercase tracking-wider text-mint-600 mb-1">广告位 · Sponsored</div>
+          <div>顶部横幅 · ad-top-banner · 推荐放置 728×90 / 响应式</div>
+        </div>
+      </div>
+
+      <!-- 编辑精选 -->
+      <section class="bg-gradient-to-br from-mint-50 via-white to-cream-100 rounded-card p-6 lg:p-8 shadow-card border border-mint-100">
+        <header class="flex items-center justify-between mb-5">
+          <h2 class="text-xl font-bold flex items-center gap-2 text-ink-800">
+            <span class="text-2xl">✨</span><span>编辑精选</span>
+          </h2>
+          <span class="text-xs text-slate-500">编辑人工挑的，不坑人</span>
+        </header>
+        <div id="featured-grid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4"></div>
+      </section>
+
+      <!-- 分类卡片墙（JS 渲染） -->
+      <div id="categories-container" class="space-y-12"></div>
+
+      <!-- 底部广告位 -->
+      <div data-ad-slot="ad-bottom" class="ad-slot">
+        <div class="text-center">
+          <div class="text-xs uppercase tracking-wider text-mint-600 mb-1">广告位 · Sponsored</div>
+          <div>底部 · ad-bottom · 推荐放置 Auto Ads / 响应式</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 侧边栏 -->
+    <aside class="col-span-12 lg:col-span-3 space-y-6">
+      <div data-ad-slot="ad-sidebar-1" class="ad-slot-vertical">
+        <div>
+          <div class="text-xs uppercase tracking-wider text-mint-600 mb-1">广告</div>
+          <div>侧栏 1 · ad-sidebar-1<br/>300×250</div>
+        </div>
+      </div>
+
+      <section class="bg-white rounded-card p-5 shadow-card border border-cream-200">
+        <header class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-bold flex items-center gap-2 text-ink-800">
+            <span class="text-xl">🔥</span><span>本周热门</span>
+          </h3>
+          <span class="text-xs text-slate-400">TOP 10</span>
+        </header>
+        <ol id="hot-list" class="space-y-3"></ol>
+      </section>
+
+      <div data-ad-slot="ad-sidebar-2" class="ad-slot-vertical">
+        <div>
+          <div class="text-xs uppercase tracking-wider text-mint-600 mb-1">广告</div>
+          <div>侧栏 2 · ad-sidebar-2<br/>300×600</div>
+        </div>
+      </div>
+
+      <section class="bg-gradient-to-br from-cream-100 to-white rounded-card p-5 border border-cream-200">
+        <h3 class="text-base font-bold mb-3 flex items-center gap-2 text-ink-800">
+          <span class="text-xl">💡</span><span>摸鱼小贴士</span>
+        </h3>
+        <ul class="text-sm text-slate-600 leading-relaxed space-y-2.5">
+          <li>
+            按 <kbd class="px-1.5 py-0.5 bg-white border border-cream-200 rounded text-xs font-mono">/</kbd>
+            聚焦搜索框
+          </li>
+          <li>
+            按 <kbd class="px-1.5 py-0.5 bg-white border border-cream-200 rounded text-xs font-mono">R</kbd>
+            随机抽一个摸鱼网站
+          </li>
+          <li>
+            按 <kbd class="px-1.5 py-0.5 bg-white border border-cream-200 rounded text-xs font-mono">S</kbd>
+            切换伪装模式（标签页标题秒变员工自助系统）
+          </li>
+          <li>
+            按 <kbd class="px-1.5 py-0.5 bg-white border border-cream-200 rounded text-xs font-mono">Esc</kbd>
+            关闭弹层
+          </li>
+          <li>
+            点 <span class="text-coral-500">★</span> 加入收藏，下次在热门榜找得到
+          </li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <!-- ===== 提交推荐 ===== -->
+  <section id="submit-section" class="bg-gradient-to-br from-mint-50 to-cream-100 py-14 border-y border-cream-200">
+    <div class="max-w-3xl mx-auto px-5 lg:px-8">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl lg:text-3xl font-bold mb-2 text-ink-800">📮 推荐摸鱼网站</h2>
+        <p class="text-slate-500 text-sm lg:text-base">
+          觉得还少？把你私藏的网址甩过来，<span class="text-mint-700 font-medium">经人工审核后上架</span>
+        </p>
+      </div>
+
+      <form id="submit-form" class="bg-white rounded-card p-6 lg:p-8 shadow-card border border-cream-200 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm text-slate-600 mb-1.5 block">网站名称 <span class="text-coral-500">*</span></label>
+            <input name="title" required
+                   class="w-full px-4 py-2.5 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm" />
+          </div>
+          <div>
+            <label class="text-sm text-slate-600 mb-1.5 block">分类 <span class="text-coral-500">*</span></label>
+            <select name="category" required
+                    class="w-full px-4 py-2.5 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm bg-white">
+              <option value="">选择分类</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="text-sm text-slate-600 mb-1.5 block">网站 URL <span class="text-coral-500">*</span></label>
+          <input name="url" type="url" required placeholder="https://..."
+                 class="w-full px-4 py-2.5 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm" />
+        </div>
+        <div>
+          <label class="text-sm text-slate-600 mb-1.5 block">一句话简介 <span class="text-coral-500">*</span></label>
+          <textarea name="description" required rows="2" maxlength="80"
+                    class="w-full px-4 py-2.5 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm resize-none"
+                    placeholder="例：在线一键抠图，上班编辑图片专用"></textarea>
+        </div>
+        <div class="flex flex-col-reverse md:flex-row md:items-center md:justify-between gap-3 pt-2">
+          <p class="text-xs text-slate-500">提交仅作为收录参考，暂存于本地。</p>
+          <button type="submit"
+                  class="bg-mint-500 hover:bg-mint-600 text-white px-6 py-2.5 rounded-full font-medium transition shadow-card whitespace-nowrap">
+            提交推荐 🐟
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="bg-ink-800 text-slate-300 pt-14 pb-6">
+    <div class="max-w-7xl mx-auto px-5 lg:px-8">
+
+      <section class="mb-10">
+        <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">🔗 友情链接</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+          <a href="https://www.v2ex.com/" target="_blank" rel="noopener" class="hover:text-mint-200 transition">V2EX</a>
+          <a href="https://juejin.cn/" target="_blank" rel="noopener" class="hover:text-mint-200 transition">掘金</a>
+          <a href="https://sspai.com/" target="_blank" rel="noopener" class="hover:text-mint-200 transition">少数派</a>
+          <a href="https://www.zhihu.com/billboard" target="_blank" rel="noopener" class="hover:text-mint-200 transition">知乎热榜</a>
+          <a href="https://www.36kr.com/" target="_blank" rel="noopener" class="hover:text-mint-200 transition">36氪</a>
+          <a href="https://github.com/trending" target="_blank" rel="noopener" class="hover:text-mint-200 transition">GitHub Trending</a>
+          <a href="https://www.dute.org/" target="_blank" rel="noopener" class="hover:text-mint-200 transition">独书工具</a>
+          <a href="https://dig.chouti.com/" target="_blank" rel="noopener" class="hover:text-mint-200 transition">抽屉梗指南</a>
+        </div>
+      </section>
+
+      <div class="border-t border-slate-700 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <div class="text-center md:text-left">
+          © 2026 摸鱼乐园 · MoyuNav · 一个网址，摸遍所有鱼<br />
+          <span class="text-slate-500">本页含付费展示广告，与本站在编立场无关</span>
+        </div>
+        <div class="flex items-center gap-5">
+          <a href="#submit-section" class="hover:text-white transition">推荐网站</a>
+          <a href="#" id="about-link" class="hover:text-white transition">关于本站</a>
+          <span>京ICP备 2026000000 号</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Toast ===== -->
+  <div id="toast"
+       class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-ink-800 text-white px-5 py-3 rounded-full shadow-card-hover text-sm font-medium">
+    已收到你的推荐
+  </div>
+
+  <!-- ===== 关于本站（最简弹窗） ===== -->
+  <div id="about-modal"
+       class="hidden fixed inset-0 z-40 bg-ink-800/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-card max-w-lg w-full p-6 lg:p-8 shadow-card-hover">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold">关于摸鱼乐园</h2>
+        <button id="about-close" class="text-slate-400 hover:text-ink-800 text-2xl leading-none">×</button>
+      </div>
+      <div class="text-sm text-slate-600 space-y-3 leading-relaxed">
+        <p>摸鱼乐园是一个收录「能让你在工位上假装工作其实快乐摸鱼」的网址集合。</p>
+        <p>每一项都由人工挑选，但链接会变、人会变、站会变——如果你发现打不开，欢迎在最上方点「+ 推荐网站」告诉我们。</p>
+        <p class="text-xs text-slate-400 pt-2 border-t border-cream-200">
+          本页含付费展示广告，广告内容与本站编辑立场无关，仅作为维持服务器的咖啡钱。
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5BB29A"/>
+      <stop offset="100%" stop-color="#2A7A66"/>
+    </linearGradient>
+  </defs>
+  <!-- 鱼竿线 -->
+  <path d="M16 6 L20 32" stroke="#1F2D3D" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 鱼 -->
+  <ellipse cx="36" cy="40" rx="20" ry="14" fill="url(#g)"/>
+  <path d="M56 40 L64 30 L64 50 Z" fill="#2A7A66"/>
+  <!-- 眼睛 -->
+  <circle cx="28" cy="36" r="3" fill="#1F2D3D"/>
+  <circle cx="29" cy="35" r="1" fill="white"/>
+  <!-- 嘴 -->
+  <path d="M16 44 Q22 48 28 44" stroke="#1F2D3D" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- 鱼钩 -->
+  <path d="M18 32 Q14 38 18 44 Q22 50 24 44" fill="none" stroke="#1F2D3D" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="24" cy="44" r="1.6" fill="#FF7A6B"/>
+</svg>
