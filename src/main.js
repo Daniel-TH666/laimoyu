@@ -1,6 +1,9 @@
 // src/main.js - 摸鱼乐园 主逻辑
 
 import './style.css';
+// 站点数据：构建期打包进产物（不能用运行时 fetch —— 构建后 src/ 目录不存在）
+import sitesData from './data/sites.json';
+import categoriesData from './data/categories.json';
 
 // === 状态 ===
 const state = {
@@ -26,12 +29,8 @@ function saveFavorites() {
 
 // === 数据加载 ===
 async function loadData() {
-  const [sites, cats] = await Promise.all([
-    fetch('./src/data/sites.json').then(r => r.json()),
-    fetch('./src/data/categories.json').then(r => r.json())
-  ]);
-  state.sites = sites;
-  state.categories = cats.sort((a, b) => a.sort - b.sort);
+  state.sites = Array.isArray(sitesData) ? sitesData : [];
+  state.categories = [...(categoriesData || [])].sort((a, b) => a.sort - b.sort);
 }
 
 // === 工具 ===
