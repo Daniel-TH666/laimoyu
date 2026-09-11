@@ -10,6 +10,8 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    // 不清空产物目录：CI 里每次都是干净环境，本地也能避开文件锁问题
+    emptyOutDir: false,
     assetsDir: 'assets',
     sourcemap: false,
     chunkSizeWarningLimit: 800,
