@@ -18,6 +18,8 @@
 
 import './style.css';
 import Sortable from 'sortablejs';
+// 本地默认数据：仓库里没有 sites.json 时用于一键初始化
+import defaultSites from './data/sites.json';
 
 // === 配置 ===
 const CONFIG_KEY = 'moyu_admin_config';
@@ -453,7 +455,7 @@ async function loadFromGithub() {
       }
       if (confirm('仓库中还没有 sites.json，要用本地默认数据（66 条）初始化吗？\n\n点确定会自动创建并提交一份初始数据。')) {
         try {
-          const local = await fetch('./src/data/sites.json').then(r => r.json());
+          const local = Array.isArray(defaultSites) ? defaultSites : [];
           state.sites = local;
           state.remote.content = JSON.stringify(local, null, 2);
           renderCategories();
