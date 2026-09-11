@@ -1,10 +1,28 @@
+# 依赖与构建产物
 node_modules/
 dist/
+
+# 编辑器 / 系统
 .DS_Store
 .idea/
 .vscode/
 *.log
 .env
 .env.local
+
+# 内部工作日志（不进公开仓库）
 .workbuddy/
+
+# 本地辅助页与调试产物
 deploy-helper.html
+_chrometmp*/
+_cdp*/
+_s1/
+_p1/
+_p2/
+_p3/
+_v2_*.png
+_live_*.png
+_shot_*.png
+_t.png
+_dom.html
