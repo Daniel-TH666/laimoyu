@@ -37,7 +37,8 @@ const state = {
   remote: { sha: '', content: '' },
   sites: [],
   dirty: false,
-  saving: false
+  saving: false,
+  alertKind: null
 };
 
 // === 分类（与 sites.json 的 category 字段一致） ===
@@ -326,10 +327,14 @@ function renderCard(site) {
   });
 
   // 删除（直接）
-  card.querySelector('[data-action="delete"]').addEventListener('click', () => {
+  card.querySelector('[data-action="delete"]').addEventListener('click', async () => {
     const s = state.sites.find(x => x.id === site.id);
     const name = s?.title || site.id;
-    if (!confirm(`确认删除「${name}」？\n（点「保存到 GitHub」前都可以反悔）`)) return;
+    const yes = await askConfirm({
+      title: '删除网站', icon: '🗑️', danger: true, okText: '删除',
+      msg: `确认删除「${name}」？\n只要还没点「保存到 GitHub」，随时可以刷新页面找回。`
+    });
+    if (!yes) return;
     state.sites = state.sites.filter(x => x.id !== site.id);
     card.remove();
     const grid = card.parentElement;
@@ -381,6 +386,9 @@ function addBlankToCategory(catId) {
   addLog(`➕ 新增 ${id} 到「${CAT_BY_ID[catId]?.title || catId}」`);
   renderStats();
   markDirty();
+  showSaveAlert('warn',
+    `➕ 已新增一张空白卡片（${id}）。把 <strong>名称 / 网址 / 简介</strong> 三项填上之后，` +
+    `点右上角 <strong>💾 保存到 GitHub</strong> 才会真正生效。`);
 }
 
 function refreshCount(catId) {
@@ -388,8 +396,8 @@ function refreshCount(catId) {
   const grid = document.querySelector(`[data-cat-list="${catId}"]`);
   if (!grid) return;
   const count = grid.querySelectorAll('.admin-card').length;
-  const section = grid.closest('section, div');
-  // 找到最近的 site-count 元素
+  // 用 [data-cat] 定位外层分类容器；grid 自身也是 div，不能直接用 closest('div')
+  const section = grid.closest('[data-cat]') || grid.parentElement;
   const cntEl = section?.querySelector('.site-count');
   if (cntEl) cntEl.textContent = `${count} 条`;
 }
@@ -453,7 +461,12 @@ async function loadFromGithub() {
         showError(`GitHub 上还没有 ${state.cfg.owner}/${state.cfg.repo} 这个仓库。请先把网站项目推送到 GitHub（部署第 4 步），再来登录后台。`);
         return;
       }
-      if (confirm('仓库中还没有 sites.json，要用本地默认数据（66 条）初始化吗？\n\n点确定会自动创建并提交一份初始数据。')) {
+      const yes = await askConfirm({
+        title: '初始化数据', icon: '🆕',
+        msg: '仓库中还没有 sites.json，要用本地默认数据（66 条）初始化吗？\n点「确定」会自动创建并提交一份初始数据。',
+        okText: '初始化'
+      });
+      if (yes) {
         try {
           const local = Array.isArray(defaultSites) ? defaultSites : [];
           state.sites = local;
@@ -467,7 +480,7 @@ async function loadFromGithub() {
           showError('初始化失败：' + e.message);
         }
       } else {
-        showError('仓库里没有 sites.json。请先初始化，或确认仓库配置正确。');
+        showError('你取消了初始化。仓库里目前还没有 sites.json —— 点下面的「重试」可以再来一次。');
       }
     } else if (msg.startsWith('401')) {
       showError('令牌无效或已过期。点「设置」重新填写。');
@@ -481,20 +494,26 @@ async function loadFromGithub() {
 
 async function saveToGithub() {
   if (state.saving) return;
-  // 先做一次合法性校验
-  const bad = [];
-  state.sites.forEach((s, i) => {
-    if (!s.title?.trim()) bad.push(`第 ${i + 1} 条（${s.id}）：网站名称为空`);
-    if (!s.url?.trim() || !/^https?:\/\/.+/.test(s.url)) bad.push(`第 ${i + 1} 条（${s.id}）：网址无效`);
-    if (!s.description?.trim()) bad.push(`第 ${i + 1} 条（${s.id}）：简介为空`);
-    if (!CATEGORIES.some(c => c.id === s.category)) bad.push(`第 ${i + 1} 条（${s.id}）：分类错误`);
-  });
+  const bad = validateSites();
   if (bad.length) {
-    toast(`有 ${bad.length} 条数据不完整：${bad[0]}`, 'error');
-    addLog('❌ 校验失败：' + bad.length + ' 条');
+    renderBadAlert(bad);
+    addLog(`❌ 校验失败：${bad.length} 个网站信息不完整（第一个：${bad[0].id}）`);
+    jumpToCard(bad[0].id);
     return;
   }
-  if (!confirm(`确认提交 ${state.sites.length} 条数据到 GitHub？\n（这会在你的仓库创建一个 commit）`)) return;
+  hideSaveAlert();
+
+  const okGo = await askConfirm({
+    title: '保存到 GitHub',
+    icon: '💾',
+    msg: `确认提交 ${state.sites.length} 条数据到 GitHub？\n（会在你的仓库创建一个 commit，线上页面约 1 分钟后自动更新）`,
+    okText: '确认提交'
+  });
+  if (!okGo) {
+    showSaveAlert('warn', '已取消提交，改动还留在这个页面上，随时可以再点「保存到 GitHub」。');
+    return;
+  }
+
   state.saving = true;
   const saveBtnEl = document.getElementById('btn-save');
   saveBtnEl.disabled = true;
@@ -508,10 +527,23 @@ async function saveToGithub() {
     updateSaveBtn();
     renderStats();
     addLog('✅ 已提交 · ' + result.commit.sha.slice(0, 7));
+    showSaveAlert('ok',
+      `✅ <strong>已保存到 GitHub</strong>（commit ${result.commit.sha.slice(0, 7)}）<br>` +
+      `<span class="text-xs">线上自动发布约需 1 分钟，稍后刷新首页即可看到。本次共 ${state.sites.length} 条数据。</span>`);
     toast('已保存到 GitHub ✓', 'success');
   } catch (err) {
-    toast('保存失败：' + err.message, 'error');
-    addLog('❌ 保存失败：' + err.message);
+    const msg = err.message || String(err);
+    let hint = '';
+    if (/^401/.test(msg)) hint = '令牌无效或已过期，点右上角「⚙️ 设置」重新粘贴一个。';
+    else if (/^403/.test(msg)) hint = '令牌权限不足：需要 Fine-grained → Contents: Read and write。';
+    else if (/^404/.test(msg)) hint = '仓库或文件路径不对，点右上角「⚙️ 设置」核对用户名 / 仓库名 / 分支。';
+    else if (/^409|^422/.test(msg)) hint = '仓库里的文件已被别处改动（版本过期），点「🔄 从 GitHub 重新拉取」再试。';
+    else if (/Failed to fetch|NetworkError|Load failed/i.test(msg)) hint = '网络请求失败，检查网络后重试。';
+    addLog('❌ 保存失败：' + msg);
+    showSaveAlert('error',
+      `❌ <strong>保存失败</strong>：${escapeHtml(msg)}` +
+      (hint ? `<br><span class="text-xs">👉 ${hint}</span>` : ''));
+    toast('保存失败，请看按钮下方的提示', 'error', 5000);
   } finally {
     state.saving = false;
     saveBtnEl.textContent = '💾 保存到 GitHub';
@@ -556,6 +588,8 @@ function markDirty() {
   state.dirty = true;
   updateSaveBtn();
   renderStats();
+  // 之前提示过「有网站没填完」——用户补齐后自动收掉那条提示
+  if (state.alertKind === 'error' && validateSites().length === 0) hideSaveAlert();
 }
 function updateSaveBtn() {
   const btn = document.getElementById('btn-save');
@@ -569,13 +603,109 @@ function updateSaveBtn() {
     btn.textContent = '💾 保存到 GitHub';
   }
 }
-function toast(msg, kind = 'success') {
+function toast(msg, kind = 'success', duration = 3000) {
   const inner = document.getElementById('toast-inner');
   inner.textContent = msg;
   inner.className = `px-5 py-3 rounded-xl shadow-lg text-sm font-medium pointer-events-auto transition-all ${kind === 'error' ? 'bg-rose-500 text-white' : 'bg-mint-600 text-white'}`;
   inner.classList.remove('hidden');
-  setTimeout(() => inner.classList.add('hidden'), 2500);
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => inner.classList.add('hidden'), duration);
 }
+
+// === 常驻结果提示条（显示在「保存到 GitHub」按钮正下方，不会自动消失） ===
+function showSaveAlert(kind, html) {
+  const el = document.getElementById('save-alert');
+  const styles = {
+    error: 'bg-rose-50 border border-rose-200 text-rose-700',
+    warn: 'bg-amber-50 border border-amber-200 text-amber-800',
+    ok: 'bg-mint-50 border border-mint-100 text-mint-800'
+  };
+  el.className = `mt-2 rounded-xl px-4 py-3 text-sm leading-relaxed ${styles[kind] || styles.warn}`;
+  el.innerHTML = html;
+  el.classList.remove('hidden');
+  state.alertKind = kind;
+}
+function hideSaveAlert() {
+  document.getElementById('save-alert').classList.add('hidden');
+  state.alertKind = null;
+}
+
+// === 数据校验：把每个问题都归到具体那一张卡片上 ===
+function validateSites() {
+  const bad = [];
+  state.sites.forEach((s, i) => {
+    const probs = [];
+    if (!s.title?.trim()) probs.push('名称未填');
+    if (!s.url?.trim() || !/^https?:\/\/.+/.test(s.url)) probs.push('网址无效（要以 http:// 或 https:// 开头）');
+    if (!s.description?.trim()) probs.push('简介未填');
+    if (!CATEGORIES.some(c => c.id === s.category)) probs.push('分类错误');
+    if (probs.length) bad.push({ id: s.id, idx: i + 1, title: s.title?.trim(), probs });
+  });
+  return bad;
+}
+function renderBadAlert(bad) {
+  const lines = bad.slice(0, 3).map(b =>
+    `· 第 ${b.idx} 条（${b.id}）${b.title ? '「' + escapeHtml(b.title) + '」' : ''}：${b.probs.join('、')}`
+  ).join('<br>');
+  const more = bad.length > 3 ? `<br>…还有 ${bad.length - 3} 条同样问题` : '';
+  showSaveAlert('error',
+    `<strong>⚠️ 有 ${bad.length} 个网站还没填完，暂时存不了</strong><br>${lines}${more}<br>` +
+    `<span class="text-xs">已自动跳到第一个出问题的卡片（红色框）。填好后这条提示会自己消失，再点一次「保存到 GitHub」即可。</span>`);
+}
+
+// === 自定义确认弹窗（替代 window.confirm） ===
+// 原生 confirm 可能被浏览器「阻止此页面创建更多对话框」静默拦截，
+// 表现为点了按钮完全没反应 —— 后台的关键操作一律走这个自绘弹窗。
+function askConfirm(opts = {}) {
+  const o = typeof opts === 'string' ? { msg: opts } : opts;
+  const {
+    title = '确认操作', msg = '', okText = '确定', cancelText = '取消',
+    danger = false, icon = '❓'
+  } = o;
+  return new Promise(resolve => {
+    const modal = document.getElementById('modal-confirm');
+    const ok = document.getElementById('confirm-ok');
+    const cancel = document.getElementById('confirm-cancel');
+    document.getElementById('confirm-icon').textContent = icon;
+    document.getElementById('confirm-title').textContent = title;
+    document.getElementById('confirm-msg').textContent = msg;
+    ok.textContent = okText;
+    cancel.textContent = cancelText;
+    ok.className = `text-sm text-white px-5 py-2 rounded-full font-medium transition ${danger ? 'bg-rose-500 hover:bg-rose-600' : 'bg-mint-500 hover:bg-mint-600'}`;
+    modal.classList.remove('hidden');
+    ok.focus();
+
+    const done = v => {
+      modal.classList.add('hidden');
+      ok.removeEventListener('click', onOk);
+      cancel.removeEventListener('click', onCancel);
+      document.removeEventListener('keydown', onKey);
+      resolve(v);
+    };
+    const onOk = () => done(true);
+    const onCancel = () => done(false);
+    const onKey = e => {
+      if (e.key === 'Escape') { e.preventDefault(); done(false); }
+      if (e.key === 'Enter') { e.preventDefault(); done(true); }
+    };
+    ok.addEventListener('click', onOk);
+    cancel.addEventListener('click', onCancel);
+    document.addEventListener('keydown', onKey);
+  });
+}
+
+// === 高亮并滚动到出问题的卡片 ===
+function jumpToCard(id) {
+  // 先清掉旧的高亮
+  document.querySelectorAll('.admin-card.card-error').forEach(c => c.classList.remove('card-error'));
+  const card = document.querySelector(`.admin-card[data-id="${id}"]`);
+  if (!card) return;
+  card.classList.add('card-error');
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const first = card.querySelector('input, textarea');
+  if (first) setTimeout(() => first.focus({ preventScroll: true }), 400);
+}
+
 function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
 function hideModal(id) { document.getElementById(id).classList.add('hidden'); }
 
@@ -666,8 +796,12 @@ function bindEvents() {
       }
     });
   });
-  document.getElementById('btn-clear-config').addEventListener('click', () => {
-    if (!confirm('确定清除本地保存的令牌？\n（清除后需要重新粘贴才能进入后台）')) return;
+  document.getElementById('btn-clear-config').addEventListener('click', async () => {
+    const yes = await askConfirm({
+      title: '清除令牌', icon: '🔑', danger: true, okText: '清除',
+      msg: '确定清除本机保存的访问令牌？\n清除后需要重新粘贴令牌才能进入后台。'
+    });
+    if (!yes) return;
     localStorage.removeItem(CONFIG_KEY);
     state.cfg = { ...defaultConfig };
     fillConfigForm();
@@ -675,8 +809,14 @@ function bindEvents() {
     showLoginView();
     toast('令牌已清除', 'success');
   });
-  document.getElementById('btn-logout').addEventListener('click', () => {
-    if (state.dirty && !confirm('有未保存的改动，确定退出吗？改动会丢失。')) return;
+  document.getElementById('btn-logout').addEventListener('click', async () => {
+    if (state.dirty) {
+      const yes = await askConfirm({
+        title: '退出登录', icon: '🚪', danger: true, okText: '退出',
+        msg: '有未保存的改动，确定退出吗？\n退出后这些改动会丢失。'
+      });
+      if (!yes) return;
+    }
     state.sites = [];
     state.dirty = false;
     hideModal('modal-settings');
@@ -684,8 +824,14 @@ function bindEvents() {
     toast('已退出，令牌仍保留在本机', 'success');
   });
   document.getElementById('btn-retry').addEventListener('click', loadFromGithub);
-  document.getElementById('btn-reload').addEventListener('click', () => {
-    if (state.dirty && !confirm('有未保存的改动，重新拉取会丢失当前编辑。继续？')) return;
+  document.getElementById('btn-reload').addEventListener('click', async () => {
+    if (state.dirty) {
+      const yes = await askConfirm({
+        title: '重新拉取', icon: '🔄', danger: true, okText: '放弃改动并拉取',
+        msg: '有未保存的改动，重新拉取会丢失当前编辑。继续吗？'
+      });
+      if (!yes) return;
+    }
     loadFromGithub();
   });
   document.getElementById('btn-save').addEventListener('click', saveToGithub);
