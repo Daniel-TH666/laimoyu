@@ -27,7 +27,7 @@
     "description": "开局抽天赋，一秒重开人生",
     "category": "games",
     "icon": "https://api.iowen.cn/favicon/syaro.io.png",
-    "featured": false,
+    "featured": true,
     "addedAt": "2026-09-10",
     "isNew": true
   },
@@ -425,7 +425,8 @@
     "category": "cover",
     "icon": "https://api.iowen.cn/favicon/pomofocus.io.png",
     "featured": false,
-    "addedAt": "2026-09-10"
+    "addedAt": "2026-09-10",
+    "isNew": true
   },
   {
     "id": "c-10",
@@ -666,16 +667,5 @@
     "icon": "https://api.iowen.cn/favicon/yangshipin.cn.png",
     "featured": false,
     "addedAt": "2026-09-10"
-  },
-  {
-    "id": "c-12",
-    "title": "猎聘",
-    "url": "https://lpt.liepin.com",
-    "description": "一个招聘网站",
-    "category": "cover",
-    "icon": "",
-    "addedAt": "2026-09-11",
-    "featured": false,
-    "isNew": true
   }
 ]
