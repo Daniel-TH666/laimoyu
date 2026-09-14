@@ -11,9 +11,7 @@ const state = {
   categories: [],
   activeCategory: 'all',
   query: '',
-  favorites: loadFavorites(),
-  stealthOn: false,
-  originalTitle: document.title
+  favorites: loadFavorites()
 };
 
 function loadFavorites() {
@@ -328,31 +326,10 @@ function bindRoll() {
         document.getElementById('top-search').focus();
         showToast('🐟 已聚焦搜索框');
       }
-      if (k === 's') {
-        e.preventDefault();
-        document.getElementById('btn-stealth').click();
-      }
     }
     if (e.key === 'Escape') {
       const m = document.getElementById('about-modal');
       if (m) m.classList.add('hidden');
-    }
-  });
-}
-
-function bindStealth() {
-  const btn = document.getElementById('btn-stealth');
-  if (!btn) return;
-  btn.addEventListener('click', () => {
-    state.stealthOn = !state.stealthOn;
-    if (state.stealthOn) {
-      document.title = '员工自助系统 · 文档中心 - Excel Online';
-      btn.innerHTML = '🎭 <span class="hidden xl:inline">退出伪装</span>';
-      showToast('🎭 已切换到「员工自助系统」伪装模式');
-    } else {
-      document.title = state.originalTitle;
-      btn.innerHTML = '🎭 <span class="hidden xl:inline">伪装模式</span>';
-      showToast('🎭 已恢复正常标题');
     }
   });
 }
@@ -365,38 +342,31 @@ function bindSubmit() {
   }
 
   const form = document.getElementById('submit-form');
-  if (form) {
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const btn = form.querySelector('button[type="submit"]');
-      if (btn?.disabled) return;
+  if (!form) return;
 
-      const data = Object.fromEntries(new FormData(form));
-      const cat = state.categories.find(c => c.id === data.category);
-      const catTitle = cat ? cat.title : data.category;
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form));
+    const cat = state.categories.find(c => c.id === data.category);
+    const url = buildRecIssueUrl(data, cat ? `${cat.icon} ${cat.title}` : data.category);
 
-      const orig = btn ? btn.innerHTML : '';
-      if (btn) { btn.disabled = true; btn.innerHTML = '提交中…'; }
-      try {
-        await postRecommendationIssue(data, catTitle);
-        form.reset();
-        showToast('🐟 已提交，感谢摸鱼人！', 'success', 3500);
-      } catch (err) {
-        const status = err.status;
-        if (status === 403 || /rate limit/i.test(err.message || '')) {
-          showToast('提交有点频繁，喝口水过几分钟再来 🥤', 'warn', 4500);
-        } else if (status === 410) {
-          showToast('这个仓库暂时不接受推荐了', 'error', 4000);
-        } else if (/Failed to fetch|NetworkError|Load failed/i.test(err.message || '')) {
-          showToast('网络不太顺，内容已保留，稍后重试', 'error', 4000);
-        } else {
-          showToast(`提交失败：${err.message || '未知错误'}`, 'error', 4500);
-        }
-      } finally {
-        if (btn) { btn.disabled = false; btn.innerHTML = orig; }
-      }
-    });
-  }
+    // 处在用户点击的调用栈里，正常不会被拦截；被拦了就退回手工链接
+    const tab = window.open(url, '_blank');
+
+    const hint = document.getElementById('submit-hint');
+    const link = document.getElementById('submit-hint-link');
+    if (hint && link) {
+      link.href = url;
+      hint.classList.remove('hidden');
+      hint.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    showToast(
+      tab ? '已在 GitHub 打开，点「Submit new issue」完成提交 🐟'
+          : '新标签页被拦了，点下面的链接继续 🐟',
+      tab ? 'success' : 'warn',
+      5000
+    );
+  });
 
   const btn = document.getElementById('btn-submit');
   if (btn) btn.addEventListener('click', () => {
@@ -404,41 +374,31 @@ function bindSubmit() {
   });
 }
 
-// === 推荐提交：直接落到仓库的 Issue，后天台「📥 推荐管理」就能看到 ===
-// 公开仓库允许未登录创建 Issue，访客无需任何账号或令牌。
+// === 推荐提交：跳转到 GitHub 的「新建 Issue」页，内容预先填好 ===
+// 为什么不是直接 POST：GitHub 早就禁止未登录匿名建 Issue，
+// 前端直连 api.github.com 一定拿到 401 Requires authentication，所以改为
+// 引导访客在 GitHub 上点一次「Submit new issue」——不需要任何令牌，零后端。
+// 正文格式必须与后台 studio.js 的 parseRecIssue() 解析规则保持一致：
+//   `- **网站名**：xxx` / `**网址**` / `**分类**` / `**简介**`
 const REC_REPO = { owner: 'Daniel-TH666', repo: 'laimoyu' };
 
-async function postRecommendationIssue(data, catTitle) {
+function buildRecIssueUrl(data, catTitle) {
+  const one = s => String(s == null ? '' : s).replace(/\s*\n\s*/g, ' ').trim();
   const body = [
     '### 推荐摸鱼网站',
     '',
-    `- **网站名**：${data.title}`,
-    `- **网址**：${data.url}`,
-    `- **分类**：${catTitle}`,
-    `- **简介**：${data.description}`,
-    `- **提交时间**：${new Date().toISOString()}`
+    `- **网站名**：${one(data.title)}`,
+    `- **网址**：${one(data.url)}`,
+    `- **分类**：${one(catTitle)}`,
+    `- **简介**：${one(data.description)}`,
+    `- **提交时间**：${new Date().toLocaleString('zh-CN')}`
   ].join('\n');
 
-  const res = await fetch(
-    `https://api.github.com/repos/${REC_REPO.owner}/${REC_REPO.repo}/issues`,
-    {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/vnd.github+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ title: `[推荐] ${data.title}`, body })
-    }
-  );
-
-  if (!res.ok) {
-    let msg = '';
-    try { msg = (await res.json())?.message || ''; } catch { /* 忽略 */ }
-    const err = new Error(msg || `HTTP ${res.status}`);
-    err.status = res.status;
-    throw err;
-  }
-  return res.json();
+  const q = new URLSearchParams({
+    title: `[推荐] ${one(data.title)}`,
+    body
+  });
+  return `https://github.com/${REC_REPO.owner}/${REC_REPO.repo}/issues/new?${q.toString()}`;
 }
 
 function bindAbout() {
@@ -526,7 +486,6 @@ function bindTypewriter() {
     bindTabs();
     bindSearch();
     bindRoll();
-    bindStealth();
     bindSubmit();
     bindAbout();
     bindTypewriter();

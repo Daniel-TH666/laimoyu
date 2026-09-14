@@ -470,7 +470,7 @@ async function loadFromGithub() {
       }
       const yes = await askConfirm({
         title: '初始化数据', icon: '🆕',
-        msg: '仓库中还没有 sites.json，要用本地默认数据（66 条）初始化吗？\n点「确定」会自动创建并提交一份初始数据。',
+        msg: `仓库中还没有 sites.json，要用本地默认数据（${Array.isArray(defaultSites) ? defaultSites.length : 0} 条）初始化吗？\n点「确定」会自动创建并提交一份初始数据。`,
         okText: '初始化'
       });
       if (yes) {
