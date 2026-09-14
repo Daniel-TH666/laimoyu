@@ -30,13 +30,6 @@
         </div>
       </div>
 
-      <button id="btn-stealth"
-              class="hidden md:flex items-center gap-1.5 text-sm text-slate-500 hover:text-mint-600 px-3 py-2 rounded-full hover:bg-mint-50 transition relative"
-              title="按 S 切换伪装模式：标签页标题会变成「员工自助系统」">
-        🎭 <span class="hidden xl:inline">伪装模式</span>
-        <kbd class="hidden xl:inline text-[10px] font-mono text-slate-400 bg-white border border-cream-200 px-1.5 py-0.5 rounded">S</kbd>
-      </button>
-
       <button id="btn-submit"
               title="推荐一个摸鱼网站"
               class="bg-mint-500 hover:bg-mint-600 text-white px-3 lg:px-4 py-2 rounded-full text-sm font-medium transition shadow-card whitespace-nowrap">
@@ -163,10 +156,6 @@
             随机抽一个摸鱼网站
           </li>
           <li>
-            按 <kbd class="px-1.5 py-0.5 bg-white border border-cream-200 rounded text-xs font-mono">S</kbd>
-            切换伪装模式（标签页标题秒变员工自助系统）
-          </li>
-          <li>
             按 <kbd class="px-1.5 py-0.5 bg-white border border-cream-200 rounded text-xs font-mono">Esc</kbd>
             关闭弹层
           </li>
@@ -215,13 +204,23 @@
                     placeholder="例：在线一键抠图，上班编辑图片专用"></textarea>
         </div>
         <div class="flex flex-col-reverse md:flex-row md:items-center md:justify-between gap-3 pt-2">
-          <p class="text-xs text-slate-500">提交后会直接进入站长审核列表，采纳与否由站长决定 🐟</p>
+          <p class="text-xs text-slate-500">提交会跳到 GitHub 确认（需 GitHub 账号），站长后台能直接看到 🐟</p>
           <button type="submit"
                   class="bg-mint-500 hover:bg-mint-600 text-white px-6 py-2.5 rounded-full font-medium transition shadow-card whitespace-nowrap">
             提交推荐 🐟
           </button>
         </div>
       </form>
+
+      <!-- 提交后引导：GitHub 新标签页已打开，点 Submit new issue 完成 -->
+      <div id="submit-hint"
+           class="hidden mt-4 bg-white/90 border border-mint-200 rounded-card px-5 py-4 text-sm text-slate-600 leading-relaxed">
+        <p class="font-semibold text-ink-800 mb-1.5">还差最后一步 🐟</p>
+        <p>① 已在新标签页打开 GitHub，表单内容都帮你填好了；</p>
+        <p>② 点页面上的绿色按钮 <span class="font-medium text-ink-800">Submit new issue</span> 就完成提交。</p>
+        <a id="submit-hint-link" href="#" target="_blank" rel="noopener"
+           class="inline-block mt-2 text-mint-600 hover:text-mint-700 font-medium underline">没弹出来？点这里手动打开 →</a>
+      </div>
     </div>
   </section>
 
