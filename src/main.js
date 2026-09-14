@@ -261,6 +261,8 @@ function syncTabs() {
 function render() {
   renderCategories();
   bindCardEvents();
+  const cnt = document.getElementById('hero-count');
+  if (cnt) cnt.textContent = state.sites.length;
 }
 
 // === 事件绑定 ===
