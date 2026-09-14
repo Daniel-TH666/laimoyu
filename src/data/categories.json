@@ -7,31 +7,31 @@
     "sort": 1
   },
   {
-    "id": "trending",
-    "title": "热榜资讯",
-    "icon": "🔥",
-    "desc": "吃瓜一线，永远不迟到",
-    "sort": 2
-  },
-  {
     "id": "weird",
-    "title": "抽象创意",
+    "title": "沙雕抽象",
     "icon": "🤯",
     "desc": "脑洞网站，看着就摸鱼",
-    "sort": 3
+    "sort": 2
   },
   {
     "id": "cover",
     "title": "伪装办公",
     "icon": "🎭",
     "desc": "表面在上班，实际在摸鱼",
-    "sort": 4
+    "sort": 3
   },
   {
     "id": "tools",
     "title": "实用工具",
     "icon": "🛠️",
     "desc": "摸鱼顺便干点正事",
+    "sort": 4
+  },
+  {
+    "id": "trending",
+    "title": "热榜资讯",
+    "icon": "🔥",
+    "desc": "吃瓜一线，永远不迟到",
     "sort": 5
   },
   {
@@ -40,5 +40,19 @@
     "icon": "🎬",
     "desc": "看视频听歌，摸鱼必备",
     "sort": 6
+  },
+  {
+    "id": "relax",
+    "title": "治愈放松",
+    "icon": "🎵",
+    "desc": "白噪音小曲儿，松弛一下",
+    "sort": 7
+  },
+  {
+    "id": "learned",
+    "title": "涨点芝士",
+    "icon": "📚",
+    "desc": "摸鱼顺便充充电",
+    "sort": 8
   }
 ]
