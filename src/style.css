@@ -64,6 +64,35 @@
   .hero-cat {
     @apply flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-white/85 backdrop-blur border border-cream-200 hover:border-mint-500 hover:bg-mint-50 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover cursor-pointer;
   }
+
+  /* ===== 后台：视图切换（站点管理 / 推荐管理） ===== */
+  .view-tab {
+    @apply inline-flex items-center px-3 py-1.5 text-sm font-medium text-slate-400 rounded-full transition-all duration-200 whitespace-nowrap hover:bg-slate-800 hover:text-slate-100;
+  }
+  .view-tab.active {
+    @apply bg-slate-800 text-white;
+  }
+
+  /* ===== 后台：推荐条目 ===== */
+  .rec-card {
+    @apply bg-white rounded-2xl border border-cream-200 p-4 transition;
+  }
+  .rec-card:hover {
+    border-color: rgba(91, 178, 154, 0.4);
+    box-shadow: 0 4px 16px -4px rgba(91, 178, 154, 0.18);
+  }
+  .rec-rank {
+    @apply flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-cream-100 text-slate-500;
+  }
+  .rec-rank.top {
+    @apply bg-mint-500 text-white;
+  }
+  .rec-count {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-mint-50 text-mint-700;
+  }
+  .rec-count.hot {
+    @apply bg-rose-50 text-rose-600;
+  }
 }
 
 @layer utilities {
