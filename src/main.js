@@ -366,14 +366,35 @@ function bindSubmit() {
 
   const form = document.getElementById('submit-form');
   if (form) {
-    form.addEventListener('submit', e => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]');
+      if (btn?.disabled) return;
+
       const data = Object.fromEntries(new FormData(form));
-      const queue = JSON.parse(localStorage.getItem('moyu_pending') || '[]');
-      queue.push({ ...data, submittedAt: new Date().toISOString() });
-      localStorage.setItem('moyu_pending', JSON.stringify(queue));
-      form.reset();
-      showToast('🐟 已收到你的推荐，谢谢摸鱼人');
+      const cat = state.categories.find(c => c.id === data.category);
+      const catTitle = cat ? cat.title : data.category;
+
+      const orig = btn ? btn.innerHTML : '';
+      if (btn) { btn.disabled = true; btn.innerHTML = '提交中…'; }
+      try {
+        await postRecommendationIssue(data, catTitle);
+        form.reset();
+        showToast('🐟 已提交，感谢摸鱼人！', 'success', 3500);
+      } catch (err) {
+        const status = err.status;
+        if (status === 403 || /rate limit/i.test(err.message || '')) {
+          showToast('提交有点频繁，喝口水过几分钟再来 🥤', 'warn', 4500);
+        } else if (status === 410) {
+          showToast('这个仓库暂时不接受推荐了', 'error', 4000);
+        } else if (/Failed to fetch|NetworkError|Load failed/i.test(err.message || '')) {
+          showToast('网络不太顺，内容已保留，稍后重试', 'error', 4000);
+        } else {
+          showToast(`提交失败：${err.message || '未知错误'}`, 'error', 4500);
+        }
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = orig; }
+      }
     });
   }
 
@@ -381,6 +402,43 @@ function bindSubmit() {
   if (btn) btn.addEventListener('click', () => {
     document.getElementById('submit-section').scrollIntoView({ behavior: 'smooth' });
   });
+}
+
+// === 推荐提交：直接落到仓库的 Issue，后天台「📥 推荐管理」就能看到 ===
+// 公开仓库允许未登录创建 Issue，访客无需任何账号或令牌。
+const REC_REPO = { owner: 'Daniel-TH666', repo: 'laimoyu' };
+
+async function postRecommendationIssue(data, catTitle) {
+  const body = [
+    '### 推荐摸鱼网站',
+    '',
+    `- **网站名**：${data.title}`,
+    `- **网址**：${data.url}`,
+    `- **分类**：${catTitle}`,
+    `- **简介**：${data.description}`,
+    `- **提交时间**：${new Date().toISOString()}`
+  ].join('\n');
+
+  const res = await fetch(
+    `https://api.github.com/repos/${REC_REPO.owner}/${REC_REPO.repo}/issues`,
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: `[推荐] ${data.title}`, body })
+    }
+  );
+
+  if (!res.ok) {
+    let msg = '';
+    try { msg = (await res.json())?.message || ''; } catch { /* 忽略 */ }
+    const err = new Error(msg || `HTTP ${res.status}`);
+    err.status = res.status;
+    throw err;
+  }
+  return res.json();
 }
 
 function bindAbout() {
@@ -398,13 +456,23 @@ function bindAbout() {
   });
 }
 
-function showToast(text) {
+// 前台提示条：文本写进 JS，保证 Tailwind 能扫到这些类名并生成
+const TOAST_COLOR = {
+  success: 'bg-mint-500 text-white',
+  warn: 'bg-amber-400 text-amber-900',
+  error: 'bg-rose-500 text-white',
+  info: 'bg-ink-800 text-white'
+};
+
+function showToast(text, kind = 'info', duration = 2200) {
   const t = document.getElementById('toast');
   if (!t) return;
   t.textContent = text;
+  t.classList.remove('bg-mint-500', 'text-white', 'bg-amber-400', 'text-amber-900', 'bg-rose-500', 'bg-ink-800');
+  (TOAST_COLOR[kind] || TOAST_COLOR.info).split(' ').forEach(c => t.classList.add(c));
   t.classList.remove('hidden');
   clearTimeout(t._tid);
-  t._tid = setTimeout(() => t.classList.add('hidden'), 2200);
+  t._tid = setTimeout(() => t.classList.add('hidden'), duration);
 }
 
 // === Hero 打字机 ===

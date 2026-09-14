@@ -23,6 +23,15 @@
           <div class="text-[11px] text-slate-400">摸鱼乐园 · 内容管理后台</div>
         </div>
       </div>
+
+      <!-- 视图切换 -->
+      <nav class="flex items-center gap-1 ml-1 lg:ml-4">
+        <button data-view="sites" class="view-tab active">📚 站点管理</button>
+        <button data-view="recommend" class="view-tab">
+          📥 推荐管理<span id="rec-badge" class="hidden ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500 text-white"></span>
+        </button>
+      </nav>
+
       <div class="flex-1"></div>
       <span id="status-badge" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300">
         <span class="w-2 h-2 rounded-full bg-slate-500"></span>
@@ -59,6 +68,8 @@
   <!-- 已登录：后台主界面                             -->
   <!-- =========================================== -->
   <main id="page-admin" class="hidden">
+    <!-- ===== 视图一：站点管理 ===== -->
+    <div id="view-sites">
     <!-- 顶部统计条 -->
     <section class="max-w-7xl mx-auto px-5 lg:px-8 pt-6">
       <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -140,6 +151,81 @@
         </div>
       </div>
     </section>
+    </div><!-- /view-sites -->
+
+    <!-- ===== 视图二：推荐管理 ===== -->
+    <div id="view-recommend" class="hidden">
+      <section class="max-w-7xl mx-auto px-5 lg:px-8 pt-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="bg-white rounded-2xl border border-cream-200 p-4">
+            <div class="text-xs text-slate-400 uppercase tracking-wider">30 天内推荐</div>
+            <div id="rec-stat-30d" class="text-3xl font-bold text-ink-800 mt-1">—</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-cream-200 p-4">
+            <div class="text-xs text-slate-400 uppercase tracking-wider">待审候选站</div>
+            <div id="rec-stat-cand" class="text-3xl font-bold text-mint-600 mt-1">—</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-cream-200 p-4">
+            <div class="text-xs text-slate-400 uppercase tracking-wider">全部推荐</div>
+            <div id="rec-stat-all" class="text-3xl font-bold text-slate-600 mt-1">—</div>
+          </div>
+          <div class="bg-white rounded-2xl border border-cream-200 p-4">
+            <div class="text-xs text-slate-400 uppercase tracking-wider">最近提交</div>
+            <div id="rec-stat-latest" class="text-base font-medium text-slate-600 mt-2.5">—</div>
+          </div>
+        </div>
+
+        <div class="mt-4 bg-mint-50 border border-mint-100 rounded-xl px-4 py-3 text-xs text-mint-800 leading-relaxed">
+          <strong>这是啥：</strong>访客在首页「📮 推荐摸鱼网站」填写的推荐，会自动变成这个仓库的一条
+          <strong>Issue</strong>。<br />
+          这里按 <strong>近 30 天被推荐次数</strong> 从多到少排；同一网址被多人推荐会自动合并计数。
+          <span class="text-mint-600">本页只读，收录仍需你自己动手。</span>
+        </div>
+      </section>
+
+      <!-- 推荐操作条 -->
+      <div class="sticky top-16 z-20 mt-3 bg-cream-50/90 backdrop-blur border-y border-cream-200 py-2.5 shadow-sm">
+        <div class="max-w-7xl mx-auto px-5 lg:px-8">
+          <div class="flex flex-wrap items-center justify-end gap-3">
+            <label class="mr-auto flex items-center gap-2 text-xs text-slate-500">
+              <input id="rec-hide-done" type="checkbox" class="rounded border-cream-300" />
+              隐藏已关闭的
+            </label>
+            <select id="rec-sort" class="text-xs px-3 py-1.5 rounded-full border border-cream-200 bg-white text-slate-600 outline-none">
+              <option value="count30">按 30 天推荐次数</option>
+              <option value="countAll">按累计推荐次数</option>
+              <option value="latest">按最近提交时间</option>
+            </select>
+            <button id="btn-rec-refresh" class="text-xs bg-slate-900 text-white px-4 py-1.5 rounded-full hover:bg-slate-700 transition font-medium">
+              🔄 刷新推荐列表
+            </button>
+          </div>
+          <div id="rec-alert" class="hidden mt-2 rounded-xl px-4 py-3 text-sm leading-relaxed"></div>
+        </div>
+      </div>
+
+      <section class="max-w-7xl mx-auto px-5 lg:px-8 py-4">
+        <div id="rec-loading" class="hidden text-center py-20 text-slate-400">
+          <div class="text-5xl mb-3 animate-bob">📥</div>
+          <div>正在拉取推荐…</div>
+        </div>
+
+        <div id="rec-empty" class="hidden text-center py-20">
+          <div class="text-5xl mb-3">🐟</div>
+          <div class="text-slate-600 font-medium mb-1">还没有人推荐过</div>
+          <div class="text-slate-400 text-sm">等首页那条「推荐摸鱼网站」收到提交后，这里就会出现。</div>
+        </div>
+
+        <div id="rec-error" class="hidden text-center py-20">
+          <div class="text-5xl mb-3">⚠️</div>
+          <div class="text-slate-700 font-medium mb-2">拉取推荐失败</div>
+          <div id="rec-error-msg" class="text-slate-500 text-sm mb-4"></div>
+          <button id="btn-rec-retry" class="bg-mint-500 hover:bg-mint-600 text-white text-sm px-4 py-2 rounded-full">重试</button>
+        </div>
+
+        <div id="rec-list" class="space-y-3"></div>
+      </section>
+    </div><!-- /view-recommend -->
   </main>
 
   <!-- =========================================== -->
