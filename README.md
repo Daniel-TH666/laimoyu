@@ -163,6 +163,19 @@ npm run build       # 输出在 dist/
 > 改 `.github/workflows/` 下的文件需要令牌带 `workflow` 权限。
 > 普通后台令牌没有，遇到 403 就在 GitHub 网页上直接编辑/提交该文件。
 
+## 提交身份（重要，别改回来）
+
+本仓库已固定本地提交身份（`.git/config`），**不要设置全局身份**：
+
+```bash
+git config user.name  "Daniel-TH666"
+git config user.email "Daniel-TH666@users.noreply.github.com"
+```
+
+原因：这台机器的 git 全局身份是空的，git 会用「Windows 账户名 + 主机域名」自动拼出一个真实邮箱
+（曾经因此把公司邮箱写进了提交历史，必须重写历史才能清掉）。用 GitHub 的 noreply 邮箱既不影响贡献统计，
+也不会再泄露私人邮箱。`git config --global` 里不要放任何真实邮箱。
+
 ## 换设备 / 迁移
 
 **代码和数据全都在 GitHub 上，新设备只要 clone 下来就行**，不存在"漏了哪个文件"的问题。
@@ -187,7 +200,7 @@ npm run dev
 
 ## 换自定义域名
 
-免费二级域名 `daniel-th666.github.io/laimoyu/` 后面换成自己的域名（如 `laimoyu.com`）时：
+免费二级域名 `daniel-th666.github.io/laimoyu/` 后面换成了自己的域名 `laimoyu.top`（2026-09-16 完成）：
 
 1. 在仓库 Settings → Pages → Custom domain 填入域名并保存
 2. 在域名服务商处按提示配置 DNS（CNAME 指向 `daniel-th666.github.io`）
@@ -195,3 +208,16 @@ npm run dev
 
 改一次就永久生效。仓库里的构建、数据、后台地址逻辑都不用动。
 （注意：换域名后后台地址也会跟着变成 `https://你的域名/bookmarks.html`。）
+
+## 打赏功能（已暂时下线，2026-09-16）
+
+入口与弹窗已从 `index.html` 移除，**打算等流量起来再启用**。完整实现保留在提交 `438db18` 里，恢复步骤：
+
+1. `git show 438db18:index.html` → 把页脚的「打赏支持」链接与 `#reward-modal` 弹窗整块贴回 `index.html`
+2. 把收款码图片放到 `public/reward-qr.png`（构建后即 `./reward-qr.png`，未放置会自动显示「收款码暂未上传」）
+3. 保留弹窗底部的免责文案：**「本站打赏为自愿行为，不构成任何交易或合同关系，不提供发票及售后保障。」**
+
+`src/main.js` 里的 `bindReward()` 无需改动——它在弹窗 DOM 不存在时第一行就返回，属于安全空转。
+
+**收款方式提醒**：个人收款码用于公开站点长期收款，属于平台协议禁止的「经营性收款」，有风控限额、暂停收款的风险；金额稳定后建议升级为支付宝商户收钱码或正规聚合支付，并避免使用与工资卡/家庭生活强绑定的主账户。
+
