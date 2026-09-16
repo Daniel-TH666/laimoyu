@@ -4,6 +4,15 @@ import './style.css';
 // 站点数据：构建期打包进产物（不能用运行时 fetch —— 构建后 src/ 目录不存在）
 import sitesData from './data/sites.json';
 import categoriesData from './data/categories.json';
+// 渲染模板与构建期静态渲染（build/prerender.js）共用同一份，避免两边结构走偏
+import {
+  escapeHtml,
+  heroCategoriesHtml,
+  featuredGridHtml,
+  hotListHtml,
+  emptyStateHtml,
+  categorySectionHtml
+} from './lib/render.js';
 
 // === 状态 ===
 const state = {
@@ -32,28 +41,8 @@ async function loadData() {
 }
 
 // === 工具 ===
-function getHostname(siteUrl) {
-  try { return new URL(siteUrl).hostname.replace(/^www\./, ''); }
-  catch { return ''; }
-}
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  }[c]));
-}
-// 安全 URL：只放行 http/https（挡掉 javascript: data: vbscript: 等危险协议），无协议的相对路径放行
-function safeUrl(u) {
-  const s = String(u == null ? '' : u).trim();
-  if (!s) return '#';
-  if (/^[a-z][a-z0-9+.-]*:/i.test(s)) return /^https?:/i.test(s) ? s : '#';
-  return s;
-}
-function highlight(text, query) {
-  if (!query) return escapeHtml(text);
-  const safe = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return escapeHtml(text).replace(new RegExp(`(${safe})`, 'gi'),
-    '<mark class="bg-mint-100 text-ink-800 rounded px-0.5">$1</mark>');
-}
+// escapeHtml / safeUrl / getHostname / highlight / 卡片模板 都来自 src/lib/render.js，
+// 构建期静态渲染用的是同一份，改一处两边同步生效。
 function getFilteredSites() {
   return state.sites.filter(s => {
     const catOk = state.activeCategory === 'all' || s.category === state.activeCategory;
@@ -66,97 +55,17 @@ function getFilteredSites() {
   });
 }
 
-// === 图标：站点数据 > favicon service > 字母兜底 ===
-function getIconUrl(site) {
-  if (site.icon && site.icon.trim()) return site.icon.trim();
-  // 兜底：直接用 api.iowen.cn 的 favicon 接口
-  try {
-    const host = getHostname(site.url);
-    if (host) return `https://api.iowen.cn/favicon/${host}.png`;
-  } catch {}
-  return '';
-}
-// 字母兜底：生成固定色调的 data-uri svg
-function fallbackAvatar(site) {
-  // 用标题第一个字符（中英文都支持）
-  const title = site.title || '?';
-  const ch = [...title.trim()][0] || '?';
-  // 用站点 id 哈希出色相
-  let hash = 0;
-  for (const c of site.id) hash = (hash * 31 + c.charCodeAt(0)) >>> 0;
-  const h = hash % 360;
-  const bg1 = `hsl(${h} 70% 55%)`;
-  const bg2 = `hsl(${(h + 30) % 360} 70% 45%)`;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${bg1}"/><stop offset="100%" stop-color="${bg2}"/>
-    </linearGradient></defs>
-    <rect width="64" height="64" rx="12" fill="url(#g)"/>
-    <text x="32" y="42" font-family="-apple-system,'PingFang SC','Microsoft YaHei',sans-serif" font-size="32" font-weight="700" fill="#fff" text-anchor="middle">${escapeHtml(ch)}</text>
-  </svg>`;
-  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
-}
-
-// === 卡片渲染 ===
-function siteCard(site, opts = {}) {
-  const isFav = state.favorites.has(site.id);
-  const favBtnClass = isFav ? 'fav-btn text-coral-500' : 'fav-btn text-slate-300 hover:text-coral-500';
-  const iconUrl = getIconUrl(site);
-  const avatar = fallbackAvatar(site);
-  const newBadge = site.isNew ? `<span class="new-badge" title="新收录">NEW</span>` : '';
-  return `
-    <article class="site-card group bg-white rounded-card p-4 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col border border-cream-200/60 relative overflow-hidden">
-      ${newBadge}
-      <div class="flex items-start gap-3 mb-2">
-        <div class="site-icon w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-cream-100">
-          <img src="${escapeHtml(iconUrl)}" alt=""
-               class="w-full h-full object-cover"
-               loading="lazy"
-               data-fallback="${escapeHtml(avatar)}"
-               onerror="if(this.dataset.fallback&&this.src!==this.dataset.fallback){this.src=this.dataset.fallback;this.onerror=null;}" />
-        </div>
-        <div class="min-w-0 flex-1">
-          <h3 class="font-bold text-ink-800 truncate text-[15px]">${highlight(site.title, state.query)}</h3>
-          <p class="text-xs text-slate-400 truncate mt-0.5">${escapeHtml(getHostname(site.url))}</p>
-        </div>
-        <button class="${favBtnClass} text-lg transition flex-shrink-0"
-                data-id="${site.id}" data-action="fav"
-                title="${isFav ? '取消收藏' : '加入收藏'}">
-          ${isFav ? '★' : '☆'}
-        </button>
-      </div>
-      <p class="text-sm text-slate-500 line-clamp-2 mb-3 flex-1">${highlight(site.description, state.query)}</p>
-      <div class="flex items-center justify-end mt-auto">
-        <a href="${escapeHtml(safeUrl(site.url))}" target="_blank" rel="noopener noreferrer nofollow"
-           data-visit="${site.id}"
-           class="text-xs bg-mint-50 text-mint-700 px-3 py-1.5 rounded-full hover:bg-mint-500 hover:text-white transition font-medium">
-          打开摸鱼 ↗
-        </a>
-      </div>
-    </article>
-  `;
-}
-
-// 原生广告卡（混在列表里）
-function nativeAdCard() {
-  return `
-    <article class="ad-native rounded-card p-4 bg-gradient-to-br from-cream-100/60 to-mint-50/40 border-2 border-dashed border-mint-200 flex flex-col items-center justify-center text-center min-h-[134px]">
-      <span class="text-[10px] uppercase tracking-wider text-mint-600 font-bold mb-2">广告 · Sponsored</span>
-      <p class="text-xs text-slate-500">原生广告位 · ad-native-1</p>
-    </article>
-  `;
-}
+// 图标、卡片、原生广告卡等模板见 src/lib/render.js
 
 // === 渲染各区域 ===
 function renderHeroCategories() {
   const c = document.getElementById('quick-cats');
   if (!c) return;
-  c.innerHTML = state.categories.map(cat => `
-    <button data-cat="${cat.id}" class="hero-cat floating" style="animation-delay:${(Math.random() * 3).toFixed(2)}s">
-      <span class="text-3xl">${escapeHtml(cat.icon)}</span>
-      <span class="text-sm font-medium text-ink-700">${escapeHtml(cat.title)}</span>
-    </button>
-  `).join('');
+  c.innerHTML = heroCategoriesHtml(state.categories);
+  // 让每张分类卡片的浮动节奏错开，静态渲染出来的 HTML 没有内联 delay
+  c.querySelectorAll('.hero-cat').forEach(el => {
+    el.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+  });
   c.querySelectorAll('[data-cat]').forEach(b => {
     b.addEventListener('click', () => {
       state.activeCategory = b.dataset.cat;
@@ -169,11 +78,14 @@ function renderHeroCategories() {
   });
 }
 
+function cardOpts() {
+  return { query: state.query, favorites: state.favorites };
+}
+
 function renderFeatured() {
-  const featured = state.sites.filter(s => s.featured).slice(0, 10);
   const target = document.getElementById('featured-grid');
   if (!target) return;
-  target.innerHTML = featured.map(s => siteCard(s, { compact: true })).join('');
+  target.innerHTML = featuredGridHtml(state.sites, cardOpts());
 }
 
 function renderCategories() {
@@ -186,16 +98,7 @@ function renderCategories() {
     : state.categories.filter(c => c.id === state.activeCategory);
 
   if (filtered.length === 0) {
-    container.innerHTML = `
-      <div class="text-center py-20 bg-white rounded-card border border-cream-200">
-        <div class="text-6xl mb-4">🐟</div>
-        <p class="text-slate-500">没找到相关的摸鱼网址</p>
-        <button id="back-all"
-                class="mt-4 text-sm bg-mint-50 text-mint-700 px-4 py-2 rounded-full hover:bg-mint-500 hover:text-white transition font-medium">
-          返回全部
-        </button>
-      </div>
-    `;
+    container.innerHTML = emptyStateHtml();
     const back = document.getElementById('back-all');
     if (back) back.onclick = () => {
       state.activeCategory = 'all';
@@ -210,51 +113,14 @@ function renderCategories() {
   container.innerHTML = catsToShow.map(cat => {
     const items = filtered.filter(s => s.category === cat.id);
     if (items.length === 0) return '';
-    return `
-      <section id="cat-${cat.id}" class="category-section scroll-mt-32">
-        <header class="flex items-center justify-between mb-5">
-          <h2 class="text-2xl font-bold flex items-center gap-3 text-ink-800">
-            <span class="text-3xl">${escapeHtml(cat.icon)}</span>
-            <span>${escapeHtml(cat.title)}</span>
-            <span class="text-sm text-slate-400 font-normal">${items.length} 个</span>
-          </h2>
-          <span class="text-xs text-slate-400 hidden md:inline">${escapeHtml(cat.desc)}</span>
-        </header>
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          ${items.map((s, i) => siteCard(s) + ((i === 2 && items.length > 4) ? nativeAdCard() : '')).join('')}
-        </div>
-      </section>
-    `;
+    return categorySectionHtml(cat, items, cardOpts());
   }).join('');
 }
 
 function renderHotList() {
-  const hot = [
-    ...state.sites.filter(s => s.featured),
-    ...state.sites.filter(s => !s.featured).slice(0, 10)
-  ].slice(0, 10);
-
   const ol = document.getElementById('hot-list');
   if (!ol) return;
-  ol.innerHTML = hot.map((s, i) => {
-    const iconUrl = getIconUrl(s);
-    const avatar = fallbackAvatar(s);
-    return `
-    <li class="flex items-center gap-3">
-      <span class="${i < 3 ? 'rank-top' : 'rank'}">${i + 1}</span>
-      <a href="${escapeHtml(safeUrl(s.url))}" target="_blank" rel="noopener noreferrer"
-         class="flex-1 min-w-0 flex items-center gap-2 hover:text-mint-600 transition group">
-        <div class="w-5 h-5 rounded overflow-hidden flex-shrink-0 bg-cream-100">
-          <img src="${escapeHtml(iconUrl)}" alt=""
-               class="w-full h-full object-cover"
-               loading="lazy"
-               data-fallback="${escapeHtml(avatar)}"
-               onerror="if(this.dataset.fallback&&this.src!==this.dataset.fallback){this.src=this.dataset.fallback;this.onerror=null;}" />
-        </div>
-        <span class="truncate text-sm text-ink-700 group-hover:text-mint-600">${escapeHtml(s.title)}</span>
-      </a>
-    </li>
-  `;}).join('');
+  ol.innerHTML = hotListHtml(state.sites);
 }
 
 function syncTabs() {
@@ -335,8 +201,10 @@ function bindRoll() {
       }
     }
     if (e.key === 'Escape') {
-      const m = document.getElementById('about-modal');
-      if (m) m.classList.add('hidden');
+      ['about-modal', 'reward-modal'].forEach(id => {
+        const m = document.getElementById(id);
+        if (m) m.classList.add('hidden');
+      });
     }
   });
 }
@@ -408,21 +276,6 @@ function buildRecIssueUrl(data, catTitle) {
   return `https://github.com/${REC_REPO.owner}/${REC_REPO.repo}/issues/new?${q.toString()}`;
 }
 
-function bindAbout() {
-  const link = document.getElementById('about-link');
-  const modal = document.getElementById('about-modal');
-  const close = document.getElementById('about-close');
-  if (!modal) return;
-  if (link) link.addEventListener('click', e => {
-    e.preventDefault();
-    modal.classList.remove('hidden');
-  });
-  if (close) close.addEventListener('click', () => modal.classList.add('hidden'));
-  modal.addEventListener('click', e => {
-    if (e.target === modal) modal.classList.add('hidden');
-  });
-}
-
 // === 打赏弹窗 ===
 // 注：打赏功能已于 2026-09-16 暂时下线（index.html 里的入口与弹窗已移除），
 // 本函数在 DOM 不存在时第一行即返回，留着是为了将来一行 HTML 就能恢复。
@@ -479,11 +332,14 @@ function showToast(text, kind = 'info', duration = 2200) {
 function bindTypewriter() {
   const el = document.getElementById('hero-slogan');
   if (!el) return;
+  // 第一句刻意写成含关键词、含收录数量的完整描述：它既是首屏文案，
+  // 也是被搜索引擎抓到的 h1 文本（静态渲染出来的就是这一句）
+  const n = state.sites.length || 0;
   const phrases = [
-    '摸鱼乐园 · 让划水更优雅',
+    `摸鱼乐园 · ${n} 个摸鱼网站导航`,
     '一个网址，摸遍所有鱼',
     '上班摸鱼，从这里开始',
-    '工位摸鱼，日拱一卒',
+    '让划水更优雅一点',
     '上班的快乐，一个导航就够'
   ];
   let pi = 0, ci = 0, deleting = false;
@@ -527,7 +383,6 @@ function bindTypewriter() {
     bindSearch();
     bindRoll();
     bindSubmit();
-    bindAbout();
     bindReward();
     bindTypewriter();
   } catch (err) {

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="关于摸鱼乐园：这个站点是什么、收录标准是什么、内容从哪里来、编辑立场与免责说明。" />
+  <meta name="keywords" content="摸鱼乐园,关于我们,摸鱼导航,收录标准" />
+  <title>关于我们 · 摸鱼乐园</title>
+  <link rel="icon" type="image/svg+xml" href="./public/favicon.svg" />
+  <!-- 构建期注入：canonical / Open Graph / JSON-LD 结构化数据 -->
+  <!-- @prerender:head -->
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body class="text-ink-800 font-sans antialiased">
+
+  <!-- ===== Header ===== -->
+  <header class="sticky top-0 z-30 bg-cream-50/85 backdrop-blur border-b border-cream-200">
+    <div class="max-w-4xl mx-auto px-5 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <a href="./" class="flex items-center gap-2 flex-shrink-0">
+        <span class="text-2xl animate-bob">🎣</span>
+        <span class="font-bold text-lg tracking-tight">摸鱼乐园</span>
+      </a>
+      <nav class="flex items-center gap-4 lg:gap-5 text-sm text-slate-500">
+        <a href="./about.html" class="text-ink-800 font-medium">关于</a>
+        <a href="./privacy.html" class="hover:text-ink-800 transition hidden sm:inline">隐私</a>
+        <a href="./contact.html" class="hover:text-ink-800 transition">联系</a>
+        <a href="./" class="bg-mint-500 hover:bg-mint-600 text-white px-4 py-1.5 rounded-full font-medium transition whitespace-nowrap">回到首页</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-5 lg:px-8 py-10 lg:py-14">
+
+    <nav class="text-xs text-slate-400 mb-5">
+      <a href="./" class="hover:text-mint-600 transition">首页</a>
+      <span class="mx-1.5">/</span>
+      <span class="text-slate-500">关于我们</span>
+    </nav>
+
+    <h1 class="text-3xl lg:text-4xl font-bold tracking-tight mb-3">关于摸鱼乐园</h1>
+    <p class="text-slate-500 leading-relaxed mb-10 max-w-2xl">
+      一个把「上班时能光明正大打开的网站」整理到一起的网址导航。没有算法推荐，没有信息流，每一项都由人工挑过。
+    </p>
+
+    <section class="bg-white rounded-card p-6 lg:p-8 shadow-card border border-cream-200 mb-6">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">🎣</span>这个站点是什么</h2>
+      <div class="text-sm text-slate-600 space-y-3 leading-relaxed">
+        <p>
+          摸鱼乐园（MoyuNav）是一个面向中文上班族的网址导航站。它只做一件事：把那些「打开就能用、不需要注册、不容易被一眼看出在摸鱼」的网站，
+          按用途分好类放在一个页面上，让你不用记一堆书签、也不用来回翻聊天记录。
+        </p>
+        <p>
+          目前收录了 <strong class="text-ink-800"><!-- @prerender:count --></strong> 个站点，分成八个分类：
+          摸鱼小游戏、沙雕抽象、伪装办公、实用工具、热榜资讯、影音娱乐、治愈放松、涨点芝士。
+        </p>
+        <p>
+          每个站点除了名称和网址，还配了一段站长点评，写清楚<strong class="text-ink-800">这个站能干什么、什么时候适合打开、有什么坑</strong>。
+          我们希望你看完点评就知道要不要点进去，而不是靠标题猜。
+        </p>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-card p-6 lg:p-8 shadow-card border border-cream-200 mb-6">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">📋</span>收录标准</h2>
+      <div class="text-sm text-slate-600 space-y-3 leading-relaxed">
+        <p>我们按下面四条来筛，不符合的不会收录：</p>
+        <ul class="space-y-2.5 list-disc pl-5">
+          <li><strong class="text-ink-800">打开就能用。</strong>优先收录网页版、免登录、不用装客户端的东西。需要付费或有严格地域限制的会额外标注。</li>
+          <li><strong class="text-ink-800">来源可信。</strong>只收录抓取得到的公开站点，会实际打开确认能访问之后再上架；发现打不开会下架或替换。</li>
+          <li><strong class="text-ink-800">不侵权、不涉黄赌毒。</strong>盗版资源站、破解下载站、违法违规内容一律不收。</li>
+          <li><strong class="text-ink-800">有实际用途或者能真的放松。</strong>纯广告页、纯引流页、空壳站点不收。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-card p-6 lg:p-8 shadow-card border border-cream-200 mb-6">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">✍️</span>内容从哪里来</h2>
+      <div class="text-sm text-slate-600 space-y-3 leading-relaxed">
+        <p>
+          一部分是站长自己常用、长期在用的站点；另一部分来自访客在首页「推荐网站」里提交的建议。
+          所有提交都会先经过人工核对，确认能正常访问、内容合规之后才会出现在列表里，
+          <strong class="text-ink-800">不存在自动收录</strong>。
+        </p>
+        <p>
+          点评里的「有什么坑」基本都来自实际使用：哪个站广告多、哪个站需要挂代理、哪个站存档会丢。
+          如果某条点评和你的体验不一致，欢迎告诉我们，我们改。
+        </p>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-card p-6 lg:p-8 shadow-card border border-cream-200 mb-6">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">⚖️</span>编辑立场与免责</h2>
+      <div class="text-sm text-slate-600 space-y-3 leading-relaxed">
+        <p>
+          本站是独立运营的非官方站点，与所列各网站的运营方<strong class="text-ink-800">没有任何隶属或代理关系</strong>，
+          收录不代表对方认可本站，也不代表本站对其内容背书。
+        </p>
+        <p>
+          列表中的所有站点均指向第三方网站。第三方站点的内容、版权、隐私政策、可用性以及可能存在的风险，
+          都由该网站及其运营者负责，本站无法控制也不承担责任。点开链接后请自行判断。
+        </p>
+        <p>
+          本站点评与简介均为原创撰写，仅代表站长个人的使用体验，供参考，不构成任何形式的专业建议或保证。
+        </p>
+        <p>
+          本站为独立运营站点，未来可能接入展示广告等商业化内容以支持运营，广告内容与本站编辑立场无关。
+          目前页面上的广告位均为留空状态。
+        </p>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-card p-6 lg:p-8 shadow-card border border-cream-200">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="text-2xl">📮</span>纠错、下架与投诉</h2>
+      <div class="text-sm text-slate-600 space-y-3 leading-relaxed">
+        <p>遇到下面这些情况都可以直接找我们：</p>
+        <ul class="space-y-2.5 list-disc pl-5">
+          <li>某个站点打不开了、换域名了或者已经变质；</li>
+          <li>点评内容与实际不符，或者写错了；</li>
+          <li>你是某个站点的权利人，希望我们下架相关链接；</li>
+          <li>想推荐一个自认为很值得收的网站。</li>
+        </ul>
+        <p>
+          提交入口在<strong class="text-ink-800">首页的「推荐网站」表单</strong>，也可以直接到
+          <a href="https://github.com/Daniel-TH666/laimoyu/issues" target="_blank" rel="noopener noreferrer"
+             class="text-mint-600 hover:text-mint-700 font-medium underline">GitHub 仓库的 Issues</a>
+          里留言。具体说明见<a href="./contact.html" class="text-mint-600 hover:text-mint-700 font-medium underline">联系方式</a>页面。
+        </p>
+        <p class="text-xs text-slate-400 pt-2 border-t border-cream-200">
+          权利人下架请求请附上权利证明和具体链接，我们会在核实后尽快处理。
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="bg-ink-800 text-slate-300 mt-8 pt-10 pb-8">
+    <div class="max-w-4xl mx-auto px-5 lg:px-8">
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm mb-6">
+        <a href="./" class="hover:text-mint-200 transition">首页</a>
+        <a href="./about.html" class="hover:text-mint-200 transition">关于我们</a>
+        <a href="./privacy.html" class="hover:text-mint-200 transition">隐私政策</a>
+        <a href="./contact.html" class="hover:text-mint-200 transition">联系方式</a>
+        <a href="https://github.com/Daniel-TH666/laimoyu" target="_blank" rel="noopener" class="hover:text-mint-200 transition">GitHub 仓库</a>
+      </div>
+      <div class="border-t border-slate-700 pt-6 text-xs text-slate-400 leading-relaxed">
+        © 2026 摸鱼乐园 · MoyuNav · 一个网址，摸遍所有鱼<br />
+        <span class="text-slate-500">独立运营站点，未来可能接入展示广告以支持运营；广告内容与本站编辑立场无关</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

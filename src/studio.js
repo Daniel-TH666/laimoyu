@@ -251,6 +251,8 @@ function renderCard(site) {
     </div>
     <textarea data-field="description" rows="1" placeholder="一句话简介（必填）"
       class="w-full mt-2 bg-transparent text-xs text-slate-600 outline-none border-b border-transparent hover:border-cream-200 focus:border-mint-500 focus:bg-white px-1 py-0.5 transition resize-none">${escapeHtml(site.description || '')}</textarea>
+    <textarea data-field="review" rows="3" placeholder="站长点评（选填，建议 80~150 字：这站怎么玩 / 什么时候适合用 / 有什么坑）"
+      class="w-full mt-2 bg-transparent text-xs text-slate-500 leading-relaxed outline-none border-b border-transparent hover:border-cream-200 focus:border-mint-500 focus:bg-white px-1 py-0.5 transition resize-none">${escapeHtml(site.review || '')}</textarea>
     <div class="flex items-center justify-between mt-2">
       <div class="flex flex-wrap gap-1 chips-wrap">${chips}</div>
       <button type="button" data-action="delete"

@@ -1,9 +1,10 @@
 # 摸鱼乐园
 
-摸鱼资源聚合导航站，66 个精选网站，6 个分类。纯静态站点，部署到任何 CDN/虚拟主机都 OK。
+摸鱼资源聚合导航站，95 个精选网站，8 个分类。纯静态站点，构建期已把内容静态渲染进 HTML，爬虫不执行 JS 也能读到全部内容。
 
-- 线上地址：https://daniel-th666.github.io/laimoyu/
-- 后台地址：https://daniel-th666.github.io/laimoyu/bookmarks.html
+- 线上地址：https://laimoyu.top/
+- 后台地址：https://laimoyu.top/bookmarks.html
+- 关于 / 隐私 / 联系：`about.html` / `privacy.html` / `contact.html`
 - 代码仓库：https://github.com/Daniel-TH666/laimoyu
 
 ## 本地开发
@@ -100,7 +101,12 @@ npm run dev
 ```
 laimoyu/
 ├── .github/workflows/deploy.yml   # 推送到 main 后自动发布到 GitHub Pages
+├── build/
+│   └── prerender.js     # 构建期静态渲染 + robots.txt / sitemap.xml / JSON-LD
 ├── index.html           # 网站首页
+├── about.html           # 关于我们（独立页面）
+├── privacy.html         # 隐私政策（含 Cookie 与广告披露）
+├── contact.html         # 联系方式
 ├── bookmarks.html       # 后台（独立页面，主页无任何链接指向它）
 ├── package.json
 ├── vite.config.js
@@ -113,6 +119,8 @@ laimoyu/
     ├── main.js          # 首页逻辑
     ├── studio.js        # 后台逻辑
     ├── style.css
+    ├── lib/
+    │   └── render.js    # 渲染模板（浏览器与构建期共用，改这里就够）
     └── data/
         ├── sites.json        # ← 网站数据都在这里
         └── categories.json
@@ -121,6 +129,10 @@ laimoyu/
 > ⚠️ **数据必须用 `import` 引入，不能运行时 `fetch`。**
 > `src/main.js` / `src/studio.js` 里若把 JSON 改成 `fetch('./data/sites.json')`，
 > 本地开发能跑，但构建后 JSON 不会被打包进 `dist/`，线上会变成空列表。
+
+> ⚠️ **改页面结构请改 `src/lib/render.js`，不要只改 `main.js`。**
+> 卡片、分类区块、热门榜这些模板被浏览器端和构建期静态渲染共用，
+> 只改一边会出现「首屏和 JS 跑完之后长得不一样」。
 
 ## 直接改数据（不走后台也行）
 
@@ -132,6 +144,7 @@ laimoyu/
   "title": "4399",
   "url": "https://www.4399.com",
   "description": "经典小游戏大全",
+  "review": "国内最老牌的网页小游戏站之一……（80~150 字的站长点评，会显示在首页「摸鱼指南」里，也会进搜索引擎）",
   "category": "games",
   "featured": true,
   "isNew": true,
@@ -139,7 +152,39 @@ laimoyu/
 }
 ```
 
-`category` 只能是这 6 个之一：`games` / `trending` / `weird` / `cover` / `tools` / `media`
+`category` 只能是这 8 个之一：`games` / `weird` / `cover` / `tools` / `trending` / `media` / `relax` / `learned`
+
+`review` 选填，但强烈建议写：它既是给访客看的正文，也是搜索引擎判断「这个站有没有内容」的主要依据。
+建议按「这站怎么玩 → 什么时候适合用 → 有什么坑」三段写，80~150 字。
+
+## 搜索引擎与变现基础（2026-09-16 上线）
+
+这部分是给「让搜索引擎能看见、将来能接广告」打的地基，都已经自动跑在构建里：
+
+| 能力 | 实现位置 | 说明 |
+|---|---|---|
+| **站点内容静态渲染** | `build/prerender.js` → `transformIndexHtml` | 构建时把 95 个站点、8 个分类、全部点评直接写进 `dist/index.html`。爬虫不执行 JS 也能读到全部内容（原本整站是 JS 渲染，爬虫看到的是空壳） |
+| **摸鱼指南正文** | `src/lib/render.js` 的 `siteGuideHtml()` | 首页底部 95 条逐站点评，约 1.6 万字可见正文 |
+| **robots.txt** | 构建期生成 | 允许抓取全站，屏蔽 `/bookmarks.html` |
+| **sitemap.xml** | 构建期生成 | 首页 + 三个内容页，带 `lastmod` |
+| **canonical / OG / twitter** | 构建期注入 `<head>` | 每页自动按自己的 title/description 生成 |
+| **JSON-LD 结构化数据** | 构建期注入 | `WebSite` + `WebPage` + `ItemList`（95 条）+ `BreadcrumbList`（8 个分类） |
+
+**换域名时只需改一处**：`build/prerender.js` 顶部的 `SITE_URL`（以及页面里可见的域名文案）。
+
+**加新站点之后的动作**：后台保存会自动触发构建，静态渲染、sitemap、JSON-LD 全部跟着更新，
+不需要手动改任何 SEO 文件。新加的站点如果没写 `review`，首页指南里会退回显示 `description`。
+
+### Google Search Console 绑定
+
+1. 打开 <https://search.google.com/search-console>
+2. 选「网址前缀」，填 `https://laimoyu.top/`
+3. 验证方式选 **HTML 标记**，复制它给的那一整行 `<meta ... />`
+4. 把那行贴到 `index.html` 的 `<head>` 里（建议紧跟在 `<!-- @prerender:head -->` 下面），推送后回来点「验证」
+5. 验证通过后在左侧「站点地图」提交：`sitemap.xml`
+
+> 也可以选「网域」验证（用 DNS TXT 记录），需要在 NameSilo 的 DNS 里加一条 TXT，
+> 好处是同时覆盖 `www` 等所有子域。两种都行，HTML 标记最简单。
 
 ## 构建
 
