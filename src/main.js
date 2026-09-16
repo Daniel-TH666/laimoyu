@@ -41,6 +41,13 @@ function escapeHtml(s) {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[c]));
 }
+// 安全 URL：只放行 http/https（挡掉 javascript: data: vbscript: 等危险协议），无协议的相对路径放行
+function safeUrl(u) {
+  const s = String(u == null ? '' : u).trim();
+  if (!s) return '#';
+  if (/^[a-z][a-z0-9+.-]*:/i.test(s)) return /^https?:/i.test(s) ? s : '#';
+  return s;
+}
 function highlight(text, query) {
   if (!query) return escapeHtml(text);
   const safe = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -120,7 +127,7 @@ function siteCard(site, opts = {}) {
       </div>
       <p class="text-sm text-slate-500 line-clamp-2 mb-3 flex-1">${highlight(site.description, state.query)}</p>
       <div class="flex items-center justify-end mt-auto">
-        <a href="${site.url}" target="_blank" rel="noopener noreferrer nofollow"
+        <a href="${escapeHtml(safeUrl(site.url))}" target="_blank" rel="noopener noreferrer nofollow"
            data-visit="${site.id}"
            class="text-xs bg-mint-50 text-mint-700 px-3 py-1.5 rounded-full hover:bg-mint-500 hover:text-white transition font-medium">
           打开摸鱼 ↗
@@ -146,8 +153,8 @@ function renderHeroCategories() {
   if (!c) return;
   c.innerHTML = state.categories.map(cat => `
     <button data-cat="${cat.id}" class="hero-cat floating" style="animation-delay:${(Math.random() * 3).toFixed(2)}s">
-      <span class="text-3xl">${cat.icon}</span>
-      <span class="text-sm font-medium text-ink-700">${cat.title}</span>
+      <span class="text-3xl">${escapeHtml(cat.icon)}</span>
+      <span class="text-sm font-medium text-ink-700">${escapeHtml(cat.title)}</span>
     </button>
   `).join('');
   c.querySelectorAll('[data-cat]').forEach(b => {
@@ -207,8 +214,8 @@ function renderCategories() {
       <section id="cat-${cat.id}" class="category-section scroll-mt-32">
         <header class="flex items-center justify-between mb-5">
           <h2 class="text-2xl font-bold flex items-center gap-3 text-ink-800">
-            <span class="text-3xl">${cat.icon}</span>
-            <span>${cat.title}</span>
+            <span class="text-3xl">${escapeHtml(cat.icon)}</span>
+            <span>${escapeHtml(cat.title)}</span>
             <span class="text-sm text-slate-400 font-normal">${items.length} 个</span>
           </h2>
           <span class="text-xs text-slate-400 hidden md:inline">${escapeHtml(cat.desc)}</span>
@@ -235,7 +242,7 @@ function renderHotList() {
     return `
     <li class="flex items-center gap-3">
       <span class="${i < 3 ? 'rank-top' : 'rank'}">${i + 1}</span>
-      <a href="${s.url}" target="_blank" rel="noopener noreferrer"
+      <a href="${escapeHtml(safeUrl(s.url))}" target="_blank" rel="noopener noreferrer"
          class="flex-1 min-w-0 flex items-center gap-2 hover:text-mint-600 transition group">
         <div class="w-5 h-5 rounded overflow-hidden flex-shrink-0 bg-cream-100">
           <img src="${escapeHtml(iconUrl)}" alt=""
@@ -416,6 +423,37 @@ function bindAbout() {
   });
 }
 
+// === 打赏弹窗 ===
+function bindReward() {
+  const link = document.getElementById('reward-link');
+  const modal = document.getElementById('reward-modal');
+  const close = document.getElementById('reward-close');
+  if (!modal) return;
+  if (link) link.addEventListener('click', e => {
+    e.preventDefault();
+    modal.classList.remove('hidden');
+  });
+  if (close) close.addEventListener('click', () => modal.classList.add('hidden'));
+  modal.addEventListener('click', e => {
+    if (e.target === modal) modal.classList.add('hidden');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') modal.classList.add('hidden');
+  });
+  // 收款码未上传时优雅降级，不显示破图
+  // 注意：图片 404 的 error 事件可能早于本函数执行，所以要同时检查 complete/naturalWidth
+  const img = document.getElementById('reward-qr');
+  const missing = document.getElementById('reward-qr-missing');
+  if (img && missing) {
+    const showMissing = () => {
+      img.classList.add('hidden');
+      missing.classList.remove('hidden');
+    };
+    if (img.complete && img.naturalWidth === 0) showMissing();
+    else img.addEventListener('error', showMissing);
+  }
+}
+
 // 前台提示条：文本写进 JS，保证 Tailwind 能扫到这些类名并生成
 const TOAST_COLOR = {
   success: 'bg-mint-500 text-white',
@@ -488,6 +526,7 @@ function bindTypewriter() {
     bindRoll();
     bindSubmit();
     bindAbout();
+    bindReward();
     bindTypewriter();
   } catch (err) {
     console.error('初始化失败：', err);

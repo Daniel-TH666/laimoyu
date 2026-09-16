@@ -746,6 +746,13 @@ function escapeAttr(s) {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[c]));
 }
+// 安全 URL：只放行 http/https，挡掉 javascript: 等危险协议（推荐 Issue 的内容来自外部访客）
+function safeUrl(u) {
+  const s = String(u ?? '').trim();
+  if (!s) return '#';
+  if (/^[a-z][a-z0-9+.-]*:/i.test(s)) return /^https?:/i.test(s) ? s : '#';
+  return s;
+}
 
 // ========================================================
 // 推荐管理：读仓库 Issue 里的访客推荐
@@ -928,7 +935,7 @@ function renderRecs() {
               ${r.countAll > r.count30 ? `<span class="text-xs text-slate-400">累计 ${r.countAll} 次</span>` : ''}
               ${done ? '<span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-400">已关闭</span>' : ''}
             </div>
-            <a href="${escapeAttr(url)}" target="_blank" rel="noopener"
+            <a href="${escapeAttr(safeUrl(url))}" target="_blank" rel="noopener"
                class="text-xs text-mint-600 hover:text-mint-700 hover:underline break-all mt-1 inline-block">${escapeHtml(url)}</a>
             ${r.desc ? `<p class="text-sm text-slate-600 mt-1.5 leading-relaxed">${escapeHtml(r.desc)}</p>` : ''}
             <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-[11px] text-slate-400">
