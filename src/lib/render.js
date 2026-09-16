@@ -32,14 +32,13 @@ export function getHostname(siteUrl) {
   catch { return ''; }
 }
 
-// === 图标：站点数据 > favicon service > 字母兜底 ===
+// === 图标：站点自带 > 字母兜底（不再发起网络请求） ===
+// 历史教训：曾用 https://api.iowen.cn/favicon/<host>.png 作为兜底，
+// 2026-09-16 监测发现该服务 SSL 证书过期 + 接口 404，全站 112 处图标全失败。
+// 现在 icon 为空时直接返回 data-uri 字母头像，无任何外网请求。
 export function getIconUrl(site) {
   if (site.icon && site.icon.trim()) return site.icon.trim();
-  try {
-    const host = getHostname(site.url);
-    if (host) return `https://api.iowen.cn/favicon/${host}.png`;
-  } catch {}
-  return '';
+  return fallbackAvatar(site);
 }
 
 // 字母兜底：生成固定色调的 data-uri svg（中文取首字，英文取首字母）
