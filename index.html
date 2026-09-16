@@ -250,7 +250,6 @@
         </div>
         <div class="flex items-center gap-5">
           <a href="#submit-section" class="hover:text-white transition">推荐网站</a>
-          <a href="#" id="reward-link" class="hover:text-white transition">打赏支持</a>
           <a href="#" id="about-link" class="hover:text-white transition">关于本站</a>
         </div>
       </div>
@@ -281,27 +280,9 @@
     </div>
   </div>
 
-  <!-- ===== 打赏弹窗 =====
-       注：收款码图片放在 public/reward-qr.png（构建后即 ./reward-qr.png）。
-       未放置时页面会自动显示「收款码暂未上传」提示，不会出现破图。 -->
-  <div id="reward-modal"
-       class="hidden fixed inset-0 z-40 bg-ink-800/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-card max-w-sm w-full p-6 shadow-card-hover">
-      <div class="flex items-center justify-between mb-1">
-        <h2 class="text-lg font-bold">请我喝杯咖啡</h2>
-        <button id="reward-close" class="text-slate-400 hover:text-ink-800 text-2xl leading-none">×</button>
-      </div>
-      <p class="text-sm text-slate-500 mb-4">如果这个站点帮你摸到了鱼，可以请站长喝杯咖啡。</p>
-
-      <div class="mx-auto w-52 h-52 rounded-xl border border-cream-200 bg-cream-50 flex items-center justify-center overflow-hidden">
-        <img id="reward-qr" src="./reward-qr.png" alt="打赏收款码" class="w-full h-full object-contain" />
-      </div>
-      <p id="reward-qr-missing" class="hidden text-xs text-slate-400 mt-3 text-center">收款码暂未上传</p>
-
-      <p class="text-[11px] text-slate-400 leading-relaxed mt-4 pt-3 border-t border-cream-200">
-        本站打赏为自愿行为，不构成任何交易或合同关系，不提供发票及售后保障。
-      </p>
-    </div>
-  </div>
+  <!-- ===== 打赏弹窗：已暂时下线（2026-09-16，待流量起来后再启用）=====
+       完整代码保留在提交 438db18 中，恢复时把页脚「打赏支持」入口与本弹窗加回即可；
+       src/main.js 的 bindReward() 已在 DOM 不存在时自动跳过，无需改动 JS。
+       启用前请先把收款码放到 public/reward-qr.png，并保留底部免责声明文案。 -->
 </body>
 </html>

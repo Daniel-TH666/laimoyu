@@ -424,6 +424,8 @@ function bindAbout() {
 }
 
 // === 打赏弹窗 ===
+// 注：打赏功能已于 2026-09-16 暂时下线（index.html 里的入口与弹窗已移除），
+// 本函数在 DOM 不存在时第一行即返回，留着是为了将来一行 HTML 就能恢复。
 function bindReward() {
   const link = document.getElementById('reward-link');
   const modal = document.getElementById('reward-modal');
