@@ -2,7 +2,10 @@
 export default {
   content: [
     './*.html',
-    './src/**/*.{js,ts,html}'
+    './src/**/*.{js,ts,html}',
+    // 首页整页模板与多语言渲染都在 build/ 下，不在 src/ 里 —— 必须显式纳入，
+    // 否则首页用到的 Tailwind 类名不会被生成（页面会「掉样式」）。
+    './build/**/*.js'
   ],
   theme: {
     extend: {

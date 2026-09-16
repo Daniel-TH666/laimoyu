@@ -16,19 +16,43 @@
 //   - 拖拽可同分类排序，也可跨分类移动
 //
 // 视图：
-//   - 📚 站点管理：编辑 sites.json
+//   - 📚 站点管理：编辑某个语言的 src/data/sites/<lang>.json（顶部可切换语言）
 //   - 📥 推荐管理：读仓库 Issue 里的访客推荐，按近 30 天推荐次数排序（只读）
 // ========================================================
 
 import './style.css';
 import Sortable from 'sortablejs';
-// 本地默认数据：仓库里没有 sites.json 时用于一键初始化
-import defaultSites from './data/sites.json';
-import categoriesData from './data/categories.json';
+import { LANGUAGE_ORDER } from './i18n/languages.js';
+import { CATEGORY_DEFS } from './lib/render.js';
+// 后台界面是中文的，分类 chip 显示中文名；但分类 id 与图标在代码里固定
+import zhI18n from './i18n/zh.json';
+
+// 各语言的本地站点数据（仓库里还没有对应文件时用于一键初始化）
+// 各语言的语言包（拿语言列表 + 该语言下的分类名）
+const localSitesByLang = import.meta.glob('./data/sites/*.json', { eager: true });
+const i18nByLang = import.meta.glob('./i18n/*.json', { eager: true });
+
+const pickMod = m => (m && m.default ? m.default : m);
+const langCodeOf = p => p.replace(/^.*\//, '').replace(/\.json$/, '');
+
+// 语言列表：顺序优先按 LANGUAGE_ORDER，其余语言包自动追加 —— 加语言零改动
+const LANGS = [
+  ...LANGUAGE_ORDER,
+  ...Object.keys(i18nByLang).map(langCodeOf).filter(c => !LANGUAGE_ORDER.includes(c))
+].map(code => {
+  const t = pickMod(i18nByLang[`./i18n/${code}.json`]) || {};
+  return { code, nativeName: t.nativeName || code, flag: t.flag || '🌐' };
+});
+
+function localSites(lang) {
+  const arr = pickMod(localSitesByLang[`./data/sites/${lang}.json`]);
+  return Array.isArray(arr) ? arr : [];
+}
 
 // === 配置 ===
 const CONFIG_KEY = 'moyu_admin_config';
 const LOG_KEY = 'moyu_admin_log';
+const LANG_KEY = 'moyu_admin_lang';   // 上次编辑的语言
 
 const defaultConfig = {
   owner: 'Daniel-TH666',
@@ -39,6 +63,7 @@ const defaultConfig = {
 
 const state = {
   cfg: { ...defaultConfig },
+  lang: LANGS[0] ? LANGS[0].code : 'zh',   // 当前正在编辑哪个语言的站点数据
   remote: { sha: '', content: '' },
   sites: [],
   dirty: false,
@@ -53,12 +78,33 @@ const state = {
   recSort: 'count30'
 };
 
-// === 分类（数据驱动，直接读 categories.json，避免与前台不同步） ===
-const CATEGORIES = [...categoriesData]
-  .sort((a, b) => (a.sort ?? 99) - (b.sort ?? 99))
-  .map(c => ({ id: c.id, title: c.title, icon: c.icon }));
+// === 分类（id 与图标在代码里固定，显示名取语言包，避免与前台不同步） ===
+const CATEGORIES = CATEGORY_DEFS.map(d => {
+  const c = (zhI18n.categories && zhI18n.categories[d.id]) || {};
+  return { id: d.id, title: c.title || d.id, icon: d.icon };
+});
 
 const CAT_BY_ID = Object.fromEntries(CATEGORIES.map(c => [c.id, c]));
+
+// 跨语言的「分类名 → id」索引：访客 Issue 里写的分类名可能是任意语言，
+// 解析时中英文都能认出来。
+const CAT_TITLE_INDEX = CATEGORY_DEFS.map(d => ({ id: d.id, title: d.id }));
+for (const { code } of LANGS) {
+  const t = pickMod(i18nByLang[`./i18n/${code}.json`]) || {};
+  for (const d of CATEGORY_DEFS) {
+    const title = t.categories && t.categories[d.id] && t.categories[d.id].title;
+    if (title) CAT_TITLE_INDEX.push({ id: d.id, title, code });
+  }
+}
+
+function matchCategory(label) {
+  const s = String(label || '').trim();
+  if (!s) return null;
+  const byId = CATEGORY_DEFS.find(d => d.id === s.toLowerCase());
+  if (byId) return byId.id;
+  const byTitle = CAT_TITLE_INDEX.find(x => s.includes(x.title));
+  return byTitle ? byTitle.id : null;
+}
 
 // === 配置读写 ===
 function loadConfig() {
@@ -68,6 +114,18 @@ function loadConfig() {
   } catch {
     state.cfg = { ...defaultConfig };
   }
+}
+
+// 上次编辑的是哪个语言，记住它，下次打开后台不用重新选
+function loadAdminLang() {
+  try {
+    const v = localStorage.getItem(LANG_KEY);
+    if (v && LANGS.some(l => l.code === v)) state.lang = v;
+  } catch { /* 忽略 */ }
+}
+
+function saveAdminLang(code) {
+  try { localStorage.setItem(LANG_KEY, code); } catch { /* 忽略 */ }
 }
 
 function fillConfigForm() {
@@ -92,10 +150,11 @@ function isConfigured() {
 }
 
 // === GitHub Contents API ===
-const FILE_PATH = 'src/data/sites.json';
+// 每种语言的站点数据一个文件：src/data/sites/en.json、zh.json、es.json …
+const dataPath = lang => `src/data/sites/${lang}.json`;
 
 async function ghFetchFile() {
-  const url = `https://api.github.com/repos/${state.cfg.owner}/${state.cfg.repo}/contents/${FILE_PATH}?ref=${state.cfg.branch}`;
+  const url = `https://api.github.com/repos/${state.cfg.owner}/${state.cfg.repo}/contents/${dataPath(state.lang)}?ref=${state.cfg.branch}`;
   const r = await fetch(url, {
     headers: {
       'Authorization': `Bearer ${state.cfg.pat}`,
@@ -111,7 +170,7 @@ async function ghFetchFile() {
 }
 
 async function ghPutFile(content, sha, message) {
-  const url = `https://api.github.com/repos/${state.cfg.owner}/${state.cfg.repo}/contents/${FILE_PATH}`;
+  const url = `https://api.github.com/repos/${state.cfg.owner}/${state.cfg.repo}/contents/${dataPath(state.lang)}`;
   const r = await fetch(url, {
     method: 'PUT',
     headers: {
@@ -472,12 +531,12 @@ async function loadFromGithub() {
       }
       const yes = await askConfirm({
         title: '初始化数据', icon: '🆕',
-        msg: `仓库中还没有 sites.json，要用本地默认数据（${Array.isArray(defaultSites) ? defaultSites.length : 0} 条）初始化吗？\n点「确定」会自动创建并提交一份初始数据。`,
+        msg: `仓库中还没有 ${dataPath(state.lang)}，要用本地默认数据（${localSites(state.lang).length} 条）初始化吗？\n点「确定」会自动创建并提交一份初始数据。`,
         okText: '初始化'
       });
       if (yes) {
         try {
-          const local = Array.isArray(defaultSites) ? defaultSites : [];
+          const local = localSites(state.lang);
           state.sites = local;
           state.remote.content = JSON.stringify(local, null, 2);
           renderCategories();
@@ -489,7 +548,7 @@ async function loadFromGithub() {
           showError('初始化失败：' + e.message);
         }
       } else {
-        showError('你取消了初始化。仓库里目前还没有 sites.json —— 点下面的「重试」可以再来一次。');
+        showError(`你取消了初始化。仓库里目前还没有 ${dataPath(state.lang)} —— 点下面的「重试」可以再来一次。`);
       }
     } else if (msg.startsWith('401')) {
       showError('令牌无效或已过期。点「设置」重新填写。');
@@ -529,7 +588,7 @@ async function saveToGithub() {
   saveBtnEl.textContent = '⏳ 提交中…';
   try {
     const newContent = JSON.stringify(state.sites, null, 2) + '\n';
-    const result = await ghPutFile(newContent, state.remote.sha, 'chore: 从管理后台更新 sites.json');
+    const result = await ghPutFile(newContent, state.remote.sha, `chore: 从管理后台更新 ${dataPath(state.lang)}`);
     state.remote.sha = result.content.sha;
     state.remote.content = newContent;
     state.dirty = false;
@@ -762,6 +821,8 @@ function safeUrl(u) {
 //   本模块 GET 全部 Issue → 解析 → 按网址域名聚合成「候选站」→ 按近 30 天次数排序
 //   纯只读：不修改、不关闭、不收录任何 Issue
 // ========================================================
+// 前台提交的 Issue 标题前缀（各语言不同），正文里的字段键则是固定 ASCII，
+// 具体解析规则见 parseRecIssue()
 const REC_TAG = '[推荐]';
 const REC_DAYS = 30;
 const REC_WINDOW_MS = REC_DAYS * 24 * 60 * 60 * 1000;
@@ -791,7 +852,11 @@ async function ghFetchIssues() {
   return all;
 }
 
-// 从 Issue body 里按 `**字段**：值` 提取；拿不到就退回标题
+// 从 Issue body 里按 `**字段**：值` 提取；拿不到就退回标题。
+// 字段名有两套：
+//   新版（前台多语言后）用固定 ASCII 键：lang / title / url / category /
+//   categoryLabel / description —— 键不随语言变化，任何一种语言提交过来都能解析；
+//   旧版是中文键：网站名 / 网址 / 分类 / 简介 —— 保留兼容，历史 Issue 仍能读出来。
 function parseRecIssue(issue) {
   const body = issue.body || '';
   const grab = label => {
@@ -799,23 +864,36 @@ function parseRecIssue(issue) {
     const m = body.match(re);
     return m ? m[1].trim() : '';
   };
+  const grabAny = (...labels) => {
+    for (const l of labels) {
+      const v = grab(l);
+      if (v) return v;
+    }
+    return '';
+  };
+
   const rawTitle = (issue.title || '').trim();
-  const isRec = rawTitle.startsWith(REC_TAG) || /网站名|网址/.test(body);
-  const title = grab('网站名') || rawTitle.replace(/^\[推荐\]\s*/, '').trim() || '(未命名)';
-  const catLabel = grab('分类');
-  // 中文分类名 → id
-  const catHit = CATEGORIES.find(c => catLabel.includes(c.title));
+  const isRec = /^\[(推荐|Suggestion|Suggest|Recomendación|Suggestion|提案|제안)\]/i.test(rawTitle)
+    || /网站名|网址/.test(body)
+    || /\*\*\s*(title|url)\s*\*\*/i.test(body);
+
+  const lang = grabAny('lang', '语言') || '';
+  const catLabel = grabAny('categoryLabel', '分类');
+  const catId = grabAny('category') || matchCategory(catLabel) || '';
+
   return {
     isRec,
     number: issue.number,
     htmlUrl: issue.html_url,
     state: issue.state,
     createdAt: issue.created_at,
-    title,
-    url: grab('网址') || grab('URL') || grab('url'),
-    cat: catHit ? catHit.id : '',
-    catLabel: catLabel || (catHit ? catHit.title : '未填分类'),
-    desc: grab('简介') || grab('一句话简介'),
+    lang: lang || '—',
+    title: grabAny('title', '网站名', '名称')
+      || rawTitle.replace(/^\[[^\]]+\]\s*/, '').trim() || '(未命名)',
+    url: grabAny('url', '网址', 'URL'),
+    cat: matchCategory(catId) || '',
+    catLabel: catLabel || (catId ? (CAT_BY_ID[catId]?.title || catId) : '未填分类'),
+    desc: grabAny('description', '简介', '一句话简介'),
     author: issue.user?.login || '匿名'
   };
 }
@@ -985,7 +1063,7 @@ async function loadRecommendations(force = false) {
     renderRecs();
     const total = state.recs.reduce((a, r) => a + r.countAll, 0);
     if (total === 0) {
-      recAlert('info', '拉到 ' + issues.length + ' 条 Issue，其中没有「' + REC_TAG + '」格式的推荐。'
+      recAlert('info', '拉到 ' + issues.length + ' 条 Issue，没有一条符合推荐格式（正文里缺少 **title** 与 **url** 字段）。'
         + '确认前台首页的推荐表单已能提交（提交入口在首页底部「📮 推荐摸鱼网站」）。');
     }
   } catch (err) {
@@ -1152,10 +1230,53 @@ function bindEvents() {
   });
 }
 
+// === 语言切换（站点管理视图）===
+// 每种语言的站点数据是独立文件，切语言 = 切一个文件，互不影响。
+function langLabel(code) {
+  const l = LANGS.find(x => x.code === code);
+  return l ? `${l.flag} ${l.nativeName}` : code;
+}
+
+function initLangSelect() {
+  const sel = document.getElementById('lang-sites');
+  if (sel) {
+    sel.innerHTML = LANGS.map(l =>
+      `<option value="${escapeAttr(l.code)}"${l.code === state.lang ? ' selected' : ''}>${escapeHtml(`${l.flag} ${l.nativeName}`)}</option>`
+    ).join('');
+  }
+  const file = document.getElementById('lang-file');
+  if (file) file.textContent = dataPath(state.lang);
+}
+
+async function switchLang(code) {
+  if (!code || code === state.lang) return;
+  if (state.dirty) {
+    const yes = await askConfirm({
+      title: '切换语言', icon: '🌐', danger: true, okText: '丢弃改动并切换',
+      msg: `${langLabel(state.lang)} 的改动还没保存，切过去就会丢失。确定切换吗？`
+    });
+    if (!yes) { initLangSelect(); return; }
+  }
+  state.lang = code;
+  saveAdminLang(code);
+  state.dirty = false;
+  state.sites = [];
+  state.remote = { sha: '', content: '' };
+  hideSaveAlert();
+  initLangSelect();
+  updateSaveBtn();
+  if (isConfigured()) {
+    updateStatus('idle', '已配置 · 加载中…');
+    await loadFromGithub();
+  }
+}
+
 // === 启动 ===
 (function init() {
   loadConfig();
+  loadAdminLang();
   bindEvents();
+  initLangSelect();
   renderLog();
 
   if (isConfigured()) {

@@ -1,41 +1,32 @@
 // build/prerender.js
-// 一个 Vite 插件，负责三件事：
-//   1) 构建期把 95 个站点的内容直接写进 HTML（爬虫不执行 JS 也能读到全部内容）
-//   2) 注入 canonical / Open Graph / JSON-LD 结构化数据
-//   3) 生成 robots.txt 与 sitemap.xml
+// 多语言静态站点生成器。一个 Vite 插件，负责：
+//   1) 为每一种语言渲染整站 HTML（首页 + about/privacy/faq/contact），
+//      站点内容、分类、全部点评都直接写进 HTML —— 爬虫不执行 JS 也能读全
+//   2) 注入 canonical / hreflang 全套（含 x-default）/ Open Graph / JSON-LD
+//   3) 生成 robots.txt 与带 hreflang 注解的 sitemap.xml
 //
-// 与 src/lib/render.js 共用同一份模板函数，所以构建产物里的结构和浏览器
-// 运行时渲染出来的完全一致。
+// 设计要点：完全数据驱动。构建期扫描 src/i18n/*.json 与 src/data/sites/*.json，
+// 有几个语言就生成几个语言版本 —— 加新语言不需要改这个文件。
 
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import {
-  heroCategoriesHtml,
-  featuredGridHtml,
-  hotListHtml,
-  allCategoriesHtml,
-  siteGuideHtml
-} from '../src/lib/render.js';
+import { LANGUAGE_ORDER, DEFAULT_LANG } from '../src/i18n/languages.js';
+import { buildCategories, contentPageHtml, escapeHtml } from '../src/lib/render.js';
+import { homePageHtml } from './home-template.js';
 
-// 站点正式域名。换域名时改这里一处即可（同时记得改 index.html 里的可见文案）。
+// 正式域名。换域名时改这里一处。
 export const SITE_URL = 'https://laimoyu.top';
-export const SITE_NAME = '摸鱼乐园';
 
-const PAGES = [
-  { file: 'index.html',    path: '/',              priority: '1.0', changefreq: 'daily' },
-  { file: 'about.html',    path: '/about.html',    priority: '0.6', changefreq: 'monthly' },
-  { file: 'privacy.html',  path: '/privacy.html',  priority: '0.3', changefreq: 'yearly' },
-  { file: 'contact.html',  path: '/contact.html',  priority: '0.5', changefreq: 'yearly' }
+// 内容页清单（kind → sitemap 权重）
+const CONTENT_PAGES = [
+  { kind: 'about', priority: '0.6', changefreq: 'monthly' },
+  { kind: 'faq', priority: '0.6', changefreq: 'monthly' },
+  { kind: 'contact', priority: '0.5', changefreq: 'yearly' },
+  { kind: 'privacy', priority: '0.3', changefreq: 'yearly' }
 ];
 
 function readJson(root, rel) {
   return JSON.parse(readFileSync(resolve(root, rel), 'utf-8'));
-}
-
-function replaceMarker(html, name, content) {
-  const re = new RegExp(`<!--\\s*@prerender:${name}\\s*-->`, 'g');
-  if (!re.test(html)) return html;
-  return html.replace(re, () => content);
 }
 
 // JSON-LD 里的 < 必须转义，否则内容里出现 </script> 会提前闭合脚本标签
@@ -44,16 +35,138 @@ function jsonLdScript(obj) {
   return `<script type="application/ld+json">${json}</script>`;
 }
 
-function extractMeta(html) {
-  const title = (html.match(/<title>([\s\S]*?)<\/title>/) || [, ''])[1].trim();
-  const desc = (html.match(/<meta\s+name="description"\s+content="([^"]*)"/) || [, ''])[1].trim();
-  return { title, desc };
+// 某个页面在某种语言下的绝对 URL
+function pageUrl(lang, page) {
+  const prefix = lang.pathPrefix || '';
+  const file = page === 'index' ? '' : page + '.html';
+  return `${SITE_URL}${prefix}/${file}`;
+}
+
+// hreflang 全套（含 x-default → 默认语言）
+function alternateLinks(page, langs) {
+  const out = langs.map(l =>
+    `<link rel="alternate" hreflang="${l.hreflang}" href="${pageUrl(l, page)}" />`);
+  const dl = langs.find(l => l.code === DEFAULT_LANG) || langs[0];
+  out.push(`<link rel="alternate" hreflang="x-default" href="${pageUrl(dl, page)}" />`);
+  return out.join('\n  ');
+}
+
+// canonical + hreflang + OG + twitter + JSON-LD
+function seoHead(lang, page, langs, ctx) {
+  const meta = (lang.meta || {})[page] || {};
+  const title = meta.title || lang.brand;
+  const desc = meta.description || '';
+  const canonical = pageUrl(lang, page);
+  const esc = escapeHtml;
+
+  const tags = [
+    `<link rel="canonical" href="${canonical}" />`,
+    alternateLinks(page, langs),
+    `<meta property="og:type" content="website" />`,
+    `<meta property="og:site_name" content="${esc(lang.brand)}" />`,
+    `<meta property="og:locale" content="${lang.ogLocale}" />`,
+    ...langs.filter(o => o.code !== lang.code)
+      .map(o => `<meta property="og:locale:alternate" content="${o.ogLocale}" />`),
+    `<meta property="og:title" content="${esc(title)}" />`,
+    `<meta property="og:description" content="${esc(desc)}" />`,
+    `<meta property="og:url" content="${canonical}" />`,
+    `<meta name="twitter:card" content="summary" />`,
+    `<meta name="twitter:title" content="${esc(title)}" />`,
+    `<meta name="twitter:description" content="${esc(desc)}" />`
+  ];
+
+  // ---- JSON-LD ----
+  const websiteId = `${SITE_URL}${lang.pathPrefix || ''}/#website`;
+  const graph = [
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      url: `${SITE_URL}${lang.pathPrefix || ''}/`,
+      name: lang.brand,
+      alternateName: 'MoyuNav',
+      description: desc,
+      inLanguage: lang.htmlLang
+    },
+    {
+      '@type': 'WebPage',
+      '@id': canonical + '#webpage',
+      url: canonical,
+      name: title,
+      description: desc,
+      isPartOf: { '@id': websiteId },
+      inLanguage: lang.htmlLang
+    }
+  ];
+
+  if (page === 'index' && ctx.sites && ctx.sites.length) {
+    const cats = ctx.categories || [];
+    graph.push({
+      '@type': 'ItemList',
+      '@id': `${SITE_URL}${lang.pathPrefix || ''}/#site-list`,
+      name: lang.brand,
+      description: desc,
+      numberOfItems: ctx.sites.length,
+      itemListOrder: 'https://schema.org/ItemListOrderAscending',
+      itemListElement: ctx.sites.map((s, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: s.title,
+        description: s.review || s.description || '',
+        url: s.url
+      }))
+    });
+    graph.push({
+      '@type': 'BreadcrumbList',
+      '@id': `${SITE_URL}${lang.pathPrefix || ''}/#breadcrumb`,
+      itemListElement: cats.map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: c.title,
+        item: `${SITE_URL}${lang.pathPrefix || ''}/#cat-${c.id}`
+      }))
+    });
+  }
+
+  // FAQ 页额外给 FAQPage 结构化数据 —— Google 会在搜索结果里直接展开问答，
+  // 也是广告审核判断「站点是否有实质内容」时的加分项
+  if (page === 'faq' && lang.pages && lang.pages.faq && Array.isArray(lang.pages.faq.items)) {
+    graph.push({
+      '@type': 'FAQPage',
+      '@id': canonical + '#faq',
+      inLanguage: lang.htmlLang,
+      mainEntity: lang.pages.faq.items.map(it => ({
+        '@type': 'Question',
+        name: it.q,
+        acceptedAnswer: { '@type': 'Answer', text: it.a }
+      }))
+    });
+  }
+
+  // 内容页补一层 BreadcrumbList
+  if (page !== 'index') {
+    graph.push({
+      '@type': 'BreadcrumbList',
+      '@id': canonical + '#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: lang.nav.home, item: `${SITE_URL}${lang.pathPrefix || ''}/` },
+        {
+          '@type': 'ListItem', position: 2,
+          name: ((lang.pages || {})[page] || {}).heading || '',
+          item: canonical
+        }
+      ]
+    });
+  }
+
+  tags.push(jsonLdScript({ '@context': 'https://schema.org', '@graph': graph }));
+  return tags.join('\n  ');
 }
 
 export default function prerenderPlugin() {
   let root = process.cwd();
-  let sites = [];
-  let categories = [];
+  let langs = [];
+  let sitesByLang = {};
+  let buildWarnings = [];
 
   return {
     name: 'moyu-prerender',
@@ -64,124 +177,103 @@ export default function prerenderPlugin() {
     },
 
     buildStart() {
-      sites = readJson(root, 'src/data/sites.json');
-      categories = readJson(root, 'src/data/categories.json')
-        .slice()
-        .sort((a, b) => a.sort - b.sort);
-      if (!Array.isArray(sites) || !sites.length) {
-        this.warn('sites.json 为空，静态渲染会被跳过');
+      // 1) 语言包（顺序由 LANGUAGE_ORDER 决定）
+      langs = LANGUAGE_ORDER.map(code => {
+        try {
+          return readJson(root, `src/i18n/${code}.json`);
+        } catch (e) {
+          buildWarnings.push(`读不到语言包 src/i18n/${code}.json，已跳过该语言`);
+          return null;
+        }
+      }).filter(Boolean);
+
+      if (!langs.length) throw new Error('没有任何可用语言包，构建中止');
+
+      // 2) 各语言的站点数据
+      sitesByLang = {};
+      for (const l of langs) {
+        try {
+          const arr = readJson(root, `src/data/sites/${l.code}.json`);
+          sitesByLang[l.code] = Array.isArray(arr) ? arr : [];
+          if (!sitesByLang[l.code].length) buildWarnings.push(`站点数据 ${l.code}.json 为空`);
+        } catch (e) {
+          sitesByLang[l.code] = [];
+          buildWarnings.push(`读不到站点数据 src/data/sites/${l.code}.json`);
+        }
       }
     },
 
-    transformIndexHtml: {
-      order: 'post',
-      handler(html, ctx) {
-        const filename = (ctx.filename || ctx.path || '').split(/[\\/]/).pop();
-        const page = PAGES.find(p => p.file === filename) || { path: '/' };
-        const today = new Date().toISOString().slice(0, 10);
+    generateBundle(options, bundle) {
+      for (const w of buildWarnings) this.warn(w);
 
-        // ---- 全站通用占位符：站点数量 / 更新日期 ----
-        html = replaceMarker(html, 'count', sites.length ? String(sites.length) : '0');
-        html = replaceMarker(html, 'date', today);
-
-        // ---- 站点列表静态渲染（仅首页） ----
-        if (filename === 'index.html' && sites.length) {
-          html = replaceMarker(html, 'quick-cats', heroCategoriesHtml(categories));
-          html = replaceMarker(html, 'featured', featuredGridHtml(sites, { query: '', favorites: new Set() }));
-          html = replaceMarker(html, 'hot', hotListHtml(sites));
-          html = replaceMarker(html, 'categories', allCategoriesHtml(categories, sites, { query: '', favorites: new Set() }));
-          html = replaceMarker(html, 'guide', siteGuideHtml(categories, sites));
-        }
-
-        // ---- head 注入：canonical / OG / JSON-LD ----
-        const { title, desc } = extractMeta(html);
-        const canonical = SITE_URL + page.path;
-
-        const isHome = filename === 'index.html';
-        const graph = [
-          {
-            '@type': 'WebSite',
-            '@id': SITE_URL + '/#website',
-            url: SITE_URL + '/',
-            name: SITE_NAME,
-            alternateName: 'MoyuNav',
-            description: desc,
-            inLanguage: 'zh-CN'
-          },
-          {
-            '@type': 'WebPage',
-            '@id': canonical + '#webpage',
-            url: canonical,
-            name: title,
-            description: desc,
-            isPartOf: { '@id': SITE_URL + '/#website' },
-            inLanguage: 'zh-CN'
-          }
-        ];
-
-        if (isHome && sites.length) {
-          graph.push({
-            '@type': 'ItemList',
-            '@id': SITE_URL + '/#site-list',
-            name: '摸鱼网站合集',
-            description: `收录 ${sites.length} 个可直接打开的摸鱼网站，覆盖小游戏、沙雕抽象、伪装办公、实用工具、热榜资讯、影音娱乐、治愈放松、冷知识八个分类。`,
-            numberOfItems: sites.length,
-            itemListOrder: 'https://schema.org/ItemListOrderAscending',
-            itemListElement: sites.map((s, i) => ({
-              '@type': 'ListItem',
-              position: i + 1,
-              name: s.title,
-              description: s.review || s.description || '',
-              url: s.url
-            }))
-          });
-          // 面包屑（首页 + 八个分类锚点），让分类页内导航也能被理解
-          graph.push({
-            '@type': 'BreadcrumbList',
-            '@id': SITE_URL + '/#breadcrumb',
-            itemListElement: categories.map((c, i) => ({
-              '@type': 'ListItem',
-              position: i + 1,
-              name: c.title,
-              item: SITE_URL + '/#cat-' + c.id
-            }))
-          });
-        }
-
-        const headTags = [
-          `<link rel="canonical" href="${canonical}" />`,
-          `<meta property="og:type" content="website" />`,
-          `<meta property="og:site_name" content="${SITE_NAME}" />`,
-          `<meta property="og:locale" content="zh_CN" />`,
-          `<meta property="og:title" content="${title.replace(/"/g, '&quot;')}" />`,
-          `<meta property="og:description" content="${desc.replace(/"/g, '&quot;')}" />`,
-          `<meta property="og:url" content="${canonical}" />`,
-          `<meta name="twitter:card" content="summary" />`,
-          `<meta name="twitter:title" content="${title.replace(/"/g, '&quot;')}" />`,
-          `<meta name="twitter:description" content="${desc.replace(/"/g, '&quot;')}" />`,
-          jsonLdScript({ '@context': 'https://schema.org', '@graph': graph })
-        ].join('\n  ');
-
-        html = replaceMarker(html, 'head', headTags);
-
-        // 首页额外注入站长可见的统计注释（不影响渲染）
-        if (isHome && sites.length) {
-          html = html.replace('</body>',
-            `<!-- 构建期静态渲染：${sites.length} 个站点 / ${categories.length} 个分类，` +
-            `爬虫无需执行 JS 即可读取全部内容 -->\n</body>`);
-        }
-        return html;
-      }
-    },
-
-    generateBundle() {
       const today = new Date().toISOString().slice(0, 10);
 
+      // ---- 找出 Vite 生成的带 hash 的资源路径 ----
+      const chunks = Object.values(bundle).filter(c => c.type === 'chunk');
+      const mainChunk = chunks.find(c => c.name === 'main') || chunks.find(c => c.isEntry);
+      const cssAsset = Object.values(bundle).find(a => a.type === 'asset' && a.fileName.endsWith('.css'));
+      const assets = {
+        cssHref: cssAsset ? '/' + cssAsset.fileName : '/assets/style.css',
+        jsSrc: mainChunk ? '/' + mainChunk.fileName : '/assets/main.js'
+      };
+
+      // 切换器需要的语言元数据（不含正文，保持轻量）
+      const langsMeta = langs.map(l => ({
+        code: l.code,
+        hreflang: l.hreflang,
+        ogLocale: l.ogLocale,
+        nativeName: l.nativeName,
+        flag: l.flag,
+        pathPrefix: l.pathPrefix || ''
+      }));
+
+      // ================= 1. 各语言首页 =================
+      const homeFile = (l) => (l.code === DEFAULT_LANG ? 'index.html' : `${l.code}/index.html`);
+
+      for (const l of langs) {
+        const sites = sitesByLang[l.code] || [];
+        const categories = buildCategories(l);
+
+        let html = homePageHtml(l, langsMeta, sites, categories, {
+          ...assets,
+          seoHead: seoHead(l, 'index', langsMeta, { sites, categories })
+        });
+
+        // 给站长看的构建信息注释
+        html = html.replace('</body>',
+          `<!-- 构建期静态渲染：${l.code} · ${sites.length} 个站点 / ${categories.length} 个分类，` +
+          `爬虫无需执行 JS 即可读取全部内容 -->\n</body>`);
+
+        // 默认语言的首页直接覆盖 Vite 输出的 index.html，其余用 emitFile
+        if (l.code === DEFAULT_LANG && bundle['index.html']) {
+          bundle['index.html'].source = html;
+        } else {
+          this.emitFile({ type: 'asset', fileName: homeFile(l), source: html });
+        }
+      }
+
+      // ================= 2. 各语言内容页 =================
+      for (const l of langs) {
+        for (const cp of CONTENT_PAGES) {
+          let html = contentPageHtml(cp.kind, l, langsMeta, {
+            cssHref: assets.cssHref,
+            today
+          });
+          html = html.replace('<!-- @prerender:head -->',
+            seoHead(l, cp.kind, langsMeta, { sites: sitesByLang[l.code] || [] }));
+
+          const prefix = l.pathPrefix || '';   // '' 或 '/zh'
+          const file = prefix ? `${prefix.slice(1)}/${cp.kind}.html` : `${cp.kind}.html`;
+          this.emitFile({ type: 'asset', fileName: file, source: html });
+        }
+      }
+
+      // ================= 3. robots.txt =================
       this.emitFile({
         type: 'asset',
         fileName: 'robots.txt',
         source: [
-          '# 摸鱼乐园 robots.txt',
+          '# Moyu Paradise / 摸鱼乐园',
           'User-agent: *',
           'Allow: /',
           '',
@@ -193,30 +285,53 @@ export default function prerenderPlugin() {
         ].join('\n')
       });
 
-      const urls = PAGES.map(p => {
-        const loc = SITE_URL + p.path;
-        const isHome = p.file === 'index.html';
-        return [
-          '  <url>',
-          `    <loc>${loc}</loc>`,
-          `    <lastmod>${today}</lastmod>`,
-          `    <changefreq>${p.changefreq}</changefreq>`,
-          `    <priority>${p.priority}</priority>`,
-          isHome && sites.length
-            ? `    <!-- 本站当前收录 ${sites.length} 个站点，共 ${categories.length} 个分类 -->`
-            : null,
-          '  </url>'
-        ].filter(Boolean).join('\n');
-      }).join('\n');
+      // ================= 4. sitemap.xml（带 hreflang 注解） =================
+      const allPages = [
+        { page: 'index', priority: '1.0', changefreq: 'daily' },
+        ...CONTENT_PAGES
+      ];
+
+      const entries = [];
+      for (const p of allPages) {
+        for (const l of langs) {
+          const loc = pageUrl(l, p.page);
+          const links = langs.map(o =>
+            `    <xhtml:link rel="alternate" hreflang="${o.hreflang}" href="${pageUrl(o, p.page)}"/>`).join('\n');
+          const dl = langs.find(x => x.code === DEFAULT_LANG) || langs[0];
+          entries.push([
+            '  <url>',
+            `    <loc>${loc}</loc>`,
+            `    <lastmod>${today}</lastmod>`,
+            `    <changefreq>${p.changefreq}</changefreq>`,
+            `    <priority>${p.priority}</priority>`,
+            links,
+            `    <xhtml:link rel="alternate" hreflang="x-default" href="${pageUrl(dl, p.page)}"/>`,
+            '  </url>'
+          ].join('\n'));
+        }
+      }
 
       this.emitFile({
         type: 'asset',
         fileName: 'sitemap.xml',
         source: [
           '<?xml version="1.0" encoding="UTF-8"?>',
-          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-          urls,
+          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+          '        xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+          entries.join('\n'),
           '</urlset>',
+          ''
+        ].join('\n')
+      });
+
+      // ================= 5. ads.txt（AdSense 通过审核后填入 pub-id 即可） =================
+      this.emitFile({
+        type: 'asset',
+        fileName: 'ads.txt',
+        source: [
+          '# AdSense / 广告联盟授权文件',
+          '# 申请通过后，把下面这行的 pub-XXXXXXXXXXXXXXXX 换成你的发布商 ID 并取消注释：',
+          '# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0',
           ''
         ].join('\n')
       });

@@ -1,0 +1,331 @@
+{
+  "code": "en",
+  "htmlLang": "en",
+  "hreflang": "en",
+  "ogLocale": "en_US",
+  "nativeName": "English",
+  "flag": "🇬🇧",
+  "dir": "ltr",
+  "pathPrefix": "",
+  "brand": "Moyu Paradise",
+  "brandTagline": "The art of slacking off at work",
+
+  "meta": {
+    "home": {
+      "title": "Moyu Paradise · 100 Sites to Kill Time at Work (Games, Memes & Look-Busy Tools)",
+      "description": "A hand-picked directory of 100 sites you can open at work: browser games, weird corners of the internet, look-busy decoys, genuinely useful tools, trending feeds, background noise and things worth learning. Every entry comes with an honest note on when to use it and what to watch out for.",
+      "keywords": "procrastination sites, things to do when bored at work, fun websites, browser games, kill time, white noise, look busy, time wasters",
+      "h1Template": "Moyu Paradise · {count} sites to kill time at work",
+      "heroStat": "Open {count} hand-checked sites — from trending feeds and browser games to decoy screens and rain sounds. Slacking off, organised.",
+      "slogans": [
+        "Moyu Paradise · {count} sites to kill time at work",
+        "One tab. Endless ways to slack off.",
+        "Your five-minute break starts here.",
+        "Look busy. Feel relaxed.",
+        "{count} sites your boss doesn't need to know about"
+      ],
+      "ogImageAlt": "Moyu Paradise — a directory of sites to kill time at work"
+    },
+    "about": {
+      "title": "About Moyu Paradise — who runs this list and how sites get picked",
+      "description": "How Moyu Paradise is put together: who writes the reviews, what gets a site rejected, where our information comes from, and how to get a listing corrected or removed."
+    },
+    "privacy": {
+      "title": "Privacy Policy — Moyu Paradise",
+      "description": "What Moyu Paradise stores, how cookies and local storage are used, what third-party advertising and analytics services do, and how to opt out of personalised ads."
+    },
+    "contact": {
+      "title": "Contact Moyu Paradise — suggest a site, report a problem",
+      "description": "Reach the editor of Moyu Paradise to suggest a site, report a broken link, request a correction or removal, or ask about advertising."
+    },
+    "faq": {
+      "title": "FAQ — Moyu Paradise",
+      "description": "Answers to the usual questions: is it free, do I need an account, how sites are chosen, why some sites don't load, and whether it's safe to use at work."
+    }
+  },
+
+  "nav": {
+    "all": "All",
+    "searchPlaceholder": "Search sites...",
+    "searchTip": "Press / to focus the search box",
+    "searchBigPlaceholder": "Try: games, memes, rain, memes, keyboard...",
+    "submitBtn": "Suggest a site",
+    "randomBtn": "Random site",
+    "randomTip": "Press R for a random site",
+    "escTip": "Press Esc to close overlays",
+    "home": "Home",
+    "languageLabel": "Language"
+  },
+
+  "card": {
+    "open": "Open site ↗",
+    "favAdd": "Save to favourites",
+    "favRemove": "Remove from favourites",
+    "newBadge": "NEW"
+  },
+
+  "categories": {
+    "games": { "title": "Browser Games", "navTitle": "Games", "desc": "Two-minute rounds that run in a tab" },
+    "weird": { "title": "Weird Internet", "navTitle": "Weird", "desc": "The strange corners worth a look" },
+    "cover": { "title": "Look Busy", "navTitle": "Look Busy", "desc": "Screens that pass as work" },
+    "tools": { "title": "Actual Tools", "navTitle": "Tools", "desc": "Get something done while you're here" },
+    "trending": { "title": "Trending & News", "navTitle": "Trending", "desc": "What the internet is arguing about today" },
+    "media": { "title": "Watch & Listen", "navTitle": "Watch", "desc": "Video, music and live radio" },
+    "relax": { "title": "Calm Down", "navTitle": "Calm", "desc": "Noise, music and slow things" },
+    "learned": { "title": "Learn Something", "navTitle": "Learn", "desc": "Ten minutes that leave you smarter" }
+  },
+
+  "sections": {
+    "featuredTitle": "Editor's Picks",
+    "featuredNote": "Tried them myself, none of them are duds",
+    "categoriesTitle": "All sites",
+    "guideTitle": "Site Guide · every entry explained",
+    "guideIntro": "Each site below gets a paragraph: what it actually is, the moment it's the right thing to open, and the catch worth knowing first. Reading this is faster than opening them one by one.",
+    "hotTitle": "Trending This Week",
+    "hotBadge": "TOP 10",
+    "tipsTitle": "Quick Tips",
+    "adLabel": "Ad",
+    "adSponsored": "Sponsored",
+    "adSlotTop": "Top banner · ad-top-banner · 728×90 or responsive",
+    "adSlotBottom": "Bottom · ad-bottom · Auto Ads or responsive",
+    "adSlotSidebar": "Sidebar · ad-sidebar-{n} · 300×250",
+    "emptyTitle": "Nothing matched that search",
+    "emptyButton": "Show everything",
+    "backToAll": "Back to all sites"
+  },
+
+  "tips": [
+    "Press <kbd>/</kbd> to jump to the search box",
+    "Press <kbd>R</kbd> to open a random site",
+    "Press <kbd>Esc</kbd> to close any overlay",
+    "Click <span class=\"text-coral-500\">★</span> to save a favourite"
+  ],
+
+  "submit": {
+    "title": "Suggest a site",
+    "subtitle": "Got one we've missed? Send it over — every submission is looked at by a human before it goes live.",
+    "fieldTitle": "Site name",
+    "fieldCategory": "Category",
+    "fieldCategoryPlaceholder": "Pick a category",
+    "fieldUrl": "Site URL",
+    "fieldDesc": "One-line description",
+    "fieldDescPlaceholder": "e.g. Paste an image, get the background removed in five seconds",
+    "submitBtn": "Submit for review",
+    "note": "Submitting opens a GitHub issue with your details filled in (a free GitHub account is needed). The editor reads it directly.",
+    "hintTitle": "One step left",
+    "hintBody": [
+      "① GitHub opened in a new tab with the form pre-filled.",
+      "② Click the green <span class=\"font-medium text-ink-800\">Submit new issue</span> button — that's it."
+    ],
+    "hintLink": "Didn't open? Click here instead →",
+    "toastOpened": "Opening GitHub — click \"Submit new issue\" to finish",
+    "toastBlocked": "The pop-up was blocked — use the link below",
+    "toastNone": "Nothing to send yet — fill in the required fields"
+  },
+
+  "footer": {
+    "friendsTitle": "Friends of the site",
+    "copyright": "© 2026 Moyu Paradise · a curated directory of things to do when work is slow",
+    "disclosure": "Independently run. Display advertising may be introduced in future to support running costs; advertising is kept separate from editorial selection.",
+    "links": {
+      "submit": "Suggest a site",
+      "about": "About",
+      "privacy": "Privacy",
+      "faq": "FAQ",
+      "contact": "Contact"
+    }
+  },
+
+  "toast": {
+    "roll": "Off you go: {title}",
+    "searchFocus": "Search box focused",
+    "favOn": "Saved to favourites",
+    "favOff": "Removed from favourites",
+    "loadFail": "Some interactive features failed to load — refresh to try again."
+  },
+
+  "langSwitch": {
+    "label": "Language",
+    "title": "Choose a language",
+    "autoHint": "Picked from your browser settings. You can change it any time — your choice is remembered on this device.",
+    "backToEnglish": "Read this site in English"
+  },
+
+  "categoryFilter": {
+    "showAll": "Show all categories"
+  },
+
+  "pages": {
+    "about": {
+      "heading": "About Moyu Paradise",
+      "intro": "Moyu (摸鱼) is a Chinese word that literally means \"feeling for fish\" — slipping a bit of your own time out of the working day. Water-cooler talk turned into a noun. This site is a directory of the places people actually go when they do it.",
+      "blocks": [
+        {
+          "h": "What this site is",
+          "p": [
+            "Moyu Paradise is a hand-maintained list of websites you can open in a browser tab without installing anything. It started as someone's personal bookmarks and grew into a proper directory: every entry gets its own category, its own short description, and a longer note explaining when it is worth opening.",
+            "There is no app, no account, no newsletter wall. Click a card, the site opens in a new tab, and you are done with us until next time."
+          ]
+        },
+        {
+          "h": "How sites get on the list",
+          "p": [
+            "Four rules, applied to every single entry:",
+            "1. It has to actually work. Every link is opened and checked; anything that returns an error, redirects to a parking page or demands an install is dropped rather than left in as a dead row.",
+            "2. It has to be usable in a browser tab. Tools that need a desktop client, a phone app or a paid plan to do anything at all are out.",
+            "3. It has to be safe enough to open. No sites that push drive-by downloads, no sites that exist only to farm ad impressions, and no adult content.",
+            "4. It has to be worth the click. \"There is already a site for that\" is not enough — the entry should be the one you would actually recommend to a colleague."
+          ]
+        },
+        {
+          "h": "Who writes the reviews",
+          "p": [
+            "Every note on this site is written by the editor, based on actually using the site. The reviews are deliberately opinionated: they say when something is the right choice, and they say when it is not — a tool with a two-file-per-day free limit gets that written down rather than quietly omitted.",
+            "This is a small independent site rather than an aggregator of other people's descriptions. If a note reads as generic filler, treat it as a mistake worth reporting."
+          ]
+        },
+        {
+          "h": "Editorial independence",
+          "p": [
+            "Listing a site does not cost anything and nobody can pay to be included or to move up a category. Display advertising, when present, is served programmatically and is kept visually separate from the editorial listing; an advertiser has no influence over what gets recommended.",
+            "If a commercial relationship ever affects a recommendation, it will be labelled as such on the card itself."
+          ]
+        },
+        {
+          "h": "Corrections, removals and takedowns",
+          "p": [
+            "Sites change hands, add paywalls, or shut down without notice. If a link is broken, has been taken over by someone else, or has started behaving badly, report it through the contact page and it will be checked and either fixed or removed.",
+            "Owners who want their site removed from this directory can request it the same way. No reason needs to be given, and the removal happens without argument — the entry is gone rather than hidden."
+          ]
+        }
+      ]
+    },
+
+    "privacy": {
+      "heading": "Privacy Policy",
+      "updatedLabel": "Last updated",
+      "intro": "This page explains what happens to your data when you use this site. The short version: we do not ask you for personal information, and the only things stored are a couple of preferences in your own browser.",
+      "blocks": [
+        {
+          "h": "What we collect directly",
+          "p": [
+            "Nothing. There is no account system, no registration form and no contact database. The \"suggest a site\" form does not post to this site's servers — it opens a pre-filled GitHub issue in your own browser, under your own GitHub account, and the submission is then governed by GitHub's privacy policy rather than ours.",
+            "We therefore hold no names, email addresses or usage profiles of our own."
+          ]
+        },
+        {
+          "h": "Cookies and browser storage",
+          "p": [
+            "This site does not set first-party tracking cookies. Two kinds of data are kept in your browser's own storage, and both stay on your device:",
+            "• Your favourites list, so that the sites you star are still starred the next time you visit.",
+            "• Your language preference, so that the site does not keep redirecting you to a language you did not pick.",
+            "You can clear both at any time through your browser's \"clear site data\" option, and the site will simply behave like a first visit again."
+          ]
+        },
+        {
+          "h": "Third-party advertising",
+          "p": [
+            "This site is free to use and is supported by display advertising. Third-party vendors, including Google, may use cookies to serve ads based on your prior visits to this and other websites.",
+            "Google's use of advertising cookies enables it and its partners to serve ads to you based on your visit to this site and/or other sites on the internet. You can opt out of personalised advertising by visiting Google's Ads Settings at <a class=\"text-mint-600 underline\" href=\"https://adssettings.google.com\" target=\"_blank\" rel=\"noopener nofollow\">adssettings.google.com</a>, or opt out of third-party vendor cookies for personalised advertising at <a class=\"text-mint-600 underline\" href=\"https://www.aboutads.info\" target=\"_blank\" rel=\"noopener nofollow\">aboutads.info</a>.",
+            "Users in the European Economic Area, the United Kingdom and Switzerland are shown a consent prompt before any non-essential cookies are used, and may withdraw consent at any time.",
+            "Advertisements are served programmatically and are not selected by this site's editor. The appearance of an advertisement here is not an endorsement of the advertised product."
+          ]
+        },
+        {
+          "h": "Analytics",
+          "p": [
+            "Aggregate, privacy-respecting analytics may be used to understand which pages are visited and roughly how many people visit. This is used to decide which categories are worth expanding. Where analytics are used, they are configured to avoid storing full IP addresses and to avoid building cross-site profiles of individual visitors."
+          ]
+        },
+        {
+          "h": "Third-party links",
+          "p": [
+            "This site is a directory, so almost every click takes you somewhere else. Those sites have their own privacy policies and their own cookies, and once you are on them this policy no longer applies. Links are opened in a new tab and marked <code class=\"text-xs bg-cream-100 px-1 py-0.5 rounded\">rel=\"noopener noreferrer nofollow\"</code>, which also prevents the destination site from learning where you came from through the referrer header."
+          ]
+        },
+        {
+          "h": "Data security",
+          "p": [
+            "Because no personal data is collected, there is no database of user information to breach. The security question worth asking about a directory site is instead whether it is safe to click through to the destinations — which is why every listing is checked and third-party favicon or widget services are deliberately not loaded from this site."
+          ]
+        },
+        {
+          "h": "Children",
+          "p": [
+            "This site is aimed at adults who are killing time at work and is not directed at children. No personal information is knowingly collected from anyone, children included."
+          ]
+        },
+        {
+          "h": "Changes to this policy",
+          "p": [
+            "If advertising, analytics or the way the site works changes in a way that affects this policy, this page will be updated and its \"last updated\" date changed. Continued use of the site after an update means you accept the revised policy."
+          ]
+        }
+      ]
+    },
+
+    "contact": {
+      "heading": "Contact",
+      "intro": "One person reads everything sent here. The GitHub issue tracker is the fastest route and keeps the whole conversation in one place.",
+      "blocks": [
+        {
+          "h": "Suggest a site",
+          "p": [
+            "The quickest route is the submission form on the home page: it opens a pre-filled GitHub issue with the name, URL, category and description already laid out, and a free GitHub account is all that is needed to send it. Submissions are reviewed by hand, so a short note about why the site is worth listing helps more than a marketing sentence."
+          ]
+        },
+        {
+          "h": "Report a problem",
+          "p": [
+            "Broken link, site taken over by someone else, a paywall that appeared, a page that started serving something unpleasant — open an issue at the tracker and it will be checked and either corrected or removed. The same route handles correction requests from a site's owner and requests to be removed from the directory; the latter are actioned without asking for a reason."
+          ]
+        },
+        {
+          "h": "Advertising and other enquiries",
+          "p": [
+            "Questions about advertising, partnerships or anything else: open an issue using the same tracker and it will be answered there. A plain email address is deliberately not published on this page, because public directories of contact addresses attract far more automated spam than useful mail — the tracker keeps everything readable and searchable."
+          ]
+        }
+      ]
+    },
+
+    "faq": {
+      "heading": "Frequently Asked Questions",
+      "intro": "The questions that come up most often.",
+      "items": [
+        {
+          "q": "Is Moyu Paradise free?",
+          "a": "Yes, entirely. There is no paid tier, no premium categories and no account to create. The site is supported by display advertising, which is why you may see ads between listings."
+        },
+        {
+          "q": "Do I need to install anything or sign up?",
+          "a": "No. Every listing is a website that runs in a normal browser tab. You never need to create an account with us — the only optional sign-up is a free GitHub account, and only if you want to suggest a site."
+        },
+        {
+          "q": "How are sites chosen?",
+          "a": "By hand, and by one rule above all: it has to actually work. Every link is opened and checked before it goes live, and anything that is dead, redirects to a parking page, or needs a desktop app to do anything useful is left out. Beyond that, entries are chosen for being worth the click rather than merely existing — a site that duplicates something already listed only gets in if it does the job better."
+        },
+        {
+          "q": "Why do some sites in the list not open for me?",
+          "a": "The usual cause is geography or a corporate network rather than a dead link. Some sites are blocked or throttled from certain countries, and plenty of workplace networks block anything categorised as games or entertainment. Links are re-checked periodically, but if one is genuinely gone, reporting it gets it removed rather than left there."
+        },
+        {
+          "q": "Is it safe to open these sites at work?",
+          "a": "Every listing is checked for the obvious hazards: no drive-by downloads, no sites that exist purely to farm ad impressions, no adult content. That said, this is a directory of things to do instead of working, so what is safe for your network and your manager is a judgement only you can make — which is exactly why the look-busy category exists."
+        },
+        {
+          "q": "Is my browsing tracked here?",
+          "a": "This site sets no first-party tracking cookies and asks you for no personal information. Your favourites and language choice are stored in your own browser and never sent anywhere. Third-party advertising and analytics providers may set their own cookies; the privacy policy explains exactly how to opt out."
+        },
+        {
+          "q": "Can I suggest a site, or get one removed?",
+          "a": "Both. Suggestions go through the form on the home page and are reviewed one by one. Owners who want their site removed can ask through the contact page and it will be removed without argument."
+        },
+        {
+          "q": "What does \"moyu\" mean?",
+          "a": "\"Moyu\" (摸鱼) is Chinese for sneaking a bit of personal time out of the working day — literally \"feeling for fish\", from the idea of staying busy-looking at the surface while doing something else entirely underneath. It is a much nicer word than \"procrastinating\", which is roughly why this site is named after it."
+        }
+      ]
+    }
+  }
+}
