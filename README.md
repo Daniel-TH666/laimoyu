@@ -12,24 +12,30 @@
 
 根路径是**英语**（`hreflang` 里的 `x-default`），其余语言各有自己的目录：
 
-| 语言 | 路径 | 站点数 | 状态 |
-|---|---|---|---|
-| 🇬🇧 English | `/` | 100 | ✅ 已上线 |
-| 🇨🇳 简体中文 | `/zh/` | 95 | ✅ 已上线 |
-| 🇪🇸 Español | `/es/` | — | 待铺（架构已就绪，加两个 JSON 即可） |
-| 🇫🇷 Français | `/fr/` | — | 同上 |
-| 🇯🇵 日本語 | `/ja/` | — | 同上 |
-| 🇰🇷 한국어 | `/ko/` | — | 同上 |
+| 语言 | 路径 | 站点数 | 自托管图标 | 状态 |
+|---|---|---|---|---|
+| 🇬🇧 English | `/` | 100 | 75 | ✅ 已上线 |
+| 🇨🇳 简体中文 | `/zh/` | 95 | 76 | ✅ 已上线 |
+| 🇪🇸 Español | `/es/` | 90 | 54 | ✅ 已上线 |
+| 🇫🇷 Français | `/fr/` | 89 | 67 | ✅ 已上线 |
+| 🇯🇵 日本語 | `/ja/` | 90 | 60 | ✅ 已上线 |
+| 🇰🇷 한국어 | `/ko/` | 89 | 60 | ✅ 已上线 |
 
-每个语言版本都有自己独立的内容页：`about.html` / `faq.html` / `contact.html` / `privacy.html`。
+站点素材合计 **453 条**。**每个语言区是独立选题 + 该语言的原创点评，不是翻译**：
+西语版收 Marca / Menéame / Minijuegos，法语版收 JeuxVideo.com / SensCritique / Topito，
+日语版收 ニコニコ動画 / はてなブックマーク / pixiv，韩语版收 디시인사이드 / 클리앙 / 뽐뿌。
+
+每个语言版本都有自己独立的内容页：`about.html` / `faq.html` / `contact.html` / `privacy.html`
+（共 6 × 4 = 24 个内容页）。
 
 **语言选择逻辑**（访问根路径 `/` 时）：
 
 1. 用户在本站手动选过语言 → 完全尊重这个选择，永不自动跳转
 2. 没选过 → 按浏览器语言匹配一次；匹配得到非英语语言就跳到对应目录
-3. 浏览器语言没被支持（比如法语还没做）→ 留在默认的英语主页
+   （`zh-TW` → `zh`、`es-MX` → `es`、`fr-CA` → `fr`，前缀匹配）
+3. 浏览器语言没被支持（比如 `de-DE`）→ 留在默认的英语主页
 4. **爬虫不会被执行跳转**：Googlebot 的 `Accept-Language` 是 en-US，拿到的是英语主页；
-   同时 `/zh/` 有完整 hreflang 声明也在 sitemap 里，两条路径都能被正常索引
+   同时其余 5 个语言目录都有完整 hreflang 声明也在 sitemap 里，6 条路径都能被正常索引
 
 手动切换用页头右上角（和页脚）的语言切换器，纯 `<details>` 实现，**禁用 JS 也能用**。
 
@@ -68,6 +74,15 @@ npm run dev
 > `{count}`、`{title}`、`{n}` 是模板占位符，会在渲染时替换掉。
 > `tips` 和 `hintBody` 里的字符串可以带 HTML 标签（`<kbd>`、`<span>`），本文件原文不转义 ——
 > 这是安全的，因为它们来自仓库里的语言包，不是外部输入。
+>
+> ⚠️ **`navTitle` 不能省。** 顶部 tab 一行要排 8 个分类，字母语言用完整名
+> （`Browser Games` / `Trending & News`）会直接溢出容器被裁掉。`navTitle` 建议 ≤10 个字符。
+> `buildCategories()` 有 `c.navTitle || c.title` 兜底，但兜底出来的布局是坏的。
+>
+> ⚠️ **key 结构必须和 `en.json` 完全一致**（递归比对 key 路径集合）。
+> 少一个 key 不会报错，只会静默回落到英文兜底 —— 比如漏了
+> `submit.issueHeading` / `submit.issueTitlePrefix`，该语言的推荐 Issue 标题就会变成英文。
+> 用 `python _diag/audit-data.py` 可以一键查出这类缺漏。
 
 **② 建站点数据 `src/data/sites/<code>.json`**
 
@@ -245,13 +260,21 @@ laimoyu/
     ├── i18n/
     │   ├── languages.js # 语言注册表（LANGUAGE_ORDER / 路径推导 / 浏览器语言匹配）
     │   ├── en.json      # ← 语言包（参照模板）
-    │   └── zh.json
+    │   ├── zh.json
+    │   ├── es.json
+    │   ├── fr.json
+    │   ├── ja.json
+    │   └── ko.json
     ├── lib/
     │   └── render.js    # 渲染模板（浏览器与构建期共用，改这里就够）
     └── data/
         └── sites/
             ├── en.json  # ← 网站数据（每种语言一份）
-            └── zh.json
+            ├── zh.json
+            ├── es.json
+            ├── fr.json
+            ├── ja.json
+            └── ko.json
 ```
 
 ### 改代码之前先看这三条
@@ -278,12 +301,12 @@ laimoyu/
 
 | 能力 | 实现位置 | 说明 |
 |---|---|---|
-| **全站静态渲染** | `build/prerender.js` + `build/home-template.js` | 每个语言版本的 100/95 个站点、8 个分类、全部点评都直接写进 HTML。爬虫不执行 JS 也能读全 |
+| **全站静态渲染** | `build/prerender.js` + `build/home-template.js` | 每个语言版本的站点、8 个分类、全部点评都直接写进 HTML（单页 450~520 KB）。爬虫不执行 JS 也能读全 |
 | **内容页** | `src/lib/render.js` 的 `contentPageHtml()` | 每语言 4 个独立页面（about / faq / contact / privacy），零脚本，纯 HTML |
-| **hreflang 三件套** | `build/prerender.js` | `<link rel=alternate hreflang>`（含 `x-default` 指向英语根路径）+ sitemap 里的 `xhtml:link` + 自指 canonical |
-| **FAQPage 结构化数据** | `build/prerender.js` | `faq.html` 里每条问答都进 JSON-LD，Google 搜索结果可直接展开 |
+| **hreflang 三件套** | `build/prerender.js` | `<link rel=alternate hreflang>`（6 语言 + `x-default` 指向英语根路径）+ sitemap 里的 `xhtml:link` + 自指 canonical |
+| **FAQPage 结构化数据** | `build/prerender.js` | 每个语言的 `faq.html` 里每条问答都进 JSON-LD，Google 搜索结果可直接展开 |
 | **JSON-LD** | 构建期注入 | `WebSite` + `WebPage` + `ItemList`（全部站点）+ `BreadcrumbList` + `FAQPage` |
-| **sitemap.xml** | 构建期生成 | 2 语言 × 5 页面 = 10 条，每条带全套 hreflang 注解 |
+| **sitemap.xml** | 构建期生成 | 6 语言 × 5 页面 = **30 条**，每条带全套 hreflang 注解 |
 | **robots.txt** | 构建期生成 | 允许抓取全站，屏蔽 `/bookmarks.html` |
 | **ads.txt** | 构建期生成 | 现在是注释模板；广告审核通过后把 `pub-XXXXXXXXXXXXXXXX` 换成真实发布商 ID 并取消注释 |
 
@@ -294,18 +317,35 @@ laimoyu/
 
 ### 验收脚本
 
-改完前台结构或 SEO 相关代码，跑这两个再推：
+改完前台结构、语言包或 SEO 相关代码，按顺序跑这四个：
 
 ```bash
-# ① 纯静态检查：产物结构、hreflang、canonical、sitemap、点评是否真的在 HTML 里
-python _diag/verify-dist.py          # 期望 38/38
+# 有 python 的环境直接用；本机 bash 退化（ls/git 都 command not found）时改用解释器绝对路径
+PY=python
 
-# ② 浏览器行为检查（需要 Chrome）：禁用 JS 的爬虫视角 + 语言自动匹配 + 交互不回归
-node _diag/check-i18n.mjs            # 期望 43/43，JS 错误数 0
+# ① 数据审计：条数 / 字段 / 分类配比 / review 长度 / 语言包 key 一致性 / 语言纯度
+$PY _diag/audit-data.py              # 期望 120/120
+
+# ② 静态产物检查：hreflang、canonical、sitemap、点评是否真的在 HTML 里
+$PY _diag/verify-dist.py             # 期望 96/96
+
+# ③ 浏览器行为检查（需要 Chrome，原生 CDP，不依赖 puppeteer）
+node _diag/check-i18n.mjs            # 期望 39/39，JS 错误数 0
+#    覆盖：11 种浏览器语言自动匹配 / 手动选择优先 / 切换器点击与记忆 /
+#          搜索-分类-收藏不回归 / Issue 字段键 ASCII / 禁 JS 爬虫视角 / 6 语言截图
+
+# ④ 线上核验（推完等 Actions 绿了再跑）
+$PY _diag/check-live.py              # 期望 73/73
 ```
 
-> 两个脚本都会把详细结果写进 `_diag/*.log`，并在 `_diag/` 下留几张截图方便肉眼核对。
-> `_diag/` 已在 `.gitignore` 里，不会进公开仓库。
+> `check-i18n.mjs` 会把 6 个语言的首页截图写到 `_diag/shot-6lang-*.png`，方便肉眼核对排版
+> （尤其是顶部 tab 有没有因为 `navTitle` 太长而溢出）。
+>
+> **两个排查用的小知识点**（踩过的坑）：
+> - 站点卡是 `<article class="site-card">`，标识在内部按钮的 `data-id` 上。**别直接数 `<article>`** ——
+>   每个分类区块里还塞了一张 `<article class="ad-native">` 广告位占位卡，会让计数每条 +1。
+> - 顶部 tab 是 `button.cat-tab[data-cat=...]`，而区块的 id 也叫 `cat-<x>`。
+>   用 `getElementById('cat-games').click()` 点到的是区块，不会有任何反应。
 
 ### 图标策略（自托管，不再依赖任何第三方 favicon 服务）
 
@@ -319,7 +359,7 @@ node _diag/check-i18n.mjs            # 期望 43/43，JS 错误数 0
   字母头像（站点首字 + 哈希色调的 data-uri SVG）
 - 同一灰色模板的通用占位图会被主动剔除，避免「看上去有图标其实是占位」
 
-**补图标的脚本**：`_diag/fetch-en-favicons.py`（英语区）。它会先读首页 HTML 里的
+**补图标的脚本**：`_diag/fetch-favicons.py <lang>`（语言代码，如 `ja`）。它会先读首页 HTML 里的
 `<link rel=icon>`，再退到 `/favicon.ico`、`/apple-touch-icon.png` 等约定路径，
 校验文件头确认真实格式后写入 `public/icons/sites/`，并回填 JSON 里的 `icon` 字段。
 
@@ -327,8 +367,14 @@ node _diag/check-i18n.mjs            # 期望 43/43，JS 错误数 0
 - 加 `--all` 会重抓全部
 - 网络不通的站点会失败并打印原因，不影响其它站点；失败的继续用字母头像兜底
 
-> 抓不到图标的常见原因不是站点挂了，而是本机网络/代理到不了（`URLError`）。
-> 换个网络环境重跑就行。
+> 抓不到图标的常见原因不是站点挂了，而是本机网络/代理到不了（`URLError`，
+> 或 `WinError 10054` = 站点反爬主动断开）。换个网络环境重跑就行。
+>
+> ⚠️ **不要再加任何第三方 favicon 服务的兜底**。抓不到就用字母头像，这是刻意的取舍：
+> 外网图标服务挂一次就是全站 100+ 处破图，自托管 + 兜底永远不会一起挂。
+
+**幂等重抓策略**：新语言铺完先跑一轮（首次通常 60~75% 成功率），
+隔一会儿再跑第二轮能把一部分「第一次超时」的补上 —— 实测西语 54、法语 67、日语 60、韩语 60。
 
 **加新站点时**（后台或直接编辑 JSON）：最好同时把图标放进 `public/icons/sites/`，
 并在数据里填 `"icon": "/icons/sites/<id>.<ext>"`。不放也行，会自动用字母头像。
@@ -341,8 +387,9 @@ node _diag/check-i18n.mjs            # 期望 43/43，JS 错误数 0
 4. 把那行贴到 `build/home-template.js` 里 `<head>` 的 `${seoHead}` 上方（标题下面），推送后回来点「验证」
 5. 验证通过后在左侧「站点地图」提交：`sitemap.xml`
 
-> 建议顺便再验证一次 `https://laimoyu.top/zh/`（用同一个标记即可），
-> 这样中英文两套页面的收录情况能分开看。
+> 建议顺便再验证 `https://laimoyu.top/zh/`、`/es/`、`/fr/`、`/ja/`、`/ko/`
+> （用同一个标记即可），这样 6 套页面的收录情况能分开看。
+> 不过 6 条路径之间已经有完整 hreflang 互相声明，不分开验证也不会影响收录。
 >
 > 也可以选「网域」验证（用 DNS TXT 记录），需要在 NameSilo 的 DNS 里加一条 TXT，
 > 好处是同时覆盖 `www` 等所有子域。两种都行，HTML 标记最简单。
@@ -359,13 +406,17 @@ npm run build       # 输出在 dist/
 
 ```
 dist/
-├── index.html         英语主页（~490 KB，gzip ~60 KB）
+├── index.html         英语主页（~496 KB，gzip ~60 KB）
 ├── about.html faq.html contact.html privacy.html      英语内容页
-├── zh/index.html      中文主页（~447 KB，gzip ~55 KB）
-├── zh/about.html ...  中文内容页
-├── bookmarks.html     后台
-├── assets/            带 hash 的 JS / CSS
-├── icons/sites/       自托管站点图标
+├── zh/index.html      中文主页（~407 KB，gzip ~55 KB）
+├── es/index.html      西语主页（~502 KB）
+├── fr/index.html      法语主页（~493 KB）
+├── ja/index.html      日语主页（~425 KB）
+├── ko/index.html      韩语主页（~415 KB）
+├── <lang>/*.html      每种语言的 4 个内容页
+├── bookmarks.html     后台（只有根路径一份）
+├── assets/            带 hash 的 JS / CSS（每种语言一个语言包 chunk）
+├── icons/sites/       自托管站点图标（392 个）
 ├── robots.txt  sitemap.xml  ads.txt
 ```
 
@@ -396,6 +447,42 @@ git config user.email "Daniel-TH666@users.noreply.github.com"
 （曾经因此把公司邮箱写进了提交历史，必须重写历史才能清掉）。用 GitHub 的 noreply 邮箱既不影响贡献统计，
 也不会再泄露私人邮箱。`git config --global` 里不要放任何真实邮箱。
 
+## 推送（`git push` 被网络阻断时怎么办）
+
+**现象**：`git push` 报 `Failed to connect to github.com:443 after 21058 ms` 或
+`Empty reply from server`。这是本地网络/代理到 `github.com` 的路由问题，**不是仓库或令牌的问题**。
+
+**判断方法**：`git push` 不通，但 `https://api.github.com` 通 —— 用下面的命令确认：
+
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' https://api.github.com/
+# 200 就说明可以走 API 推送
+```
+
+**解法**：走 Git Data API 推送，位置在 `_diag/push-via-api.py`。
+
+```bash
+GH_PUSH_TOKEN=github_pat_xxx PY _diag/push-via-api.py
+```
+
+它做的事：
+
+1. 用 Contents API 的 `git/ref` + `git/commits` 取远端 HEAD 和它的 tree
+2. **按 tree 比对**在本地历史里找出「与远端内容一致的那个 commit」作为基准
+   （⚠️ 不能用 `FETCH_HEAD` —— `fetch` 同样走不通，而且通过 API 推出来的 commit
+   sha 由服务端计算，根本不在本地历史里；但它的 tree 一定等于本地对应 commit 的 tree）
+3. `git diff 基准 HEAD` 得到文件清单，逐个 `POST git/blobs`（8 线程并发）上传
+4. 以远端 tree 为 `base_tree` 建新 tree → 建 commit → `PATCH` 更新 `refs/heads/main`
+
+> 250 个文件约 37 秒。`_diag/` 已在 `.gitignore` 里，所以上传的都是 `src/` 与 `public/` 的真内容。
+
+**推完必须核对**：脚本会打印 `new_tree`，把它和本地
+`git rev-parse HEAD^{tree}` 比一下 —— 一致就说明远端内容与本地完全对齐。
+本文档提到的两次推送分别是 `f3ab6d5692` / `ce5aea5551`，都对上了。
+
+**同理不要用 `git fetch` / `git pull`**：同样的原因会失败。远端状态一律通过
+`https://api.github.com/repos/Daniel-TH666/laimoyu/actions/runs` 查询。
+
 ## 换设备 / 迁移
 
 **代码和数据全都在 GitHub 上，新设备只要 clone 下来就行**，不存在「漏了哪个文件」的问题。
@@ -414,8 +501,14 @@ npm run dev
 | `node_modules/` | `npm install` 重新装 |
 | `dist/` | CI 自动构建，或本地 `npm run build` |
 | GitHub 登录令牌 | 存在浏览器 localStorage，按设备各存一份 |
-| `_diag/` | 本机验收脚本与截图，已被 gitignore |
+| `_diag/` | 本机验收脚本与截图，已被 gitignore —— ⚠️ 见下方提醒 |
 | `.workbuddy/` | 本机内部工作记录，与网站无关，已被 gitignore |
+
+> ⚠️ **`_diag/` 被 gitignore 了，所以换设备时这几个验收脚本不会跟着走。**
+> 它们是排查问题的主力工具（`audit-data.py` / `verify-dist.py` / `check-i18n.mjs` /
+> `check-live.py` / `fetch-favicons.py` / `push-via-api.py`）。
+> 换设备前记得单独把它们复制走，或者跟维护者确认是否要把 `_diag/*.py` `_diag/*.mjs`
+> 从 `.gitignore` 里放出来、只忽略截图。
 
 **唯一要额外记的**：后台地址 `bookmarks.html` 和你的 GitHub 令牌（建议存密码管理器）。
 
@@ -430,6 +523,33 @@ npm run dev
 
 > 注意：**Actions 部署会忽略仓库里的 CNAME 文件**，自定义域名只能在 Settings → Pages 里设。
 > 换域名后后台地址也会跟着变成 `https://你的域名/bookmarks.html`。
+
+## 广告位（当前是可见的占位框，待接入时替换）
+
+页面里已经预留了 4 类广告位，**目前显示为虚线占位框 + 技术文案**
+（例如 `Top banner · ad-top-banner · 728×90 or responsive`）。这些文案来自语言包的
+`sections.adLabel`（`Ad`）/ `sections.adSponsored`（`Sponsored`，也用在站点指南的插入位）/
+`sections.adSlotTop` / `sections.adSlotBottom` / `sections.adSlotSidebar`，**6 个语言各一份**。
+
+| 位置 | 标识 | 尺寸 |
+|---|---|---|
+| 首屏下方横栏 | `ad-top-banner` | 728×90 或自适应 |
+| 侧边栏 | `ad-sidebar-{n}` | 300×250 |
+| 页面底部 | `ad-bottom` | 自适应 |
+| 站点指南里每两个分类之间 | `ad-in-content-{n}` | 自适应 |
+
+接入 AdSense 之后要做三件事（缺一不可）：
+
+1. 把占位框换成真实的 `<ins class="adsbygoogle">` 代码（在 `src/lib/render.js` 的
+   `adSlot` 变量与该模板的其它广告位处）
+2. `ads.txt` 里把 `pub-XXXXXXXXXXXXXXXX` 换成真实发布商 ID 并取消注释
+3. **显著标明「广告」**，并把页脚文案从「未来可能接入展示广告」改成「本站展示」
+
+> ⚠️ 个人 ICP 备案**不能放广告**（非经营性 vs 广告=经营性），
+> 合法接国内广告需要企业主体 + 经营性备案。这也是这个站做多语言、走 AdSense 赚海外流量的根本原因。
+>
+> ⚠️ 占位文案是给开发看的技术标注，**正式上线前建议换成给访客看的说法**
+> （或直接隐藏占位框只保留留白），否则访客会觉得站点没做完。这一条待定。
 
 ## 打赏功能（已暂时下线，2026-09-16）
 
