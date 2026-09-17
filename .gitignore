@@ -18,6 +18,7 @@ vite.config.js.timestamp-*.mjs
 
 # 本地辅助页与调试产物
 deploy-helper.html
+GSC-操作指南.html
 _diag/
 _chrometmp*/
 _cdp*/

@@ -67,9 +67,10 @@ npm run dev
 | `meta.home` | 首页 title / description / keywords / `h1Template` / `heroStat` / `slogans` |
 | `meta.about` `meta.privacy` `meta.contact` `meta.faq` | 四个内容页的 title / description |
 | `categories.<id>` | 8 个分类的 `title`、`desc`，字母语言建议再加 `navTitle`（顶部 tab 用的短标签） |
-| `nav` `card` `sections` `submit` `footer` `toast` `tips` `langSwitch` | 界面文案 |
+| `nav` `card` `sections` `updates` `footer` `toast` `tips` `langSwitch` | 界面文案 |
 | `pages.about` / `pages.privacy` / `pages.contact` | 内容页正文，`blocks: [{h, p: [...]}]` |
-| `pages.faq` | `items: [{q, a}]` —— 会自动生成 FAQPage 结构化数据 |
+| `pages.faq` | `items: [{q, a}]` —— **目前 9 条**，会自动生成 FAQPage 结构化数据 |
+| `updates` | 「不定期更新」区块：`title` / `subtitle` / `points`（3 条要点）。取代了旧的 `submit` |
 
 > `{count}`、`{title}`、`{n}` 是模板占位符，会在渲染时替换掉。
 > `tips` 和 `hintBody` 里的字符串可以带 HTML 标签（`<kbd>`、`<span>`），本文件原文不转义 ——
@@ -80,8 +81,9 @@ npm run dev
 > `buildCategories()` 有 `c.navTitle || c.title` 兜底，但兜底出来的布局是坏的。
 >
 > ⚠️ **key 结构必须和 `en.json` 完全一致**（递归比对 key 路径集合）。
-> 少一个 key 不会报错，只会静默回落到英文兜底 —— 比如漏了
-> `submit.issueHeading` / `submit.issueTitlePrefix`，该语言的推荐 Issue 标题就会变成英文。
+> 少一个 key 不会报错，只会静默回落到英文兜底。这个坑踩过两次：
+> 一次是 6 个语言包同时漏了 `submit.issueHeading`（导致推荐 Issue 标题全变英文），
+> 一次是 `zh.json` 缺了 8 个 `categories.*.navTitle`（顶部 tab 撑溢出）。
 > 用 `python _diag/audit-data.py` 可以一键查出这类缺漏。
 
 **② 建站点数据 `src/data/sites/<code>.json`**
@@ -155,11 +157,23 @@ npm run dev
 > 令牌是**按设备**存的，不会跟仓库同步。换新设备（或换浏览器、清理浏览器数据）后，
 > 需要用同一个令牌（或新生成一个）重新登录一次。
 
+**令牌不会被回显**（2026-09-17 加固）。再次点「⚙️ 设置」时，令牌输入框是**空的**，
+只显示「已保存 · 留空则沿用」：
+
+- 留空直接保存 = **沿用原来那个令牌**（不用为改个仓库名重新粘贴一遍）
+- 要换令牌时才重新粘贴；粘贴后可以点右侧「显示」临时核对是否粘全（默认永远是遮住的）
+- 之所以不回填：令牌一旦写进 input 的 `value`，它就实实在在躺在 DOM 里，
+  旁人扫一眼屏幕、截一张图、或拖一下开发者工具都能拿走。
+  `check-i18n.mjs` 的 H3 段会断言「不回显 + 初始是 password + DOM 里搜不到令牌」。
+
 ### 先选语言，再改站点
 
 每种语言的站点数据是**独立文件**（`src/data/sites/<lang>.json`），所以后台顶部固定条上有一个
-**🌐 编辑语言** 下拉框：它决定你现在改的是哪个语言的数据。旁边会显示对应文件路径。
+**🌐 编辑语言** 下拉框：它决定你现在改的是哪个语言的数据。
 
+- 下拉框右侧会显示 **`→ /zh/ · 95 个站点`** 这样一行提示：前面是该语言对应的**前台首页地址**，
+  后面是当前数据条数 —— 「我正在改哪个语言的页面」一眼可见，不用记文件路径
+- 切换语言会**真的重新去 GitHub 拉那一份文件**（`check-i18n.mjs` H2 段会断言这一点）
 - 切换语言时如果有未保存改动，会先确认一次
 - 上次编辑的语言记在 localStorage，下次打开后台自动回到那一版
 - 站点总数、文件大小这些统计都是**当前语言**的
@@ -207,31 +221,27 @@ npm run dev
 
 ---
 
-## 访客推荐（Issue 流程）
+## 「不定期更新」区块（访客投稿已于 2026-09-17 下线）
 
-首页的「推荐网站」表单不会 POST 到任何服务器（**零后端、源码零密钥**），而是：
+首页原本有一个「推荐网站」表单，走 GitHub Issue 流程收投稿。**已整体移除**，原因有两条：
 
-1. 表单内容拼成一段固定格式的正文
-2. `window.open` 打开预填好的 GitHub「新建 Issue」页面
-3. 访客点一下绿色的 **Submit new issue** 完成提交
+1. **投稿入口会暴露仓库位置**。表单本质上是 `window.open` 打开本仓库的「新建 Issue」页，
+   访客一点就看到 `github.com/<owner>/<repo>/issues/new`。而本站刻意不让访客摸到源码仓库。
+2. **聚合站不该引导 UGC**。投稿进来的内容既无法审核、也不产出原创价值，
+   对 AdSense「低价值内容」的判定没有帮助，反而增加维护面。
 
-后台「📥 推荐管理」会拉取仓库 Issue，按域名聚合成候选站，按近 30 天推荐次数排序。
+现在换成 `#updates-section`「不定期更新」说明区块：**纯静态文案 + 3 条要点，不收集任何输入、
+不发任何网络请求**（页面上根本不存在 `<form>`）。文案在语言包的 `updates.*`。
 
-**正文格式（改代码时务必保持一致）**：字段名用固定 ASCII 键，**不随语言变化** ——
-任何一种语言提交过来后台都能解析：
+### 相关约束（改代码时注意）
 
-```
-### Site suggestion
-- **lang**: zh
-- **title**: ...
-- **url**: https://...
-- **category**: tools
-- **categoryLabel**: 🛠️ 实用工具
-- **description**: ...
-```
-
-解析逻辑在 `src/studio.js` 的 `parseRecIssue()`，同时兼容旧版中文键
-（`网站名` / `网址` / `分类` / `简介`），历史 Issue 不会失效。
+- 语言包**不再有 `submit.*` 节点**；`audit-data.py` 会断言它没被改回来。
+- `src/main.js` 的 `bindSubmit()` / `buildRecIssueUrl()` / `REC_REPO` 已全部删除，
+  换成 `bindUpdates()` —— 只做「滚动到区块」，不碰网络。
+- 后台的「📥 推荐管理」视图与 `src/studio.js` 里的解析逻辑（`parseRecIssue` 等，约 267 行）已移除。
+- **内容页页脚原本有一个指向仓库的 GitHub 链接，也已删除**。
+- 回归检查：`check-i18n.mjs` 的 E 段会断言页面上**不存在任何指向 `github.com` 的链接**，
+  以及 `#submit-form` / `#submit-section` 节点不复活。
 
 ---
 
@@ -254,7 +264,7 @@ laimoyu/
 │   └── icons/
 │       └── sites/       # 站点的真实图标（自托管），见下「图标策略」
 └── src/
-    ├── main.js          # 前台逻辑：语言识别、自动匹配、搜索筛选收藏提交
+    ├── main.js          # 前台逻辑：语言识别、自动匹配、搜索筛选收藏（无投稿、无网络请求）
     ├── studio.js        # 后台逻辑：按语言读写站点数据
     ├── style.css
     ├── i18n/
@@ -293,6 +303,16 @@ laimoyu/
 > ⚠️ **`vite.config.js` 的 `base` 必须是 `/`（绝对路径）。** 多语言页面分布在
 > `/`、`/zh/` 等不同深度的目录下，用相对路径 `./` 会在子目录里解析错。
 
+> ⚠️ **`vite.config.js` 的 `emptyOutDir` 必须是 `true`。** 曾经设成 `false`，
+> 本地 `dist/assets` 堆了 48 个文件（含 31 个历史 bundle），旧代码里的仓库名被
+> 「泄露检查」当成现行代码抓出来，**假警报 + 掩盖真问题**。CI 是干净环境所以线上一直是对的，
+> 问题只出在本地验证结果不可信。宁可偶尔遇到文件锁，也不要验证结果不可信。
+
+> ⚠️ **`build/prerender.js` 的 `CONTENT_PAGES` 字段名统一叫 `page`。**
+> 曾经这里叫 `kind` 而 sitemap 读取 `p.page`，两套命名撞出 **24 条 `/undefined.html`**。
+> 现在 sitemap 循环开头有构建期断言：缺 `page` 直接让构建失败，不再产出「看着正常其实全坏」的 sitemap。
+> **同一个概念只允许一个字段名** —— 这类静默错误靠肉眼走查发现不了。
+
 ---
 
 ## 搜索引擎与广告变现基础
@@ -317,35 +337,44 @@ laimoyu/
 
 ### 验收脚本
 
-改完前台结构、语言包或 SEO 相关代码，按顺序跑这四个：
+改完前台结构、语言包或 SEO 相关代码，按顺序跑这五个：
 
 ```bash
 # 有 python 的环境直接用；本机 bash 退化（ls/git 都 command not found）时改用解释器绝对路径
 PY=python
 
 # ① 数据审计：条数 / 字段 / 分类配比 / review 长度 / 语言包 key 一致性 / 语言纯度
-$PY _diag/audit-data.py              # 期望 120/120
+$PY _diag/audit-data.py              # 期望 138/138
 
-# ② 静态产物检查：hreflang、canonical、sitemap、点评是否真的在 HTML 里
-$PY _diag/verify-dist.py             # 期望 96/96
+# ② 静态产物检查：hreflang、canonical、sitemap（含每条 <loc> 能否落到真实文件）、点评是否真在 HTML 里
+$PY _diag/verify-dist.py             # 期望 100/100
 
-# ③ 浏览器行为检查（需要 Chrome，原生 CDP，不依赖 puppeteer）
-node _diag/check-i18n.mjs            # 期望 39/39，JS 错误数 0
+# ③ 产物泄露检查：dist 里有没有混进仓库地址 / 用户名 / 令牌；广告位文案是否「当下为真」
+$PY _diag/check-leak.py              # 期望 7 类判据 0 命中 + 内容抽查全绿
+
+# ④ 浏览器行为检查（需要 Chrome，原生 CDP，不依赖 puppeteer）
+node _diag/check-i18n.mjs            # 期望 56/56，JS 错误数 0
 #    覆盖：11 种浏览器语言自动匹配 / 手动选择优先 / 切换器点击与记忆 /
-#          搜索-分类-收藏不回归 / Issue 字段键 ASCII / 禁 JS 爬虫视角 / 6 语言截图
+#          搜索-分类-收藏不回归 / 页面无 github.com 链接 / 禁 JS 爬虫视角 / 6 语言截图 /
+#          后台不暴露仓库（含「切语言真的去拉对应数据文件」与「令牌不回显」两组回归）
+#    另外：MOYU_PAT=<令牌> node _diag/check-admin-langs.mjs 可用真令牌端到端核对后台 6 语言条数
 
-# ④ 线上核验（推完等 Actions 绿了再跑）
+# ⑤ 线上核验（推完等 Actions 绿了再跑）
 $PY _diag/check-live.py              # 期望 73/73
 ```
 
 > `check-i18n.mjs` 会把 6 个语言的首页截图写到 `_diag/shot-6lang-*.png`，方便肉眼核对排版
 > （尤其是顶部 tab 有没有因为 `navTitle` 太长而溢出）。
 >
-> **两个排查用的小知识点**（踩过的坑）：
+> **三个排查用的小知识点**（踩过的坑）：
 > - 站点卡是 `<article class="site-card">`，标识在内部按钮的 `data-id` 上。**别直接数 `<article>`** ——
 >   每个分类区块里还塞了一张 `<article class="ad-native">` 广告位占位卡，会让计数每条 +1。
 > - 顶部 tab 是 `button.cat-tab[data-cat=...]`，而区块的 id 也叫 `cat-<x>`。
 >   用 `getElementById('cat-games').click()` 点到的是区块，不会有任何反应。
+> - **验收脚本本身也会骗人，判据要能「看见变化」**：后台切语言那段最初写成
+>   「看到 `#stat-total` 是数字就通过」，结果切换后 DOM 还挂着**上一个语言**的旧值 100，
+>   脚本立刻判过 —— 6 个语言全绿，实际上一个都没换。改成「必须等到它变成该语言的期望值」
+>   才看得见问题。**凡是「值应该变化」的断言，都要等新值出现，不能等「有值」。**
 
 ### 图标策略（自托管，不再依赖任何第三方 favicon 服务）
 
@@ -381,18 +410,33 @@ $PY _diag/check-live.py              # 期望 73/73
 
 ### Google Search Console 绑定
 
-1. 打开 <https://search.google.com/search-console>
-2. 选「网址前缀」，填 `https://laimoyu.top/`
-3. 验证方式选 **HTML 标记**，复制它给的那一整行 `<meta ... />`
-4. 把那行贴到 `build/home-template.js` 里 `<head>` 的 `${seoHead}` 上方（标题下面），推送后回来点「验证」
-5. 验证通过后在左侧「站点地图」提交：`sitemap.xml`
+**面向非技术操作者的完整图文步骤见 `GSC-操作指南.html`**（本机文档，已 gitignore，不随网站发布）。
+下面只保留和代码有关的要点。
 
-> 建议顺便再验证 `https://laimoyu.top/zh/`、`/es/`、`/fr/`、`/ja/`、`/ko/`
-> （用同一个标记即可），这样 6 套页面的收录情况能分开看。
-> 不过 6 条路径之间已经有完整 hreflang 互相声明，不分开验证也不会影响收录。
+推荐走 **「网域」+ DNS TXT 记录**（`laimoyu.top` 的 DNS 在 NameSilo，NS 是 `ns1/2/3.dnsowl.com`）：
+
+1. 打开 <https://search.google.com/search-console> → 新增资源 → 选「网域」→ 填 `laimoyu.top`
+   （不带 `https://`、不带 `www`、不带结尾 `/`）
+2. 复制它给的 `google-site-verification=...`
+3. NameSilo → Domain Manager → laimoyu.top → DNS Manager → ADD RECORD：
+   `TXT` / 主机名留空（或 `@`）/ 值粘贴整串 → 保存
+4. 回 GSC 点「验证」（DNS 生效通常 5~15 分钟，首次失败等一会儿再点）
+5. 验证通过后在左侧「站点地图」提交 `sitemap.xml`（**只填这 9 个字符**，前缀已自动带上）
+
+> ⚠️ 验证成功后**不要删那条 TXT 记录** —— Google 会不定期复查，删了验证就失效。
 >
-> 也可以选「网域」验证（用 DNS TXT 记录），需要在 NameSilo 的 DNS 里加一条 TXT，
-> 好处是同时覆盖 `www` 等所有子域。两种都行，HTML 标记最简单。
+> ⚠️ 提交 sitemap 前先确认线上 `sitemap.xml` 是好的。2026-09-17 曾因内容页清单字段名
+> 写成 `kind` 而 sitemap 生成器读 `page`，产出 **24 条 `/undefined.html`**。
+> 修法见 `build/prerender.js` 的 `CONTENT_PAGES`（统一字段名 + 构建期抛错），
+> 以及 `verify-dist.py` 里「每条 `<loc>` 都必须能在 dist 里找到对应文件」这组断言。
+> 若 GSC 报过这类抓取错误，修好后重新提交一次即可。
+
+替代方案「网址前缀 + HTML 标记」：在 `build/home-template.js` 的 `<head>` 里、
+`${seoHead}` 上方贴 Google 给的 `<meta name="google-site-verification" ... />`，推送后再验证。
+缺点是**只覆盖 `https://laimoyu.top/` 这一个前缀**，且每次改站点都要保留这行。
+
+> 6 条语言路径（`/zh/`、`/es/`、`/fr/`、`/ja/`、`/ko/`）之间已有完整 hreflang 互相声明，
+> 用「网域」资源会自动全覆盖，**不需要**分语言各建一个资源。
 
 ## 构建
 
@@ -526,30 +570,44 @@ npm run dev
 
 ## 广告位（当前是可见的占位框，待接入时替换）
 
-页面里已经预留了 4 类广告位，**目前显示为虚线占位框 + 技术文案**
-（例如 `Top banner · ad-top-banner · 728×90 or responsive`）。这些文案来自语言包的
-`sections.adLabel`（`Ad`）/ `sections.adSponsored`（`Sponsored`，也用在站点指南的插入位）/
-`sections.adSlotTop` / `sections.adSlotBottom` / `sections.adSlotSidebar`，**6 个语言各一份**。
+页面里已经预留了 4 类广告位，**目前显示为虚线占位框 + 访客可读的说法**
+（顶部写「广告 / 顶部广告位」、侧边写「广告 / 侧边广告位」这样），占位文案来自语言包，
+**6 个语言各一份**：
 
-| 位置 | 标识 | 尺寸 |
+| 语言包 key | 作用 | en / zh 示例 |
+|---|---|---|
+| `sections.adLabel` | 广告位左上角的小标签 | `Ad` / `广告` |
+| `sections.adSlotTop` | 顶部占位框正文 | `Top ad space` / `顶部广告位` |
+| `sections.adSlotBottom` | 底部占位框正文 | `Bottom ad space` / `底部广告位` |
+| `sections.adSlotSidebar` | 侧边占位框正文（`{n}` 会替换成 1/2） | `Sidebar ad space` / `侧边广告位` |
+| `sections.adSlotInContent` | 正文区占位框正文 | `In-content ad space` / `正文内广告位` |
+
+| 位置 | 标识（HTML 属性） | 尺寸 |
 |---|---|---|
 | 首屏下方横栏 | `ad-top-banner` | 728×90 或自适应 |
 | 侧边栏 | `ad-sidebar-{n}` | 300×250 |
 | 页面底部 | `ad-bottom` | 自适应 |
 | 站点指南里每两个分类之间 | `ad-in-content-{n}` | 自适应 |
 
+> `data-ad-slot="…"` 这些英文标识是**给广告接入用的定位属性**，刻意保留、访客看不到，别删。
+> 访客能看到的只有上面 5 个 key 里的文案。
+
+### 文案原则：必须「当下为真」
+
+- **现在没有赞助商，所以不能写「赞助内容 / Sponsored」**。曾经的 `sections.adSponsored`
+  已在 2026-09-17 全部移除，换成中性的 `adLabel`。文案要描述**当下事实**，不能描述期望状态。
+- 同理，占位框里**不能出现变量名、尺寸、`728x90`、`ad-in-content-2` 这类技术黑话** ——
+  访客看到会以为站点没做完。`audit-data.py` 与 `check-leak.py` 都会断言这一点。
+
 接入 AdSense 之后要做三件事（缺一不可）：
 
-1. 把占位框换成真实的 `<ins class="adsbygoogle">` 代码（在 `src/lib/render.js` 的
-   `adSlot` 变量与该模板的其它广告位处）
+1. 把占位框换成真实的 `<ins class="adsbygoogle">` 代码（`src/lib/render.js` 的 `nativeAdCard` /
+   `siteGuideHtml` 里的 `adSlot`，以及 `build/home-template.js` 的四处广告位）
 2. `ads.txt` 里把 `pub-XXXXXXXXXXXXXXXX` 换成真实发布商 ID 并取消注释
 3. **显著标明「广告」**，并把页脚文案从「未来可能接入展示广告」改成「本站展示」
 
 > ⚠️ 个人 ICP 备案**不能放广告**（非经营性 vs 广告=经营性），
 > 合法接国内广告需要企业主体 + 经营性备案。这也是这个站做多语言、走 AdSense 赚海外流量的根本原因。
->
-> ⚠️ 占位文案是给开发看的技术标注，**正式上线前建议换成给访客看的说法**
-> （或直接隐藏占位框只保留留白），否则访客会觉得站点没做完。这一条待定。
 
 ## 打赏功能（已暂时下线，2026-09-16）
 

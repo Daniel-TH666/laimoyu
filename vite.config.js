@@ -15,8 +15,12 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    // 不清空产物目录：CI 里每次都是干净环境，本地也能避开文件锁问题
-    emptyOutDir: false,
+    // 每次构建清空产物目录。
+    // 之前设成 false，结果本地 dist 里堆了多份不同 hash 的历史 bundle ——
+    // 旧的 JS 会被「产物泄露检查」和文件数统计当成现行代码，
+    // 既产生假警报又掩盖真问题（CI 是干净环境，所以线上一直是对的，
+    // 问题只在本地验证失真）。宁可本地偶尔遇到文件锁，也不要验证结果不可信。
+    emptyOutDir: true,
     assetsDir: 'assets',
     sourcemap: false,
     chunkSizeWarningLimit: 800,

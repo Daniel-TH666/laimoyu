@@ -34,8 +34,8 @@
       "description": "What Moyu Paradise stores, how cookies and local storage are used, what third-party advertising and analytics services do, and how to opt out of personalised ads."
     },
     "contact": {
-      "title": "Contact Moyu Paradise — suggest a site, report a problem",
-      "description": "Reach the editor of Moyu Paradise to suggest a site, report a broken link, request a correction or removal, or ask about advertising."
+      "title": "Contact Moyu Paradise — corrections, removals and advertising",
+      "description": "How corrections, link removals and advertising enquiries are handled at Moyu Paradise, and why the site does not publish a contact address."
     },
     "faq": {
       "title": "FAQ — Moyu Paradise",
@@ -47,7 +47,7 @@
     "searchPlaceholder": "Search sites...",
     "searchTip": "Press / to focus the search box",
     "searchBigPlaceholder": "Try: games, memes, rain, memes, keyboard...",
-    "submitBtn": "Suggest a site",
+    "submitBtn": "Updates",
     "randomBtn": "Random site",
     "randomTip": "Press R for a random site",
     "escTip": "Press Esc to close overlays",
@@ -112,10 +112,10 @@
     "hotBadge": "TOP 10",
     "tipsTitle": "Quick Tips",
     "adLabel": "Ad",
-    "adSponsored": "Sponsored",
-    "adSlotTop": "Top banner · ad-top-banner · 728×90 or responsive",
-    "adSlotBottom": "Bottom · ad-bottom · Auto Ads or responsive",
-    "adSlotSidebar": "Sidebar · ad-sidebar-{n} · 300×250",
+    "adSlotInContent": "In-content ad space",
+    "adSlotTop": "Top ad space",
+    "adSlotBottom": "Bottom ad space",
+    "adSlotSidebar": "Sidebar ad space",
     "emptyTitle": "Nothing matched that search",
     "emptyButton": "Show everything",
     "backToAll": "Back to all sites"
@@ -126,35 +126,21 @@
     "Press <kbd>Esc</kbd> to close any overlay",
     "Click <span class=\"text-coral-500\">★</span> to save a favourite"
   ],
-  "submit": {
-    "title": "Suggest a site",
-    "subtitle": "Got one we've missed? Send it over — every submission is looked at by a human before it goes live.",
-    "fieldTitle": "Site name",
-    "fieldCategory": "Category",
-    "fieldCategoryPlaceholder": "Pick a category",
-    "fieldUrl": "Site URL",
-    "fieldDesc": "One-line description",
-    "fieldDescPlaceholder": "e.g. Paste an image, get the background removed in five seconds",
-    "submitBtn": "Submit for review",
-    "note": "Submitting opens a GitHub issue with your details filled in (a free GitHub account is needed). The editor reads it directly.",
-    "hintTitle": "One step left",
-    "hintBody": [
-      "① GitHub opened in a new tab with the form pre-filled.",
-      "② Click the green <span class=\"font-medium text-ink-800\">Submit new issue</span> button — that's it."
-    ],
-    "hintLink": "Didn't open? Click here instead →",
-    "issueHeading": "### Site suggestion",
-    "issueTitlePrefix": "[Suggestion]",
-    "toastOpened": "Opening GitHub — click \"Submit new issue\" to finish",
-    "toastBlocked": "The pop-up was blocked — use the link below",
-    "toastNone": "Nothing to send yet — fill in the required fields"
+  "updates": {
+    "title": "The list gets updated from time to time",
+    "subtitle": "No submissions, no waiting list, no sign-up of any kind.",
+    "points": [
+      "Every entry is picked and checked by hand. New sites go in whenever something genuinely worth opening turns up.",
+      "Links that stop working are removed at the same time, so the list stays worth reading rather than merely long.",
+      "Nothing here is paid for and nothing is added automatically. Bookmark the page and check back whenever you need something to open."
+    ]
   },
   "footer": {
     "friendsTitle": "Friends of the site",
     "copyright": "© 2026 Moyu Paradise · a curated directory of things to do when work is slow",
     "disclosure": "Independently run. Display advertising may be introduced in future to support running costs; advertising is kept separate from editorial selection.",
     "links": {
-      "submit": "Suggest a site",
+      "submit": "Updates",
       "about": "About",
       "privacy": "Privacy",
       "faq": "FAQ",
@@ -216,8 +202,8 @@
         {
           "h": "Corrections, removals and takedowns",
           "p": [
-            "Sites change hands, add paywalls, or shut down without notice. If a link is broken, has been taken over by someone else, or has started behaving badly, report it through the contact page and it will be checked and either fixed or removed.",
-            "Owners who want their site removed from this directory can request it the same way. No reason needs to be given, and the removal happens without argument — the entry is gone rather than hidden."
+            "Sites change hands, add paywalls or shut down without notice. Links are re-checked periodically, and anything broken, taken over or behaving badly is corrected or dropped during those passes.",
+            "If you own a site listed here and want it removed, that request overrides everything else: no reason is required, and the entry is deleted rather than hidden."
           ]
         }
       ]
@@ -230,7 +216,7 @@
         {
           "h": "What we collect directly",
           "p": [
-            "Nothing. There is no account system, no registration form and no contact database. The \"suggest a site\" form does not post to this site's servers — it opens a pre-filled GitHub issue in your own browser, under your own GitHub account, and the submission is then governed by GitHub's privacy policy rather than ours.",
+            "Nothing. There is no account system, no registration form, no newsletter and no contact database. No part of this site asks you for personal details, and there is no form anywhere that sends anything to us.",
             "We therefore hold no names, email addresses or usage profiles of our own."
           ]
         },
@@ -286,24 +272,31 @@
     },
     "contact": {
       "heading": "Contact",
-      "intro": "One person reads everything sent here. The GitHub issue tracker is the fastest route and keeps the whole conversation in one place.",
+      "intro": "This site is run by one person, with no support desk behind it. This page sets out how corrections, removals and everything else are actually handled.",
       "blocks": [
         {
-          "h": "Suggest a site",
+          "h": "There is no contact form",
           "p": [
-            "The quickest route is the submission form on the home page: it opens a pre-filled GitHub issue with the name, URL, category and description already laid out, and a free GitHub account is all that is needed to send it. Submissions are reviewed by hand, so a short note about why the site is worth listing helps more than a marketing sentence."
+            "Nothing on this site posts anywhere. There are no accounts, no newsletter and no form that collects your details — which also means there is no inbox for general messages.",
+            "That is a deliberate trade-off rather than an oversight. A publicly listed contact address collects far more automated spam than genuine mail, and a directory maintained by one person in their spare time has no capacity to sift through it. A page that collected messages and never answered them would be worse than no page at all."
           ]
         },
         {
-          "h": "Report a problem",
+          "h": "If you own a site listed here",
           "p": [
-            "Broken link, site taken over by someone else, a paywall that appeared, a page that started serving something unpleasant — open an issue at the tracker and it will be checked and either corrected or removed. The same route handles correction requests from a site's owner and requests to be removed from the directory; the latter are actioned without asking for a reason."
+            "If you own or control one of the sites in this list and would rather it were not linked, that request is honoured without argument: no reason needs to be given, and the entry is removed outright rather than quietly hidden. Owners take priority over everything else on this site."
           ]
         },
         {
-          "h": "Advertising and other enquiries",
+          "h": "Corrections and broken links",
           "p": [
-            "Questions about advertising, partnerships or anything else: open an issue using the same tracker and it will be answered there. A plain email address is deliberately not published on this page, because public directories of contact addresses attract far more automated spam than useful mail — the tracker keeps everything readable and searchable."
+            "Sites change hands, add paywalls and shut down without warning, so descriptions are re-checked periodically rather than written once and left. Anything that stops working is corrected or dropped during those passes, which is why this list is shorter than a machine-generated one would be."
+          ]
+        },
+        {
+          "h": "Advertising and partnerships",
+          "p": [
+            "This site currently carries no advertising and has no commercial relationship with any listed site. If display advertising is introduced, it will be labelled clearly, kept visually separate from the editorial entries, and explained on this page rather than appearing quietly."
           ]
         }
       ]
@@ -318,7 +311,7 @@
         },
         {
           "q": "Do I need to install anything or sign up?",
-          "a": "No. Every listing is a website that runs in a normal browser tab. You never need to create an account with us — the only optional sign-up is a free GitHub account, and only if you want to suggest a site."
+          "a": "No. Every listing is a website that runs in a normal browser tab. There are no accounts to create, nothing to subscribe to and nothing to install — the site works the same whether you have been here before or not."
         },
         {
           "q": "How are sites chosen?",
@@ -337,12 +330,16 @@
           "a": "This site sets no first-party tracking cookies and asks you for no personal information. Your favourites and language choice are stored in your own browser and never sent anywhere. Third-party advertising and analytics providers may set their own cookies; the privacy policy explains exactly how to opt out."
         },
         {
-          "q": "Can I suggest a site, or get one removed?",
-          "a": "Both. Suggestions go through the form on the home page and are reviewed one by one. Owners who want their site removed can ask through the contact page and it will be removed without argument."
+          "q": "How often is the list updated?",
+          "a": "There is no fixed schedule. New sites go in whenever something genuinely worth opening turns up, and links that stop working are removed during the same passes. Nothing is added automatically and nobody can pay for a place."
         },
         {
           "q": "What does \"moyu\" mean?",
           "a": "\"Moyu\" (摸鱼) is Chinese for sneaking a bit of personal time out of the working day — literally \"feeling for fish\", from the idea of staying busy-looking at the surface while doing something else entirely underneath. It is a much nicer word than \"procrastinating\", which is roughly why this site is named after it."
+        },
+        {
+          "q": "Can I get my site removed from the list?",
+          "a": "Yes. Owners of listed sites can have an entry removed without giving a reason, and it is deleted rather than hidden. Requests from owners take priority over everything else here."
         }
       ]
     }

@@ -29,7 +29,7 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
   const p = i18n.pathPrefix || '';
   const nav = i18n.nav || {};
   const sec = i18n.sections || {};
-  const sub = i18n.submit || {};
+  const upd = i18n.updates || {};
   const foot = i18n.footer || {};
   const home = (i18n.meta && i18n.meta.home) || {};
   const count = sites.length;
@@ -56,16 +56,6 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
   // 贴士（内容含 <kbd> 标签，来自本地语言包，不转义）
   const tipsHtml = (Array.isArray(i18n.tips) ? i18n.tips : [])
     .map(t => `<li>${t}</li>`).join('\n          ');
-
-  // 提交提示条的两行说明（含 span/strong）
-  const hintBody = (Array.isArray(sub.hintBody) ? sub.hintBody : [])
-    .map(l => `<p>${l}</p>`).join('\n        ');
-
-  // 分类下拉：静态 HTML 里先渲染好一份（爬虫可读），JS 启动后会用同一份数据重填
-  const catOptions = [
-    `<option value="">${escapeHtml(sub.fieldCategoryPlaceholder || '')}</option>`,
-    ...categories.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.icon)} ${escapeHtml(c.title)}</option>`)
-  ].join('');
 
   return `<!DOCTYPE html>
 <html lang="${escapeHtml(i18n.htmlLang)}" data-lang="${escapeHtml(i18n.code)}">
@@ -100,10 +90,10 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
         </div>
       </div>
 
-      <button id="btn-submit"
-              title="${escapeHtml(sub.title || '')}"
-              class="hidden md:inline-block bg-mint-500 hover:bg-mint-600 text-white px-3 lg:px-4 py-2 rounded-full text-sm font-medium transition shadow-card whitespace-nowrap">
-        + ${escapeHtml(nav.submitBtn || '')}
+      <button id="btn-updates"
+              title="${escapeHtml(upd.title || '')}"
+              class="hidden md:inline-block bg-white hover:bg-cream-50 text-slate-500 border border-cream-200 px-3 lg:px-4 py-2 rounded-full text-sm transition whitespace-nowrap">
+        🔄 ${escapeHtml(nav.submitBtn || '')}
       </button>
 
       ${langSwitcherHtml(langs, i18n.code, 'index', { t: i18n })}
@@ -152,7 +142,7 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
       <!-- 顶部广告位 -->
       <div data-ad-slot="ad-top-banner" class="ad-slot">
         <div class="text-center">
-          <div class="text-xs uppercase tracking-wider text-mint-600 mb-1">${escapeHtml(sec.adSponsored || '')}</div>
+          <div class="text-xs uppercase tracking-wider text-mint-600 mb-1">${escapeHtml(sec.adLabel || '')}</div>
           <div>${escapeHtml(sec.adSlotTop || '')}</div>
         </div>
       </div>
@@ -174,7 +164,7 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
       <!-- 底部广告位 -->
       <div data-ad-slot="ad-bottom" class="ad-slot">
         <div class="text-center">
-          <div class="text-xs uppercase tracking-wider text-mint-600 mb-1">${escapeHtml(sec.adSponsored || '')}</div>
+          <div class="text-xs uppercase tracking-wider text-mint-600 mb-1">${escapeHtml(sec.adLabel || '')}</div>
           <div>${escapeHtml(sec.adSlotBottom || '')}</div>
         </div>
       </div>
@@ -228,56 +218,22 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
     </aside>
   </main>
 
-  <!-- ===== 提交推荐 ===== -->
-  <section id="submit-section" class="bg-gradient-to-br from-mint-50 to-cream-100 py-14 border-y border-cream-200">
+  <!-- ===== 更新说明（本站不定期更新；不开放投稿、不收集任何信息） ===== -->
+  <section id="updates-section" class="bg-gradient-to-br from-mint-50 to-cream-100 py-14 border-y border-cream-200">
     <div class="max-w-3xl mx-auto px-5 lg:px-8">
       <div class="text-center mb-8">
-        <h2 class="text-2xl lg:text-3xl font-bold mb-2 text-ink-800">📮 ${escapeHtml(sub.title || '')}</h2>
-        <p class="text-slate-500 text-sm lg:text-base">${sub.subtitle || ''}</p>
+        <h2 class="text-2xl lg:text-3xl font-bold mb-2 text-ink-800">🔄 ${escapeHtml(upd.title || '')}</h2>
+        <p class="text-slate-500 text-sm lg:text-base">${escapeHtml(upd.subtitle || '')}</p>
       </div>
 
-      <form id="submit-form" class="bg-white rounded-card p-6 lg:p-8 shadow-card border border-cream-200 space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="text-sm text-slate-600 mb-1.5 block">${escapeHtml(sub.fieldTitle || '')} <span class="text-coral-500">*</span></label>
-            <input name="title" required
-                   class="w-full px-4 py-2.5 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm" />
-          </div>
-          <div>
-            <label class="text-sm text-slate-600 mb-1.5 block">${escapeHtml(sub.fieldCategory || '')} <span class="text-coral-500">*</span></label>
-            <select name="category" required
-                    class="w-full px-4 py-2.5 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm bg-white">
-              ${catOptions}
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="text-sm text-slate-600 mb-1.5 block">${escapeHtml(sub.fieldUrl || '')} <span class="text-coral-500">*</span></label>
-          <input name="url" type="url" required placeholder="https://..."
-                 class="w-full px-4 py-2.5 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm" />
-        </div>
-        <div>
-          <label class="text-sm text-slate-600 mb-1.5 block">${escapeHtml(sub.fieldDesc || '')} <span class="text-coral-500">*</span></label>
-          <textarea name="description" required rows="2" maxlength="120"
-                    class="w-full px-4 py-2.5 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm resize-none"
-                    placeholder="${escapeHtml(sub.fieldDescPlaceholder || '')}"></textarea>
-        </div>
-        <div class="flex flex-col-reverse md:flex-row md:items-center md:justify-between gap-3 pt-2">
-          <p class="text-xs text-slate-500">${escapeHtml(sub.note || '')}</p>
-          <button type="submit"
-                  class="bg-mint-500 hover:bg-mint-600 text-white px-6 py-2.5 rounded-full font-medium transition shadow-card whitespace-nowrap">
-            ${escapeHtml(sub.submitBtn || '')} 🐟
-          </button>
-        </div>
-      </form>
-
-      <!-- 提交后引导：GitHub 新标签页已打开，点 Submit new issue 完成 -->
-      <div id="submit-hint"
-           class="hidden mt-4 bg-white/90 border border-mint-200 rounded-card px-5 py-4 text-sm text-slate-600 leading-relaxed">
-        <p class="font-semibold text-ink-800 mb-1.5">${escapeHtml(sub.hintTitle || '')}</p>
-        ${hintBody}
-        <a id="submit-hint-link" href="#" target="_blank" rel="noopener"
-           class="inline-block mt-2 text-mint-600 hover:text-mint-700 font-medium underline">${escapeHtml(sub.hintLink || '')}</a>
+      <div class="bg-white rounded-card p-6 lg:p-8 shadow-card border border-cream-200">
+        <ul class="space-y-4">
+          ${(Array.isArray(upd.points) ? upd.points : []).map((txt, i) => `
+          <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed">
+            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-100 text-mint-700 text-xs font-bold flex items-center justify-center mt-0.5">${i + 1}</span>
+            <span>${escapeHtml(txt)}</span>
+          </li>`).join('')}
+        </ul>
       </div>
     </div>
   </section>
@@ -297,7 +253,7 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
           <span class="text-slate-500">${escapeHtml(foot.disclosure || '')}</span>
         </div>
         <div class="flex flex-wrap items-center justify-center md:justify-end gap-x-5 gap-y-2">
-          <a href="#submit-section" class="hover:text-white transition">${escapeHtml((foot.links && foot.links.submit) || '')}</a>
+          <a href="#updates-section" class="hover:text-white transition">${escapeHtml((foot.links && foot.links.submit) || '')}</a>
           <a href="${escapeHtml(p + '/about.html')}" class="hover:text-white transition">${escapeHtml((foot.links && foot.links.about) || '')}</a>
           <a href="${escapeHtml(p + '/privacy.html')}" class="hover:text-white transition">${escapeHtml((foot.links && foot.links.privacy) || '')}</a>
           <a href="${escapeHtml(p + '/faq.html')}" class="hover:text-white transition">${escapeHtml((foot.links && foot.links.faq) || '')}</a>

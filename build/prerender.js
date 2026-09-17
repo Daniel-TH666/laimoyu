@@ -17,12 +17,17 @@ import { homePageHtml } from './home-template.js';
 // 正式域名。换域名时改这里一处。
 export const SITE_URL = 'https://laimoyu.top';
 
-// 内容页清单（kind → sitemap 权重）
+// 内容页清单（page → sitemap 权重）。
+// ⚠️ 字段名必须是 page：sitemap 生成那里读的是 p.page，渲染那里也读同一个字段。
+//    历史上这里叫 kind，而 sitemap 读 p.page —— 两套命名不一致，
+//    结果 4 个内容页 × 6 语言的 URL 全被拼成 /undefined.html（24 条坏 URL），
+//    而 verify-dist 只查了 hreflang alternate 存在、没查 loc 合法性，所以一直没报错。
+//    统一成一个字段名，从根上消掉这类「同一个概念两个名字」的坑。
 const CONTENT_PAGES = [
-  { kind: 'about', priority: '0.6', changefreq: 'monthly' },
-  { kind: 'faq', priority: '0.6', changefreq: 'monthly' },
-  { kind: 'contact', priority: '0.5', changefreq: 'yearly' },
-  { kind: 'privacy', priority: '0.3', changefreq: 'yearly' }
+  { page: 'about', priority: '0.6', changefreq: 'monthly' },
+  { page: 'faq', priority: '0.6', changefreq: 'monthly' },
+  { page: 'contact', priority: '0.5', changefreq: 'yearly' },
+  { page: 'privacy', priority: '0.3', changefreq: 'yearly' }
 ];
 
 function readJson(root, rel) {
@@ -255,15 +260,15 @@ export default function prerenderPlugin() {
       // ================= 2. 各语言内容页 =================
       for (const l of langs) {
         for (const cp of CONTENT_PAGES) {
-          let html = contentPageHtml(cp.kind, l, langsMeta, {
+          let html = contentPageHtml(cp.page, l, langsMeta, {
             cssHref: assets.cssHref,
             today
           });
           html = html.replace('<!-- @prerender:head -->',
-            seoHead(l, cp.kind, langsMeta, { sites: sitesByLang[l.code] || [] }));
+            seoHead(l, cp.page, langsMeta, { sites: sitesByLang[l.code] || [] }));
 
           const prefix = l.pathPrefix || '';   // '' 或 '/zh'
-          const file = prefix ? `${prefix.slice(1)}/${cp.kind}.html` : `${cp.kind}.html`;
+          const file = prefix ? `${prefix.slice(1)}/${cp.page}.html` : `${cp.page}.html`;
           this.emitFile({ type: 'asset', fileName: file, source: html });
         }
       }
@@ -293,6 +298,15 @@ export default function prerenderPlugin() {
 
       const entries = [];
       for (const p of allPages) {
+        // 构建期断言：宁可构建失败，也不要产出一份「看着正常、其实全是坏 URL」的 sitemap。
+        // 之前就是字段名写错（kind vs page）静默拼出 /undefined.html，线上挂了很久没人发现 ——
+        // sitemap 里的坏地址会直接被 GSC 报成抓取错误，白白浪费抓取配额。
+        if (typeof p.page !== 'string' || !p.page) {
+          throw new Error(
+            `[sitemap] 页面清单里有缺 page 字段的条目：${JSON.stringify(p)}。` +
+            `sitemap 的 URL 由 p.page 拼出，缺了就会生成 /undefined.html。`
+          );
+        }
         for (const l of langs) {
           const loc = pageUrl(l, p.page);
           const links = langs.map(o =>

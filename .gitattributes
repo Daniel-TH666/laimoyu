@@ -1,0 +1,28 @@
+# 统一换行符：仓库里一律存 LF，检出也是 LF。
+#
+# 为什么需要这个文件：
+#   本机 core.autocrlf=true，而仓库里历史文件是混杂的（README 是 LF、studio.js 是 CRLF）。
+#   结果每次编辑 studio.js，git 都会把它整体规范化一遍 ——
+#   真实改动 358 行，diff 却显示 2340 行，把真正的改动淹掉了，
+#   也让「推送前先比对」变得没法看。
+#   写死 eol=lf 之后，存储与检出都是 LF，Windows / macOS / Linux 三边一致，噪音消失。
+#
+# ⚠️ 不要改成 eol=crlf：那会让 macOS/Linux 上的检出也带 CRLF，
+#    而这个项目要能在任意平台构建（Vite / Node 都能吃 LF）。
+* text=auto eol=lf
+
+# 显式声明二进制：这些文件绝不能参与换行符转换，否则会直接损坏（图标全是二进制）
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.pdf  binary
+*.zip  binary
+
+# svg 是文本，但仍不做换行转换（里面的多行属性保持一致最省事）
+*.svg  -text

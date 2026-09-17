@@ -36,8 +36,6 @@ const sitesLoaders = import.meta.glob('./data/sites/*.json');
 const LANG_KEY = 'moyu_lang';       // 用户手动选过的语言（记住在这台设备上）
 const FAV_KEY = 'moyu_favs';        // 收藏
 
-const REC_REPO = { owner: 'Daniel-TH666', repo: 'laimoyu' };
-
 // === 状态 ===
 const state = {
   lang: DEFAULT_LANG,
@@ -325,81 +323,14 @@ function bindRoll() {
   });
 }
 
-function bindSubmit() {
-  // 分类下拉在构建期已经渲染好了（爬虫也能读），只有内容为空时才补一份
-  const select = document.querySelector('#submit-form select[name="category"]');
-  if (select && select.options.length <= 1) {
-    select.innerHTML = `<option value="">${escapeHtml((state.t.submit || {}).fieldCategoryPlaceholder || '')}</option>`
-      + state.categories.map(c =>
-        `<option value="${escapeHtml(c.id)}">${escapeHtml(c.icon)} ${escapeHtml(c.title)}</option>`).join('');
-  }
-
-  const form = document.getElementById('submit-form');
-  if (form) {
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(form));
-      const cat = state.categories.find(c => c.id === data.category);
-      const url = buildRecIssueUrl(data, cat ? `${cat.icon} ${cat.title}` : data.category);
-      const sub = state.t.submit || {};
-
-      // 处在用户点击的调用栈里，正常不会被拦截；被拦了就退回手工链接
-      const tab = window.open(url, '_blank');
-
-      const hint = document.getElementById('submit-hint');
-      const link = document.getElementById('submit-hint-link');
-      if (hint && link) {
-        link.href = url;
-        hint.classList.remove('hidden');
-        hint.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-      showToast(tab
-        ? (sub.toastOpened || 'Opened on GitHub — click "Submit new issue" to finish')
-        : (sub.toastBlocked || 'The new tab was blocked — use the link below'),
-        tab ? 'success' : 'warn', 5000);
-    });
-  }
-
-  const btn = document.getElementById('btn-submit');
+// 「更新说明」区块：本站不定期更新、不开放投稿，这里只需要把按钮滚动到该区块。
+// ⚠️ 刻意不做任何网络请求、不收集任何输入 —— 页面上不存在表单。
+function bindUpdates() {
+  const btn = document.getElementById('btn-updates');
   if (btn) btn.addEventListener('click', () => {
-    const sec = document.getElementById('submit-section');
+    const sec = document.getElementById('updates-section');
     if (sec) sec.scrollIntoView({ behavior: 'smooth' });
   });
-}
-
-// === 推荐提交：跳到 GitHub 的「新建 Issue」页，内容预先填好 ===
-// 为什么不是直接 POST：GitHub 早就禁止未登录匿名建 Issue，前端直连 api.github.com
-// 一定拿到 401 Requires authentication，所以改为引导访客在 GitHub 上点一次
-// 「Submit new issue」——不需要任何令牌，零后端。
-//
-// ⚠️ 正文里的字段名必须保持 ASCII 且不随语言变化（lang / title / url / category /
-//    description），后台 studio.js 的 parseRecIssue() 靠这些键解析。
-//    只有给人看的标题前缀、说明正文才跟着语言走；同时保留对旧版中文键的兼容。
-const REC_FIELDS = {
-  lang: 'lang', title: 'title', url: 'url',
-  category: 'category', categoryLabel: 'categoryLabel', description: 'description'
-};
-
-function buildRecIssueUrl(data, catLabel) {
-  const sub = state.t.submit || {};
-  const one = s => String(s == null ? '' : s).replace(/\s*\n\s*/g, ' ').trim();
-  const body = [
-    sub.issueHeading || '### Site suggestion',
-    '',
-    `- **${REC_FIELDS.lang}**: ${one(state.lang)}`,
-    `- **${REC_FIELDS.title}**: ${one(data.title)}`,
-    `- **${REC_FIELDS.url}**: ${one(data.url)}`,
-    `- **${REC_FIELDS.category}**: ${one(data.category)}`,
-    `- **${REC_FIELDS.categoryLabel}**: ${one(catLabel)}`,
-    `- **${REC_FIELDS.description}**: ${one(data.description)}`,
-    `- **submittedAt**: ${new Date().toISOString()}`
-  ].join('\n');
-
-  const q = new URLSearchParams({
-    title: `${sub.issueTitlePrefix || '[Suggestion]'} ${one(data.title)}`,
-    body
-  });
-  return `https://github.com/${REC_REPO.owner}/${REC_REPO.repo}/issues/new?${q.toString()}`;
 }
 
 // 前台提示条：文本写进 JS，保证 Tailwind 能扫到这些类名并生成
@@ -481,7 +412,7 @@ function bindTypewriter() {
     bindTabs();
     bindSearch();
     bindRoll();
-    bindSubmit();
+    bindUpdates();
     bindTypewriter();
   } catch (err) {
     // 静默降级：正文已经在 HTML 里了，只有搜索/收藏这些增强功能失效

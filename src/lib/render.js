@@ -141,8 +141,8 @@ export function siteCard(site, opts = {}) {
 export function nativeAdCard(t = {}) {
   return `
     <article class="ad-native rounded-card p-4 bg-gradient-to-br from-cream-100/60 to-mint-50/40 border-2 border-dashed border-mint-200 flex flex-col items-center justify-center text-center min-h-[134px]">
-      <span class="text-[10px] uppercase tracking-wider text-mint-600 font-bold mb-2">${escapeHtml(L(t, 'sections.adSponsored', 'Sponsored'))}</span>
-      <p class="text-xs text-slate-500">native-ad-1</p>
+      <span class="text-[10px] uppercase tracking-wider text-mint-600 font-bold mb-2">${escapeHtml(L(t, 'sections.adLabel', 'Ad'))}</span>
+      <p class="text-xs text-slate-500">${escapeHtml(L(t, 'sections.adSlotInContent', 'In-content ad space'))}</p>
     </article>
   `;
 }
@@ -237,7 +237,7 @@ export function allCategoriesHtml(categories, sites, opts = {}) {
 // === 站点详解（正文内容，搜索引擎抓取的主体） ===
 export function siteGuideHtml(categories, sites, opts = {}) {
   const t = opts.t || {};
-  const adLabel = L(t, 'sections.adSponsored', 'Sponsored');
+  const adLabel = L(t, 'sections.adLabel', 'Ad');
   const blocks = categories.map((cat, idx) => {
     const items = sites.filter(s => s.category === cat.id);
     if (!items.length) return '';
@@ -257,7 +257,7 @@ export function siteGuideHtml(categories, sites, opts = {}) {
         <div data-ad-slot="ad-in-content-${idx}" class="ad-slot my-8">
           <div class="text-center">
             <div class="text-xs uppercase tracking-wider text-mint-600 mb-1">${escapeHtml(adLabel)}</div>
-            <div>ad-in-content-${idx}</div>
+            <div>${escapeHtml(L(t, 'sections.adSlotInContent', 'In-content ad space'))}</div>
           </div>
         </div>` : '';
 
@@ -389,7 +389,6 @@ function contentFooterHtml(i18n, langs, page) {
         <a href="${escapeHtml(p + '/privacy.html')}" class="hover:text-mint-200 transition">${escapeHtml(links.privacy || '')}</a>
         <a href="${escapeHtml(p + '/faq.html')}" class="hover:text-mint-200 transition">${escapeHtml(links.faq || '')}</a>
         <a href="${escapeHtml(p + '/contact.html')}" class="hover:text-mint-200 transition">${escapeHtml(links.contact || '')}</a>
-        <a href="https://github.com/Daniel-TH666/laimoyu" target="_blank" rel="noopener" class="hover:text-mint-200 transition">GitHub</a>
       </div>
       <div class="mb-8 pb-6 border-t border-slate-700 pt-6">
         ${langSwitcherHtml(langs, i18n.code, page, { variant: 'footer', t: i18n })}

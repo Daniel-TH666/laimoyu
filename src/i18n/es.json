@@ -34,8 +34,8 @@
       "description": "Qué guarda Moyu Paradise, cómo se usan las cookies y el almacenamiento local, qué hacen la publicidad y las analíticas de terceros, y cómo desactivar los anuncios personalizados."
     },
     "contact": {
-      "title": "Contactar con Moyu Paradise — sugiere una web, informa de un problema",
-      "description": "Escribe al editor de Moyu Paradise para sugerir una web, avisar de un enlace roto, pedir una corrección o una eliminación, o preguntar por la publicidad."
+      "title": "Contactar con Moyu Paradise — correcciones, retiradas y publicidad",
+      "description": "Cómo se gestionan en Moyu Paradise las correcciones, las retiradas de enlaces y las consultas sobre publicidad, y por qué el sitio no publica una dirección de contacto."
     },
     "faq": {
       "title": "Preguntas frecuentes — Moyu Paradise",
@@ -47,7 +47,7 @@
     "searchPlaceholder": "Buscar webs...",
     "searchTip": "Pulsa / para ir al buscador",
     "searchBigPlaceholder": "Prueba: juegos, memes, lluvia, teclado...",
-    "submitBtn": "Sugerir una web",
+    "submitBtn": "Novedades",
     "randomBtn": "Web al azar",
     "randomTip": "Pulsa R para abrir una web al azar",
     "escTip": "Pulsa Esc para cerrar los paneles",
@@ -112,10 +112,10 @@
     "hotBadge": "TOP 10",
     "tipsTitle": "Consejos rápidos",
     "adLabel": "Anuncio",
-    "adSponsored": "Patrocinado",
-    "adSlotTop": "Banner superior · ad-top-banner · 728×90 o adaptable",
-    "adSlotBottom": "Pie de página · ad-bottom · Auto Ads o adaptable",
-    "adSlotSidebar": "Barra lateral · ad-sidebar-{n} · 300×250",
+    "adSlotInContent": "Espacio publicitario en el contenido",
+    "adSlotTop": "Espacio publicitario superior",
+    "adSlotBottom": "Espacio publicitario inferior",
+    "adSlotSidebar": "Espacio publicitario lateral",
     "emptyTitle": "Nada coincide con esa búsqueda",
     "emptyButton": "Mostrar todo",
     "backToAll": "Volver a todas las webs"
@@ -126,35 +126,21 @@
     "Pulsa <kbd>Esc</kbd> para cerrar cualquier panel",
     "Haz clic en <span class=\"text-coral-500\">★</span> para guardar un favorito"
   ],
-  "submit": {
-    "title": "Sugerir una web",
-    "subtitle": "¿Tienes una que falte? Mándala: cada propuesta la revisa una persona antes de publicarse.",
-    "fieldTitle": "Nombre de la web",
-    "fieldCategory": "Categoría",
-    "fieldCategoryPlaceholder": "Elige una categoría",
-    "fieldUrl": "URL de la web",
-    "fieldDesc": "Descripción de una línea",
-    "fieldDescPlaceholder": "p. ej., pega una imagen y quita el fondo en cinco segundos",
-    "submitBtn": "Enviar para revisión",
-    "note": "Al enviar se abre una incidencia de GitHub con tus datos ya rellenados (hace falta una cuenta gratuita de GitHub). El editor la lee directamente.",
-    "hintTitle": "Falta un paso",
-    "hintBody": [
-      "① GitHub se ha abierto en una pestaña nueva con el formulario ya rellenado.",
-      "② Pulsa el botón verde <span class=\"font-medium text-ink-800\">Submit new issue</span> — y listo."
-    ],
-    "hintLink": "¿No se ha abierto? Pulsa aquí en su lugar →",
-    "issueHeading": "### Sugerencia de sitio",
-    "issueTitlePrefix": "[Sugerencia]",
-    "toastOpened": "Abriendo GitHub — pulsa \"Submit new issue\" para terminar",
-    "toastBlocked": "El emergente fue bloqueado — usa el enlace de abajo",
-    "toastNone": "Todavía no hay nada que enviar — rellena los campos obligatorios"
+  "updates": {
+    "title": "La lista se actualiza de vez en cuando",
+    "subtitle": "Sin formularios de envío, sin lista de espera y sin ningún tipo de registro.",
+    "points": [
+      "Cada entrada se elige y se comprueba a mano. Se añaden sitios nuevos cuando aparece algo que realmente merece la pena abrir.",
+      "Los enlaces que dejan de funcionar se eliminan a la vez, para que la lista siga siendo útil y no solo más larga.",
+      "Aquí nada se paga y nada se añade de forma automática. Guarda la página y vuelve cuando necesites algo que abrir."
+    ]
   },
   "footer": {
     "friendsTitle": "Amigos de la web",
     "copyright": "© 2026 Moyu Paradise · un directorio de cosas que hacer cuando el trabajo va lento",
     "disclosure": "Sitio independiente. En el futuro podría introducirse publicidad display para cubrir los gastos de mantenimiento; la publicidad se mantiene separada de la selección editorial.",
     "links": {
-      "submit": "Sugerir una web",
+      "submit": "Novedades",
       "about": "Acerca de",
       "privacy": "Privacidad",
       "faq": "Preguntas frecuentes",
@@ -216,8 +202,8 @@
         {
           "h": "Correcciones, eliminaciones y retiradas",
           "p": [
-            "Las webs cambian de dueño, ponen muros de pago o cierran sin previo aviso. Si un enlace está roto, lo ha tomado otra persona o ha empezado a portarse mal, repórtalo desde la página de contacto y se comprobará y arreglará o eliminará.",
-            "Los propietarios que quieran que su web salga del directorio pueden pedirlo por la misma vía. No hace falta dar motivo, y la retirada se hace sin discusión: la entrada desaparece, no se esconde."
+            "Las webs cambian de dueño, ponen muros de pago o cierran sin previo aviso. Los enlaces se revisan periódicamente, y lo que está roto, ha cambiado de manos o se porta mal se corrige o se elimina en esas revisiones.",
+            "Si eres el titular de una web incluida aquí y quieres que salga, esa petición tiene prioridad sobre todo lo demás: no hace falta dar motivo y la entrada se borra, no se esconde."
           ]
         }
       ]
@@ -230,7 +216,7 @@
         {
           "h": "Lo que recogemos directamente",
           "p": [
-            "Nada. No hay sistema de cuentas, ni formulario de registro, ni base de datos de contactos. El formulario de sugerir una web no envía nada a los servidores de este sitio: abre una incidencia de GitHub ya rellenada en tu propio navegador, con tu propia cuenta, y a partir de ahí manda la política de privacidad de GitHub, no la nuestra.",
+            "Nada. No hay sistema de cuentas, ni formulario de registro, ni boletín, ni base de datos de contactos. Ninguna parte de este sitio te pide datos personales, y no hay ningún formulario que nos envíe nada.",
             "Por tanto, no guardamos por nuestra parte nombres, direcciones de correo ni perfiles de uso."
           ]
         },
@@ -286,24 +272,31 @@
     },
     "contact": {
       "heading": "Contacto",
-      "intro": "Una sola persona lee todo lo que se envía aquí. El gestor de incidencias de GitHub es la vía más rápida y mantiene toda la conversación en un solo sitio.",
+      "intro": "Este sitio lo mantiene una sola persona, sin servicio de atención detrás. Esta página explica cómo se tratan realmente las correcciones, las retiradas y todo lo demás.",
       "blocks": [
         {
-          "h": "Sugerir una web",
+          "h": "No hay formulario de contacto",
           "p": [
-            "La vía más rápida es el formulario de la página de inicio: abre una incidencia de GitHub ya rellenada con el nombre, la URL, la categoría y la descripción, y solo hace falta una cuenta gratuita de GitHub para enviarla. Las propuestas se revisan a mano, así que una nota breve sobre por qué la web merece estar sirve más que una frase de marketing."
+            "Ninguna parte de este sitio envía datos a ningún sitio. No hay cuentas, ni boletín, ni ningún formulario que recoja tus datos; por tanto tampoco hay un buzón para mensajes generales.",
+            "Es una decisión deliberada, no un descuido. Una dirección de contacto publicada recibe mucho más correo automático que correo real, y un directorio que mantiene una sola persona en su tiempo libre no tiene capacidad para filtrarlo. Una página que recogiera mensajes y nunca respondiera sería peor que no tenerla."
           ]
         },
         {
-          "h": "Informar de un problema",
+          "h": "Si eres el titular de una web incluida aquí",
           "p": [
-            "Enlace roto, web tomada por otra persona, un muro de pago que apareció, una página que empezó a servir algo desagradable: abre una incidencia en el gestor y se comprobará y corregirá o eliminará. Por la misma vía se atienden las peticiones de corrección de un propietario y las peticiones de salir del directorio; estas últimas se ejecutan sin pedir explicaciones."
+            "Si eres propietario o responsable de una de las webs de esta lista y prefieres que no se enlace, esa petición se atiende sin discutir: no hace falta dar motivos y la entrada se elimina de verdad, no se esconde. Las peticiones de los titulares tienen prioridad sobre cualquier otra cosa en este sitio."
           ]
         },
         {
-          "h": "Publicidad y otras consultas",
+          "h": "Correcciones y enlaces rotos",
           "p": [
-            "Preguntas sobre publicidad, colaboraciones o cualquier otra cosa: abre una incidencia en el mismo gestor y se responderá allí. Decididamente no se publica una dirección de correo en esta página, porque los directorios públicos de contactos atraen muchísimo más spam automatizado que correo útil: el gestor mantiene todo legible y buscable."
+            "Las webs cambian de manos, añaden muros de pago y cierran sin avisar, así que las descripciones se revisan periódicamente en lugar de escribirse una vez y dejarlas ahí. Lo que deja de funcionar se corrige o se elimina en esas revisiones, y esa es la razón de que esta lista sea más corta que una generada automáticamente."
+          ]
+        },
+        {
+          "h": "Publicidad y colaboraciones",
+          "p": [
+            "Este sitio no lleva publicidad por ahora y no mantiene ninguna relación comercial con las webs incluidas. Si en el futuro se incorpora publicidad display, se etiquetará con claridad, se mantendrá separada visualmente de las entradas editoriales y se explicará en esta página en lugar de aparecer sin más."
           ]
         }
       ]
@@ -318,7 +311,7 @@
         },
         {
           "q": "¿Tengo que instalar algo o registrarme?",
-          "a": "No. Cada entrada es una web que funciona en una pestaña normal del navegador. Nunca necesitas crear una cuenta con nosotros; el único registro opcional es una cuenta gratuita de GitHub, y solo si quieres sugerir una web."
+          "a": "No. Cada entrada es una web que funciona en una pestaña normal del navegador. No hay cuentas que crear, nada a lo que suscribirse y nada que instalar: el sitio funciona igual tanto si has entrado antes como si no."
         },
         {
           "q": "¿Cómo se eligen las webs?",
@@ -337,12 +330,16 @@
           "a": "Este sitio no establece cookies de rastreo propias y no te pide información personal. Tus favoritos y tu elección de idioma se guardan en tu propio navegador y no se envían a ningún sitio. Los proveedores de publicidad y analítica de terceros pueden poner sus propias cookies; la política de privacidad explica exactamente cómo desactivarlas."
         },
         {
-          "q": "¿Puedo sugerir una web, o pedir que se quite una?",
-          "a": "Ambas cosas. Las sugerencias pasan por el formulario de la página de inicio y se revisan una a una. Los propietarios que quieran salir pueden pedirlo por la página de contacto y se retirará sin discusión."
+          "q": "¿Con qué frecuencia se actualiza la lista?",
+          "a": "No hay un calendario fijo. Se añaden webs cuando aparece algo que realmente merece la pena abrir, y los enlaces que dejan de funcionar se eliminan en esas mismas revisiones. Nada se añade de forma automática y nadie puede pagar por aparecer."
         },
         {
           "q": "¿Qué significa \"moyu\"?",
           "a": "\"Moyu\" (摸鱼) es el chino para ir sacando un trocito de tiempo propio de la jornada laboral: literalmente \"tantear peces\", por la idea de mantenerse aparentemente ocupado en la superficie mientras debajo se hace otra cosa bien distinta. Es una palabra mucho más simpática que \"procrastinar\", que es más o menos por lo que esta web lleva su nombre."
+        },
+        {
+          "q": "¿Puedo pedir que mi web salga de la lista?",
+          "a": "Sí. El titular de una web incluida puede pedir que se retire sin dar motivos, y la entrada se borra en lugar de esconderse. Las peticiones de los titulares tienen prioridad sobre todo lo demás."
         }
       ]
     }

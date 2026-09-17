@@ -34,8 +34,8 @@
       "description": "Ce que Moyu Paradise stocke, comment les cookies et le stockage local sont utilisés, ce que font la publicité et les mesures d'audience tierces, et comment refuser les publicités personnalisées."
     },
     "contact": {
-      "title": "Contacter Moyu Paradise — proposer un site, signaler un problème",
-      "description": "Écrire à la rédaction de Moyu Paradise pour proposer un site, signaler un lien cassé, demander une correction ou un retrait, ou poser une question sur la publicité."
+      "title": "Contacter Moyu Paradise — corrections, retraits et publicité",
+      "description": "Comment sont traitées les corrections, les retraits de liens et les demandes publicitaires chez Moyu Paradise, et pourquoi le site ne publie pas d'adresse de contact."
     },
     "faq": {
       "title": "FAQ — Moyu Paradise",
@@ -47,7 +47,7 @@
     "searchPlaceholder": "Rechercher un site...",
     "searchTip": "Appuyez sur / pour activer la recherche",
     "searchBigPlaceholder": "Essayez : jeux, pluie, mèmes, actualité, clavier...",
-    "submitBtn": "Proposer un site",
+    "submitBtn": "Mises à jour",
     "randomBtn": "Site aléatoire",
     "randomTip": "Appuyez sur R pour un site aléatoire",
     "escTip": "Appuyez sur Esc pour fermer les surimpressions",
@@ -112,10 +112,10 @@
     "hotBadge": "TOP 10",
     "tipsTitle": "Astuces rapides",
     "adLabel": "Pub",
-    "adSponsored": "Sponsorisé",
-    "adSlotTop": "Bannière haute · ad-top-banner · 728×90 ou responsive",
-    "adSlotBottom": "Bas de page · ad-bottom · Auto Ads ou responsive",
-    "adSlotSidebar": "Barre latérale · ad-sidebar-{n} · 300×250",
+    "adSlotInContent": "Emplacement publicitaire dans le contenu",
+    "adSlotTop": "Emplacement publicitaire en haut",
+    "adSlotBottom": "Emplacement publicitaire en bas",
+    "adSlotSidebar": "Emplacement publicitaire latéral",
     "emptyTitle": "Aucun résultat pour cette recherche",
     "emptyButton": "Tout afficher",
     "backToAll": "Retour à tous les sites"
@@ -126,35 +126,21 @@
     "Appuyez sur <kbd>Esc</kbd> pour fermer toute surimpression",
     "Cliquez sur <span class=\"text-coral-500\">★</span> pour garder un favori"
   ],
-  "submit": {
-    "title": "Proposer un site",
-    "subtitle": "Il en manque un ? Envoyez-le — chaque proposition est examinée par un humain avant publication.",
-    "fieldTitle": "Nom du site",
-    "fieldCategory": "Catégorie",
-    "fieldCategoryPlaceholder": "Choisir une catégorie",
-    "fieldUrl": "URL du site",
-    "fieldDesc": "Description en une ligne",
-    "fieldDescPlaceholder": "ex. Coller une image, récupérer le fond supprimé en cinq secondes",
-    "submitBtn": "Envoyer pour relecture",
-    "note": "La soumission ouvre un ticket GitHub prérempli avec vos informations (un compte GitHub gratuit est nécessaire). La rédaction le lit directement.",
-    "hintTitle": "Une dernière étape",
-    "hintBody": [
-      "① GitHub s'est ouvert dans un nouvel onglet avec le formulaire prérempli.",
-      "② Cliquez sur le bouton vert <span class=\"font-medium text-ink-800\">Submit new issue</span> — c'est tout."
-    ],
-    "hintLink": "Ça ne s'est pas ouvert ? Cliquez ici plutôt →",
-    "issueHeading": "### Suggestion de site",
-    "issueTitlePrefix": "[Suggestion]",
-    "toastOpened": "Ouverture de GitHub — cliquez sur « Submit new issue » pour terminer",
-    "toastBlocked": "La fenêtre a été bloquée — utilisez le lien ci-dessous",
-    "toastNone": "Rien à envoyer pour l'instant — remplissez les champs requis"
+  "updates": {
+    "title": "La liste est mise à jour de temps à autre",
+    "subtitle": "Pas de formulaire d'envoi, pas de liste d'attente, aucune inscription.",
+    "points": [
+      "Chaque entrée est choisie et vérifiée à la main. De nouveaux sites sont ajoutés dès que quelque chose qui vaut vraiment le détour se présente.",
+      "Les liens morts sont retirés en même temps, pour que la liste reste utile plutôt que simplement plus longue.",
+      "Rien ici n'est payant et rien n'est ajouté automatiquement. Mettez la page en favori et revenez quand vous avez besoin de quelque chose à ouvrir."
+    ]
   },
   "footer": {
     "friendsTitle": "Amis du site",
     "copyright": "© 2026 Moyu Paradise · un annuaire de choses à faire quand le travail ralentit",
     "disclosure": "Site indépendant. Des publicités d'affichage pourront être introduites à l'avenir pour couvrir les frais de fonctionnement ; elles resteront séparées de la sélection éditoriale.",
     "links": {
-      "submit": "Proposer un site",
+      "submit": "Mises à jour",
       "about": "À propos",
       "privacy": "Confidentialité",
       "faq": "FAQ",
@@ -216,8 +202,8 @@
         {
           "h": "Corrections, retraits et signalements",
           "p": [
-            "Les sites changent de mains, ajoutent des paywalls ou ferment sans prévenir. Si un lien est cassé, a été repris par quelqu'un d'autre ou s'est mis à mal se comporter, signalez-le via la page contact : ce sera vérifié, puis corrigé ou retiré.",
-            "Les propriétaires qui souhaitent voir leur site retiré de cet annuaire peuvent le demander de la même façon. Aucune raison n'est demandée, et le retrait se fait sans discussion — la fiche disparaît plutôt que d'être cachée."
+            "Les sites changent de mains, ajoutent des paywalls ou ferment sans prévenir. Les liens sont revérifiés périodiquement, et ce qui est cassé, repris par quelqu'un d'autre ou se comporte mal est corrigé ou retiré lors de ces passes.",
+            "Si vous êtes propriétaire d'un site listé ici et souhaitez qu'il en soit retiré, cette demande passe avant tout le reste : aucune raison n'est exigée, et la fiche est supprimée plutôt que masquée."
           ]
         }
       ]
@@ -230,7 +216,7 @@
         {
           "h": "Ce que nous collectons directement",
           "p": [
-            "Rien. Il n'y a pas de système de compte, pas de formulaire d'inscription et pas de base de contacts. Le formulaire « proposer un site » n'envoie rien vers les serveurs de ce site — il ouvre un ticket GitHub prérempli dans votre propre navigateur, sous votre propre compte GitHub, et la soumission relève alors de la politique de confidentialité de GitHub plutôt que de la nôtre.",
+            "Rien. Il n'y a pas de système de compte, pas de formulaire d'inscription, pas de newsletter et pas de base de contacts. Aucune partie de ce site ne vous demande de données personnelles, et aucun formulaire ne nous envoie quoi que ce soit.",
             "Nous ne détenons donc ni noms, ni adresses e-mail, ni profils d'utilisation."
           ]
         },
@@ -286,24 +272,31 @@
     },
     "contact": {
       "heading": "Contact",
-      "intro": "Une seule personne lit tout ce qui est envoyé ici. Le gestionnaire de tickets GitHub est la voie la plus rapide et garde toute la conversation au même endroit.",
+      "intro": "Ce site est tenu par une seule personne, sans service d'assistance derrière. Cette page explique comment les corrections, les retraits et le reste sont réellement traités.",
       "blocks": [
         {
-          "h": "Proposer un site",
+          "h": "Il n'y a pas de formulaire de contact",
           "p": [
-            "Le chemin le plus rapide passe par le formulaire de la page d'accueil : il ouvre un ticket GitHub prérempli avec le nom, l'URL, la catégorie et la description déjà mis en place, et un compte GitHub gratuit suffit pour l'envoyer. Les propositions sont examinées à la main, donc une note courte expliquant pourquoi le site mérite sa place aide plus qu'une phrase de marketing."
+            "Rien sur ce site n'envoie quoi que ce soit. Il n'y a ni compte, ni newsletter, ni formulaire qui recueille vos informations — et donc pas non plus de boîte de réception pour les messages généraux.",
+            "C'est un compromis assumé, pas un oubli. Une adresse de contact publiée attire bien plus de courrier automatique que de courrier réel, et un annuaire tenu par une personne sur son temps libre n'a pas les moyens de faire le tri. Une page qui recueillerait des messages sans jamais y répondre serait pire que pas de page du tout."
           ]
         },
         {
-          "h": "Signaler un problème",
+          "h": "Si vous êtes propriétaire d’un site listé ici",
           "p": [
-            "Lien cassé, site repris par quelqu'un d'autre, paywall apparu, page qui a commencé à servir quelque chose de désagréable — ouvrez un ticket dans le gestionnaire et ce sera vérifié, puis corrigé ou retiré. La même voie traite les demandes de correction d'un propriétaire et les demandes de retrait de l'annuaire ; ces dernières sont exécutées sans demander de raison."
+            "Si vous possédez ou contrôlez l'un des sites de cette liste et préférez qu'il ne soit pas lié, cette demande est honorée sans discussion : aucune raison n'est demandée, et la fiche est supprimée pour de bon, pas discrètement masquée. Les demandes des propriétaires passent avant tout le reste sur ce site."
           ]
         },
         {
-          "h": "Publicité et autres demandes",
+          "h": "Corrections et liens morts",
           "p": [
-            "Questions de publicité, de partenariat ou d'autre chose : ouvrez un ticket via le même gestionnaire et la réponse se fera là. Aucune adresse e-mail n'est volontairement publiée sur cette page, car les annuaires publics d'adresses attirent bien plus de spam automatisé que de courrier utile — le gestionnaire garde tout lisible et cherchable."
+            "Les sites changent de mains, ajoutent des paywalls et ferment sans prévenir ; les descriptions sont donc revérifiées périodiquement plutôt qu'écrites une fois pour toutes. Ce qui cesse de fonctionner est corrigé ou retiré lors de ces passes, et c'est pour cela que cette liste est plus courte qu'une liste générée automatiquement."
+          ]
+        },
+        {
+          "h": "Publicité et partenariats",
+          "p": [
+            "Ce site ne diffuse aucune publicité pour l'instant et n'entretient aucune relation commerciale avec les sites listés. Si de la publicité display est introduite, elle sera clairement étiquetée, gardée visuellement à l'écart des fiches éditoriales, et expliquée sur cette page plutôt que d'apparaître sans prévenir."
           ]
         }
       ]
@@ -318,7 +311,7 @@
         },
         {
           "q": "Faut-il installer quelque chose ou créer un compte ?",
-          "a": "Non. Chaque fiche est un site web qui fonctionne dans un onglet de navigateur normal. Vous n'avez jamais besoin de créer de compte chez nous — la seule inscription facultative est un compte GitHub gratuit, et uniquement pour proposer un site."
+          "a": "Non. Chaque fiche est un site web qui fonctionne dans un onglet de navigateur normal. Il n'y a pas de compte à créer, rien à quoi s'abonner et rien à installer — le site fonctionne de la même façon, que vous soyez déjà venu ou non."
         },
         {
           "q": "Comment les sites sont-ils choisis ?",
@@ -337,12 +330,16 @@
           "a": "Ce site ne dépose aucun cookie de suivi propriétaire et ne vous demande aucune information personnelle. Vos favoris et votre choix de langue sont stockés dans votre propre navigateur et ne partent nulle part. Les régies publicitaires et de mesure d'audience tierces peuvent déposer leurs propres cookies ; la politique de confidentialité explique exactement comment les refuser."
         },
         {
-          "q": "Puis-je proposer un site, ou en faire retirer un ?",
-          "a": "Les deux. Les propositions passent par le formulaire de la page d'accueil et sont examinées une par une. Les propriétaires qui souhaitent un retrait peuvent passer par la page contact, et le retrait se fait sans discussion."
+          "q": "À quelle fréquence la liste est-elle mise à jour ?",
+          "a": "Il n'y a pas de calendrier fixe. De nouveaux sites sont ajoutés dès que quelque chose qui vaut vraiment le détour se présente, et les liens morts sont retirés lors des mêmes passes. Rien n'est ajouté automatiquement et personne ne peut payer pour figurer dans la liste."
         },
         {
           "q": "Que veut dire « moyu » ?",
           "a": "« Moyu » (摸鱼) est le mot chinois pour subtiliser un peu de temps personnel à la journée de travail — littéralement « tâter les poissons », d'après l'image de celui qui garde l'air bien occupé à la surface pendant qu'il fait tout autre chose au fond. C'est un mot bien plus sympathique que « procrastiner », et c'est à peu près pour ça que ce site porte son nom."
+        },
+        {
+          "q": "Puis-je faire retirer mon site de la liste ?",
+          "a": "Oui. Le propriétaire d'un site listé peut en demander le retrait sans donner de raison, et la fiche est supprimée plutôt que masquée. Les demandes des propriétaires passent avant tout le reste."
         }
       ]
     }

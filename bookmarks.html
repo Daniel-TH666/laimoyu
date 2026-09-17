@@ -27,10 +27,15 @@
       <!-- 视图切换 -->
       <nav class="flex items-center gap-1 ml-1 lg:ml-4">
         <button data-view="sites" class="view-tab active">📚 站点管理</button>
-        <button data-view="recommend" class="view-tab">
-          📥 推荐管理<span id="rec-badge" class="hidden ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500 text-white"></span>
-        </button>
       </nav>
+
+      <!-- 编辑语言：每种语言的站点数据是独立文件，切换即切换正在编辑的主页 -->
+      <div class="flex items-center gap-2 ml-1 lg:ml-3 pl-3 border-l border-slate-700">
+        <span class="text-xs text-slate-400 hidden lg:inline whitespace-nowrap">🌐 编辑语言</span>
+        <select id="lang-sites"
+                class="text-xs bg-slate-800 text-slate-200 border border-slate-700 rounded-full px-3 py-1.5 outline-none focus:border-mint-500 cursor-pointer"></select>
+        <span id="lang-file" class="text-[11px] text-slate-500 font-mono hidden xl:inline whitespace-nowrap"></span>
+      </div>
 
       <div class="flex-1"></div>
       <span id="status-badge" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300">
@@ -57,6 +62,10 @@
         这里是摸鱼乐园的内容管理后台。<br />
         只有持有 <strong class="text-slate-700">GitHub 访问令牌</strong> 的管理员才能进入。
       </p>
+      <div class="text-left bg-mint-50 border border-mint-100 rounded-xl px-4 py-3 mb-6 text-xs text-mint-800 leading-relaxed">
+        第一次使用需要填三项：<strong>GitHub 用户名</strong>、<strong>仓库名</strong>、<strong>访问令牌</strong>。<br />
+        这些只保存在<strong>你自己的浏览器里</strong>，不会上传到任何地方，也不会写进仓库；填过一次以后打开就不用再填。
+      </div>
       <button id="btn-login-settings" class="w-full bg-mint-500 hover:bg-mint-600 text-white font-medium py-3 rounded-full transition">
         🔑 登录
       </button>
@@ -154,79 +163,6 @@
     </section>
     </div><!-- /view-sites -->
 
-    <!-- ===== 视图二：推荐管理 ===== -->
-    <div id="view-recommend" class="hidden">
-      <section class="max-w-7xl mx-auto px-5 lg:px-8 pt-6">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div class="bg-white rounded-2xl border border-cream-200 p-4">
-            <div class="text-xs text-slate-400 uppercase tracking-wider">30 天内推荐</div>
-            <div id="rec-stat-30d" class="text-3xl font-bold text-ink-800 mt-1">—</div>
-          </div>
-          <div class="bg-white rounded-2xl border border-cream-200 p-4">
-            <div class="text-xs text-slate-400 uppercase tracking-wider">待审候选站</div>
-            <div id="rec-stat-cand" class="text-3xl font-bold text-mint-600 mt-1">—</div>
-          </div>
-          <div class="bg-white rounded-2xl border border-cream-200 p-4">
-            <div class="text-xs text-slate-400 uppercase tracking-wider">全部推荐</div>
-            <div id="rec-stat-all" class="text-3xl font-bold text-slate-600 mt-1">—</div>
-          </div>
-          <div class="bg-white rounded-2xl border border-cream-200 p-4">
-            <div class="text-xs text-slate-400 uppercase tracking-wider">最近提交</div>
-            <div id="rec-stat-latest" class="text-base font-medium text-slate-600 mt-2.5">—</div>
-          </div>
-        </div>
-
-        <div class="mt-4 bg-mint-50 border border-mint-100 rounded-xl px-4 py-3 text-xs text-mint-800 leading-relaxed">
-          <strong>这是啥：</strong>访客在首页「📮 推荐摸鱼网站」填写的推荐，会自动变成这个仓库的一条
-          <strong>Issue</strong>。<br />
-          这里按 <strong>近 30 天被推荐次数</strong> 从多到少排；同一网址被多人推荐会自动合并计数。
-          <span class="text-mint-600">本页只读，收录仍需你自己动手。</span>
-        </div>
-      </section>
-
-      <!-- 推荐操作条 -->
-      <div class="sticky top-16 z-20 mt-3 bg-cream-50/90 backdrop-blur border-y border-cream-200 py-2.5 shadow-sm">
-        <div class="max-w-7xl mx-auto px-5 lg:px-8">
-          <div class="flex flex-wrap items-center justify-end gap-3">
-            <label class="mr-auto flex items-center gap-2 text-xs text-slate-500">
-              <input id="rec-hide-done" type="checkbox" class="rounded border-cream-300" />
-              隐藏已关闭的
-            </label>
-            <select id="rec-sort" class="text-xs px-3 py-1.5 rounded-full border border-cream-200 bg-white text-slate-600 outline-none">
-              <option value="count30">按 30 天推荐次数</option>
-              <option value="countAll">按累计推荐次数</option>
-              <option value="latest">按最近提交时间</option>
-            </select>
-            <button id="btn-rec-refresh" class="text-xs bg-slate-900 text-white px-4 py-1.5 rounded-full hover:bg-slate-700 transition font-medium">
-              🔄 刷新推荐列表
-            </button>
-          </div>
-          <div id="rec-alert" class="hidden mt-2 rounded-xl px-4 py-3 text-sm leading-relaxed"></div>
-        </div>
-      </div>
-
-      <section class="max-w-7xl mx-auto px-5 lg:px-8 py-4">
-        <div id="rec-loading" class="hidden text-center py-20 text-slate-400">
-          <div class="text-5xl mb-3 animate-bob">📥</div>
-          <div>正在拉取推荐…</div>
-        </div>
-
-        <div id="rec-empty" class="hidden text-center py-20">
-          <div class="text-5xl mb-3">🐟</div>
-          <div class="text-slate-600 font-medium mb-1">还没有人推荐过</div>
-          <div class="text-slate-400 text-sm">等首页那条「推荐摸鱼网站」收到提交后，这里就会出现。</div>
-        </div>
-
-        <div id="rec-error" class="hidden text-center py-20">
-          <div class="text-5xl mb-3">⚠️</div>
-          <div class="text-slate-700 font-medium mb-2">拉取推荐失败</div>
-          <div id="rec-error-msg" class="text-slate-500 text-sm mb-4"></div>
-          <button id="btn-rec-retry" class="bg-mint-500 hover:bg-mint-600 text-white text-sm px-4 py-2 rounded-full">重试</button>
-        </div>
-
-        <div id="rec-list" class="space-y-3"></div>
-      </section>
-    </div><!-- /view-recommend -->
   </main>
 
   <!-- =========================================== -->
@@ -245,26 +181,35 @@
         <ol class="space-y-1.5 text-mint-700 text-xs leading-relaxed">
           <li>① 打开 <a class="underline font-mono" href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">github.com/settings/tokens</a></li>
           <li>② 点「Generate new token」→ 仓库权限勾上 <strong>能读写文件</strong>那项（Fine-grained 选 <strong>Contents: Read and write</strong>；Classic 勾 <strong>repo</strong>）→ 生成</li>
-          <li>③ 复制生成的那串令牌（<code class="px-1 bg-white rounded">ghp_…</code> 或 <code class="px-1 bg-white rounded">github_pat_…</code>）粘贴到下面</li>
+          <li>③ 复制生成的那串令牌，粘贴到下面</li>
         </ol>
       </div>
 
       <div class="space-y-4">
         <div>
           <label class="text-xs text-slate-500 mb-1 block">GitHub 用户名</label>
-          <input id="cfg-owner" type="text" placeholder="例如：Daniel-TH666" class="w-full px-3 py-2 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm" />
+          <input id="cfg-owner" type="text" placeholder="你的 GitHub 用户名" class="w-full px-3 py-2 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm" />
         </div>
         <div>
           <label class="text-xs text-slate-500 mb-1 block">仓库名</label>
-          <input id="cfg-repo" type="text" placeholder="例如：laimoyu" class="w-full px-3 py-2 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm" />
+          <input id="cfg-repo" type="text" placeholder="仓库名（不是完整网址）" class="w-full px-3 py-2 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm" />
         </div>
         <div>
           <label class="text-xs text-slate-500 mb-1 block">分支</label>
           <input id="cfg-branch" type="text" value="main" class="w-full px-3 py-2 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm" />
         </div>
         <div>
-          <label class="text-xs text-slate-500 mb-1 block">访问令牌（Token）</label>
-          <input id="cfg-pat" type="password" placeholder="ghp_xxxxxxxx..." class="w-full px-3 py-2 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm font-mono" />
+          <label class="text-xs text-slate-500 mb-1 block">访问令牌（Token）<span class="text-slate-400"> · 只保存在你自己的浏览器里，不会上传、不会进仓库</span></label>
+          <div class="relative">
+            <input id="cfg-pat" type="password" autocomplete="off" spellcheck="false"
+                   placeholder="粘贴你的令牌"
+                   class="w-full px-3 py-2 pr-16 rounded-lg border border-cream-200 focus:border-mint-500 focus:ring-2 focus:ring-mint-100 outline-none text-sm font-mono" />
+            <button type="button" id="btn-toggle-pat" tabindex="-1"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-[11px] text-slate-400 hover:text-mint-600 px-2 py-1 rounded">显示</button>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+            已保存过的令牌不会回显（避免被旁人看到或截图带走）；留空即沿用已保存的那个，只有要换令牌时才需要重新粘贴。
+          </p>
         </div>
       </div>
 

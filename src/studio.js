@@ -17,7 +17,6 @@
 //
 // 视图：
 //   - 📚 站点管理：编辑某个语言的 src/data/sites/<lang>.json（顶部可切换语言）
-//   - 📥 推荐管理：读仓库 Issue 里的访客推荐，按近 30 天推荐次数排序（只读）
 // ========================================================
 
 import './style.css';
@@ -54,9 +53,13 @@ const CONFIG_KEY = 'moyu_admin_config';
 const LOG_KEY = 'moyu_admin_log';
 const LANG_KEY = 'moyu_admin_lang';   // 上次编辑的语言
 
+// ⚠️ owner / repo 刻意留空，不写死在这里：
+//    bookmarks.html 是**公开可访问**的页面（robots.txt 只是不抓，不等于访问不到），
+//    写死在源码里 = 任何人打开后台页都能在页面源码里读到仓库地址。
+//    改成由你在「登录」弹窗里填一次，之后存在本机浏览器（localStorage），不落仓库。
 const defaultConfig = {
-  owner: 'Daniel-TH666',
-  repo: 'laimoyu',
+  owner: '',
+  repo: '',
   branch: 'main',
   pat: ''
 };
@@ -69,13 +72,7 @@ const state = {
   dirty: false,
   saving: false,
   alertKind: null,
-  view: 'sites',
-  recs: [],          // 推荐聚合结果
-  recRaw: [],        // 原始 issue 列表
-  recLoaded: false,
-  recLoading: false,
-  recFilterHideDone: false,
-  recSort: 'count30'
+  view: 'sites'
 };
 
 // === 分类（id 与图标在代码里固定，显示名取语言包，避免与前台不同步） ===
@@ -132,15 +129,29 @@ function fillConfigForm() {
   document.getElementById('cfg-owner').value = state.cfg.owner;
   document.getElementById('cfg-repo').value = state.cfg.repo;
   document.getElementById('cfg-branch').value = state.cfg.branch;
-  document.getElementById('cfg-pat').value = state.cfg.pat;
+  // ⚠️ 刻意**不**把已保存的令牌回填进输入框。
+  //    令牌一旦写进 input 的 value，它就实实在在存在于 DOM 里 ——
+  //    旁人扫一眼屏幕、截一张图、或在开发者工具里瞄一下都能拿走。
+  //    所以这里只给一句「已保存」提示，真实令牌留在 state.cfg.pat（本机 localStorage），
+  //    由 saveConfig() 在输入框留空时自动沿用。
+  const pat = document.getElementById('cfg-pat');
+  pat.value = '';
+  pat.placeholder = state.cfg.pat ? '已保存 · 留空则沿用' : '粘贴你的令牌';
+  pat.type = 'password';
+  const toggle = document.getElementById('btn-toggle-pat');
+  if (toggle) toggle.textContent = '显示';
 }
 
 function saveConfig() {
+  // owner / repo 没有内置默认值：由使用者填一次，连同令牌一起只存在本机浏览器。
+  // 这样源码和构建产物里都不含仓库地址（bookmarks.html 是公开可访问的页面）。
+  const typedPat = document.getElementById('cfg-pat').value.trim();
   state.cfg = {
-    owner: document.getElementById('cfg-owner').value.trim() || defaultConfig.owner,
-    repo: document.getElementById('cfg-repo').value.trim() || defaultConfig.repo,
+    owner: document.getElementById('cfg-owner').value.trim(),
+    repo: document.getElementById('cfg-repo').value.trim(),
     branch: document.getElementById('cfg-branch').value.trim() || 'main',
-    pat: document.getElementById('cfg-pat').value.trim()
+    // 输入框留空 = 沿用已保存的令牌（因为回填被刻意取消了）
+    pat: typedPat || state.cfg.pat || ''
   };
   localStorage.setItem(CONFIG_KEY, JSON.stringify(state.cfg));
 }
@@ -651,6 +662,7 @@ function renderStats() {
   document.getElementById('stat-new').textContent = state.sites.filter(s => s.isNew).length || '0';
   document.getElementById('stat-size').textContent = state.sites.length ? (new Blob([JSON.stringify(state.sites)]).size / 1024).toFixed(2) + ' KB' : '—';
   document.getElementById('stat-last-commit').textContent = state.dirty ? '⚠ 有未保存改动' : '已同步';
+  updateLangHint();   // 顶部语言选择器旁边跟着刷新「→ /xx/ · N 个站点」
 }
 function markDirty() {
   state.dirty = true;
@@ -815,283 +827,16 @@ function safeUrl(u) {
   return s;
 }
 
-// ========================================================
-// 推荐管理：读仓库 Issue 里的访客推荐
-//   前台「📮 推荐摸鱼网站」提交 → POST /repos/{o}/{r}/issues 建一条 Issue
-//   本模块 GET 全部 Issue → 解析 → 按网址域名聚合成「候选站」→ 按近 30 天次数排序
-//   纯只读：不修改、不关闭、不收录任何 Issue
-// ========================================================
-// 前台提交的 Issue 标题前缀（各语言不同），正文里的字段键则是固定 ASCII，
-// 具体解析规则见 parseRecIssue()
-const REC_TAG = '[推荐]';
-const REC_DAYS = 30;
-const REC_WINDOW_MS = REC_DAYS * 24 * 60 * 60 * 1000;
-
-function recHeaders() {
-  const h = { 'Accept': 'application/vnd.github+json' };
-  if (state.cfg.pat) h['Authorization'] = `Bearer ${state.cfg.pat}`;
-  return h;
-}
-
-async function ghFetchIssues() {
-  const { owner, repo } = state.cfg;
-  const all = [];
-  // 最多翻 5 页（500 条），再多说明真该换个存储了
-  for (let page = 1; page <= 5; page++) {
-    const url = `https://api.github.com/repos/${owner}/${repo}/issues`
-      + `?state=all&per_page=100&page=${page}&sort=created&direction=desc`;
-    const res = await fetch(url, { headers: recHeaders() });
-    if (!res.ok) throw new Error(`${res.status}`);
-    const arr = await res.json();
-    if (!Array.isArray(arr)) throw new Error('返回格式异常');
-    // /issues 端点会混入 PR，剔掉
-    const issues = arr.filter(i => !i.pull_request);
-    all.push(...issues);
-    if (arr.length < 100) break;
-  }
-  return all;
-}
-
-// 从 Issue body 里按 `**字段**：值` 提取；拿不到就退回标题。
-// 字段名有两套：
-//   新版（前台多语言后）用固定 ASCII 键：lang / title / url / category /
-//   categoryLabel / description —— 键不随语言变化，任何一种语言提交过来都能解析；
-//   旧版是中文键：网站名 / 网址 / 分类 / 简介 —— 保留兼容，历史 Issue 仍能读出来。
-function parseRecIssue(issue) {
-  const body = issue.body || '';
-  const grab = label => {
-    const re = new RegExp(`\\*\\*\\s*${label}\\s*\\*\\*\\s*[:：]\\s*(.+)`);
-    const m = body.match(re);
-    return m ? m[1].trim() : '';
-  };
-  const grabAny = (...labels) => {
-    for (const l of labels) {
-      const v = grab(l);
-      if (v) return v;
-    }
-    return '';
-  };
-
-  const rawTitle = (issue.title || '').trim();
-  const isRec = /^\[(推荐|Suggestion|Suggest|Recomendación|Suggestion|提案|제안)\]/i.test(rawTitle)
-    || /网站名|网址/.test(body)
-    || /\*\*\s*(title|url)\s*\*\*/i.test(body);
-
-  const lang = grabAny('lang', '语言') || '';
-  const catLabel = grabAny('categoryLabel', '分类');
-  const catId = grabAny('category') || matchCategory(catLabel) || '';
-
-  return {
-    isRec,
-    number: issue.number,
-    htmlUrl: issue.html_url,
-    state: issue.state,
-    createdAt: issue.created_at,
-    lang: lang || '—',
-    title: grabAny('title', '网站名', '名称')
-      || rawTitle.replace(/^\[[^\]]+\]\s*/, '').trim() || '(未命名)',
-    url: grabAny('url', '网址', 'URL'),
-    cat: matchCategory(catId) || '',
-    catLabel: catLabel || (catId ? (CAT_BY_ID[catId]?.title || catId) : '未填分类'),
-    desc: grabAny('description', '简介', '一句话简介'),
-    author: issue.user?.login || '匿名'
-  };
-}
-
-function recHost(url) {
-  try { return new URL(url).hostname.replace(/^www\./, '').toLowerCase(); }
-  catch { return String(url || '').trim().toLowerCase(); }
-}
-
-// 按域名把多条 Issue 聚合成一个候选站，统计 30 天内 / 累计推荐次数
-function aggregateRecs(issues) {
-  const parsed = issues.map(parseRecIssue).filter(r => r.isRec);
-  const cutoff = Date.now() - REC_WINDOW_MS;
-  const map = new Map();
-  for (const r of parsed) {
-    const key = recHost(r.url) || `t:${r.title}`;
-    if (!map.has(key)) {
-      map.set(key, {
-        key, title: r.title, url: r.url, cat: r.cat, catLabel: r.catLabel, desc: r.desc,
-        count30: 0, countAll: 0, openCount: 0,
-        firstAt: r.createdAt, lastAt: r.createdAt, numbers: []
-      });
-    }
-    const g = map.get(key);
-    g.countAll++;
-    const t = new Date(r.createdAt).getTime();
-    if (t >= cutoff) g.count30++;
-    if (r.state === 'open') g.openCount++;
-    if (t >= new Date(g.lastAt).getTime()) {
-      g.lastAt = r.createdAt;
-      if (r.title) g.title = r.title;
-      if (r.url) g.url = r.url;
-      if (r.desc) g.desc = r.desc;
-      if (r.cat) { g.cat = r.cat; g.catLabel = r.catLabel; }
-    }
-    if (t <= new Date(g.firstAt).getTime()) g.firstAt = r.createdAt;
-    g.numbers.push(r.number);
-  }
-  return [...map.values()];
-}
-
-function fmtRelative(iso) {
-  const t = new Date(iso).getTime();
-  if (!t) return '—';
-  const diff = Date.now() - t;
-  const min = Math.floor(diff / 60000);
-  if (min < 1) return '刚刚';
-  if (min < 60) return `${min} 分钟前`;
-  const h = Math.floor(min / 60);
-  if (h < 24) return `${h} 小时前`;
-  const d = Math.floor(h / 24);
-  if (d < 30) return `${d} 天前`;
-  return new Date(iso).toLocaleDateString('zh-CN');
-}
-
-function renderRecStats() {
-  const recs = state.recs;
-  const total30 = recs.reduce((a, r) => a + r.count30, 0);
-  const totalAll = recs.reduce((a, r) => a + r.countAll, 0);
-  const candidates = recs.filter(r => r.count30 > 0).length;
-  const latest = recs.length
-    ? recs.reduce((a, b) => (new Date(a.lastAt) > new Date(b.lastAt) ? a : b)).lastAt
-    : null;
-
-  document.getElementById('rec-stat-30d').textContent = total30;
-  document.getElementById('rec-stat-cand').textContent = candidates;
-  document.getElementById('rec-stat-all').textContent = totalAll;
-  document.getElementById('rec-stat-latest').textContent = latest ? fmtRelative(latest) : '—';
-
-  // header 小红点：30 天内有推荐才显示
-  const badge = document.getElementById('rec-badge');
-  if (badge) {
-    if (total30 > 0) { badge.textContent = total30; badge.classList.remove('hidden'); }
-    else badge.classList.add('hidden');
-  }
-}
-
-function renderRecs() {
-  const list = document.getElementById('rec-list');
-  const empty = document.getElementById('rec-empty');
-  const loading = document.getElementById('rec-loading');
-  const errBox = document.getElementById('rec-error');
-  loading.classList.add('hidden');
-  errBox.classList.add('hidden');
-
-  let rows = [...state.recs];
-  if (state.recFilterHideDone) rows = rows.filter(r => r.openCount > 0);
-
-  const by = state.recSort;
-  rows.sort((a, b) => {
-    if (by === 'latest') return new Date(b.lastAt) - new Date(a.lastAt);
-    if (by === 'countAll') return b.countAll - a.countAll || new Date(b.lastAt) - new Date(a.lastAt);
-    return b.count30 - a.count30 || b.countAll - a.countAll;
-  });
-
-  if (rows.length === 0) {
-    list.innerHTML = '';
-    empty.classList.remove('hidden');
-    return;
-  }
-  empty.classList.add('hidden');
-
-  list.innerHTML = rows.map((r, i) => {
-    const num = i + 1;
-    const rankCls = num <= 3 ? 'rec-rank top' : 'rec-rank';
-    const url = r.url || '#';
-    const catLabel = r.catLabel || (r.cat && CAT_BY_ID[r.cat]?.title) || '未填分类';
-    const host = recHost(r.url);
-    const hot = r.count30 >= 3 ? ' hot' : '';
-    const done = r.openCount === 0;
-    return `
-      <article class="rec-card">
-        <div class="flex items-start gap-3">
-          <span class="${rankCls}">${num}</span>
-          <div class="min-w-0 flex-1">
-            <div class="flex flex-wrap items-center gap-2">
-              <h3 class="font-bold text-ink-800 truncate">${escapeHtml(r.title)}</h3>
-              <span class="rec-count${hot}">🔥 30 天 ${r.count30} 次</span>
-              ${r.countAll > r.count30 ? `<span class="text-xs text-slate-400">累计 ${r.countAll} 次</span>` : ''}
-              ${done ? '<span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-400">已关闭</span>' : ''}
-            </div>
-            <a href="${escapeAttr(safeUrl(url))}" target="_blank" rel="noopener"
-               class="text-xs text-mint-600 hover:text-mint-700 hover:underline break-all mt-1 inline-block">${escapeHtml(url)}</a>
-            ${r.desc ? `<p class="text-sm text-slate-600 mt-1.5 leading-relaxed">${escapeHtml(r.desc)}</p>` : ''}
-            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-[11px] text-slate-400">
-              <span>建议分类：<span class="text-slate-500">${escapeHtml(catLabel)}</span></span>
-              <span>首次：${fmtRelative(r.firstAt)}</span>
-              <span>最近：${fmtRelative(r.lastAt)}</span>
-              <span>域名：<span class="font-mono">${escapeHtml(host)}</span></span>
-              <a href="https://github.com/${state.cfg.owner}/${state.cfg.repo}/issues?q=is%3Aissue+${encodeURIComponent(r.numbers[0])}"
-                 target="_blank" rel="noopener" class="hover:text-mint-600">查看 Issue #${r.numbers[0]}${r.numbers.length > 1 ? ` 等 ${r.numbers.length} 条` : ''}</a>
-            </div>
-          </div>
-        </div>
-      </article>
-    `;
-  }).join('');
-}
-
-function recAlert(kind, msg) {
-  const box = document.getElementById('rec-alert');
-  if (!box) return;
-  if (!msg) { box.classList.add('hidden'); box.innerHTML = ''; return; }
-  const style = kind === 'error'
-    ? 'bg-rose-50 border border-rose-200 text-rose-700'
-    : kind === 'warn'
-      ? 'bg-amber-50 border border-amber-200 text-amber-700'
-      : 'bg-mint-50 border border-mint-100 text-mint-700';
-  box.className = `mt-2 rounded-xl px-4 py-3 text-sm leading-relaxed ${style}`;
-  box.innerHTML = msg;
-}
-
-async function loadRecommendations(force = false) {
-  if (state.recLoading) return;
-  if (state.recLoaded && !force) return;
-  state.recLoading = true;
-  document.getElementById('rec-error').classList.add('hidden');
-  document.getElementById('rec-empty').classList.add('hidden');
-  document.getElementById('rec-loading').classList.remove('hidden');
-  recAlert('info', '');
-  try {
-    const issues = await ghFetchIssues();
-    state.recRaw = issues;
-    state.recs = aggregateRecs(issues);
-    state.recLoaded = true;
-    renderRecStats();
-    renderRecs();
-    const total = state.recs.reduce((a, r) => a + r.countAll, 0);
-    if (total === 0) {
-      recAlert('info', '拉到 ' + issues.length + ' 条 Issue，没有一条符合推荐格式（正文里缺少 **title** 与 **url** 字段）。'
-        + '确认前台首页的推荐表单已能提交（提交入口在首页底部「📮 推荐摸鱼网站」）。');
-    }
-  } catch (err) {
-    const code = String(err.message || '');
-    let hint = '拉取失败了。';
-    if (code === '401') hint = '令牌无效或已过期，点右上角「⚙️ 设置」重新粘贴。';
-    else if (code === '403') hint = '触发了 GitHub 频率限制，或令牌权限不足。等几分钟再试。';
-    else if (code === '404') hint = '仓库名不对，或令牌没有这个仓库的权限。';
-    else if (/Failed to fetch|NetworkError|Load failed/i.test(code)) hint = '网络请求失败，检查网络后重试。';
-    document.getElementById('rec-loading').classList.add('hidden');
-    document.getElementById('rec-error').classList.remove('hidden');
-    document.getElementById('rec-error-msg').textContent = hint + (code ? `（${code}）` : '');
-    state.recs = [];
-    renderRecStats();
-  } finally {
-    state.recLoading = false;
-  }
-}
 
 // === 视图切换 ===
+// 推荐管理视图已随前台投稿入口一起下线，现在只剩「站点管理」一套。
+// 这里保留 tab 高亮与容器切换的写法，将来要加视图时直接扩展即可。
 function switchView(view) {
   state.view = view;
   document.querySelectorAll('.view-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.view === view);
   });
   document.getElementById('view-sites').classList.toggle('hidden', view !== 'sites');
-  document.getElementById('view-recommend').classList.toggle('hidden', view !== 'recommend');
-  if (view === 'recommend') loadRecommendations();
 }
 
 function showLoginView() {
@@ -1117,6 +862,17 @@ function bindEvents() {
     fillConfigForm();
     showModal('modal-settings');
   });
+  // 令牌「显示 / 隐藏」：只在老板自己输入时可以临时露一眼，用来核对是不是粘全了。
+  // 默认始终是 password（遮住的），也不回填旧值。
+  const patToggle = document.getElementById('btn-toggle-pat');
+  if (patToggle) {
+    patToggle.addEventListener('click', () => {
+      const pat = document.getElementById('cfg-pat');
+      const show = pat.type === 'password';
+      pat.type = show ? 'text' : 'password';
+      patToggle.textContent = show ? '隐藏' : '显示';
+    });
+  }
   document.getElementById('btn-save-config').addEventListener('click', async () => {
     const btn = document.getElementById('btn-save-config');
     if (btn.disabled) return;
@@ -1198,17 +954,9 @@ function bindEvents() {
     tab.addEventListener('click', () => switchView(tab.dataset.view));
   });
 
-  // ---- 推荐管理 ----
-  document.getElementById('btn-rec-refresh').addEventListener('click', () => loadRecommendations(true));
-  document.getElementById('btn-rec-retry').addEventListener('click', () => loadRecommendations(true));
-  document.getElementById('rec-sort').addEventListener('change', e => {
-    state.recSort = e.target.value;
-    renderRecs();
-  });
-  document.getElementById('rec-hide-done').addEventListener('change', e => {
-    state.recFilterHideDone = e.target.checked;
-    renderRecs();
-  });
+  // ---- 编辑语言切换（每种语言一份独立数据文件，对应前台不同语言的主页）----
+  const langSel = document.getElementById('lang-sites');
+  if (langSel) langSel.addEventListener('change', e => switchLang(e.target.value));
 
   document.querySelectorAll('.modal-close').forEach(el => {
     el.addEventListener('click', e => {
@@ -1231,10 +979,27 @@ function bindEvents() {
 }
 
 // === 语言切换（站点管理视图）===
-// 每种语言的站点数据是独立文件，切语言 = 切一个文件，互不影响。
+// 每种语言的站点数据是独立文件，切语言 = 切一份数据，互不影响。
+// 下拉右侧同时标出该语言对应的**前台首页地址**，让「我正在改哪个语言的页面」
+// 一眼可见，不用去记文件路径。
 function langLabel(code) {
   const l = LANGS.find(x => x.code === code);
   return l ? `${l.flag} ${l.nativeName}` : code;
+}
+
+// 前台首页路径：英语在根目录，其余在 /<code>/（与语言包的 pathPrefix 同源）
+function frontPath(code) {
+  const t = pickMod(i18nByLang[`./i18n/${code}.json`]) || {};
+  const p = t.pathPrefix;
+  return (typeof p === 'string' && p) ? `${p}/` : '/';
+}
+
+// 选择器右侧那行小字：前台路径 + 站点数（只有正在编辑的那份才准，所以不显示别语言的数字）
+function updateLangHint() {
+  const file = document.getElementById('lang-file');
+  if (!file) return;
+  const n = state.sites.length;
+  file.textContent = `→ ${frontPath(state.lang)}` + (n ? `  ·  ${n} 个站点` : '');
 }
 
 function initLangSelect() {
@@ -1244,8 +1009,7 @@ function initLangSelect() {
       `<option value="${escapeAttr(l.code)}"${l.code === state.lang ? ' selected' : ''}>${escapeHtml(`${l.flag} ${l.nativeName}`)}</option>`
     ).join('');
   }
-  const file = document.getElementById('lang-file');
-  if (file) file.textContent = dataPath(state.lang);
+  updateLangHint();
 }
 
 async function switchLang(code) {
