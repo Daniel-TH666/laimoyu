@@ -1,0 +1,348 @@
+{
+  "code": "fr",
+  "htmlLang": "fr",
+  "hreflang": "fr",
+  "ogLocale": "fr_FR",
+  "nativeName": "Français",
+  "flag": "🇫🇷",
+  "dir": "ltr",
+  "pathPrefix": "/fr",
+  "brand": "Moyu Paradise",
+  "brandTagline": "L'art de glander au bureau",
+  "meta": {
+    "home": {
+      "title": "Moyu Paradise · 90 sites pour glander au travail (jeux, curiosités et écrans de diversion)",
+      "description": "Un annuaire trié sur le volet de 90 sites à ouvrir au bureau : jeux de navigateur, recoins étranges du web, écrans de diversion pour faire sérieux, outils réellement utiles, flux d'actualité, bruits d'ambiance et savoir en dix minutes. Chaque fiche s'accompagne d'un avis honnête sur le bon moment pour l'ouvrir et les pièges à connaître.",
+      "keywords": "sites pour s'occuper au travail, que faire quand on s'ennuie au bureau, jeux de navigateur, procrastination, bruit blanc, faire semblant de travailler, sites amusants",
+      "h1Template": "Moyu Paradise · {count} sites pour glander au travail",
+      "heroStat": "Ouvrez {count} sites vérifiés à la main — des flux d'actualité et des jeux de navigateur aux écrans de diversion et aux sons de pluie. L'art de glander, organisé.",
+      "slogans": [
+        "Moyu Paradise · {count} sites pour glander au travail",
+        "Un onglet. Des façons infinies de ne rien faire.",
+        "Votre pause de cinq minutes commence ici.",
+        "Avoir l'air occupé. Se sentir détendu.",
+        "{count} sites que votre chef n'a pas besoin de connaître"
+      ],
+      "ogImageAlt": "Moyu Paradise — un annuaire de sites pour glander au travail"
+    },
+    "about": {
+      "title": "À propos de Moyu Paradise — qui tient cette liste et comment les sites sont choisis",
+      "description": "Comment Moyu Paradise est fabriqué : qui écrit les avis, pourquoi un site est refusé, d'où viennent nos informations et comment faire corriger ou retirer une fiche."
+    },
+    "privacy": {
+      "title": "Politique de confidentialité — Moyu Paradise",
+      "description": "Ce que Moyu Paradise stocke, comment les cookies et le stockage local sont utilisés, ce que font la publicité et les mesures d'audience tierces, et comment refuser les publicités personnalisées."
+    },
+    "contact": {
+      "title": "Contacter Moyu Paradise — proposer un site, signaler un problème",
+      "description": "Écrire à la rédaction de Moyu Paradise pour proposer un site, signaler un lien cassé, demander une correction ou un retrait, ou poser une question sur la publicité."
+    },
+    "faq": {
+      "title": "FAQ — Moyu Paradise",
+      "description": "Les réponses aux questions habituelles : est-ce gratuit, faut-il un compte, comment les sites sont choisis, pourquoi certains ne se chargent pas, et si c'est sûr au travail."
+    }
+  },
+  "nav": {
+    "all": "Tous",
+    "searchPlaceholder": "Rechercher un site...",
+    "searchTip": "Appuyez sur / pour activer la recherche",
+    "searchBigPlaceholder": "Essayez : jeux, pluie, mèmes, actualité, clavier...",
+    "submitBtn": "Proposer un site",
+    "randomBtn": "Site aléatoire",
+    "randomTip": "Appuyez sur R pour un site aléatoire",
+    "escTip": "Appuyez sur Esc pour fermer les surimpressions",
+    "home": "Accueil",
+    "languageLabel": "Langue"
+  },
+  "card": {
+    "open": "Ouvrir le site ↗",
+    "favAdd": "Ajouter aux favoris",
+    "favRemove": "Retirer des favoris",
+    "newBadge": "NOUVEAU"
+  },
+  "categories": {
+    "games": {
+      "title": "Jeux de navigateur",
+      "navTitle": "Jeux",
+      "desc": "Des parties de deux minutes dans un onglet"
+    },
+    "weird": {
+      "title": "Le web étrange",
+      "navTitle": "Étrange",
+      "desc": "Les recoins bizarres qui méritent un détour"
+    },
+    "cover": {
+      "title": "Faire sérieux",
+      "navTitle": "Sérieux",
+      "desc": "Des écrans qui passent pour du travail"
+    },
+    "tools": {
+      "title": "Vrais outils",
+      "navTitle": "Outils",
+      "desc": "Accomplir quelque chose pendant que vous êtes là"
+    },
+    "trending": {
+      "title": "Actu & tendances",
+      "navTitle": "Actu",
+      "desc": "Ce dont internet débat aujourd'hui"
+    },
+    "media": {
+      "title": "Voir & écouter",
+      "navTitle": "Voir",
+      "desc": "Vidéo, musique et radio en direct"
+    },
+    "relax": {
+      "title": "Se calmer",
+      "navTitle": "Calme",
+      "desc": "Bruits, musique et choses lentes"
+    },
+    "learned": {
+      "title": "Apprendre quelque chose",
+      "navTitle": "Apprendre",
+      "desc": "Dix minutes qui rendent plus cultivé"
+    }
+  },
+  "sections": {
+    "featuredTitle": "Sélection de la rédaction",
+    "featuredNote": "Essayés un par un, aucun raté",
+    "categoriesTitle": "Tous les sites",
+    "guideTitle": "Guide des sites · chaque fiche expliquée",
+    "guideIntro": "Chaque site ci-dessous a droit à un paragraphe : ce qu'il est vraiment, le moment où c'est le bon choix, et le piège à connaître avant de cliquer. Lire ceci va plus vite que tout ouvrir un par un.",
+    "hotTitle": "Tendances de la semaine",
+    "hotBadge": "TOP 10",
+    "tipsTitle": "Astuces rapides",
+    "adLabel": "Pub",
+    "adSponsored": "Sponsorisé",
+    "adSlotTop": "Bannière haute · ad-top-banner · 728×90 ou responsive",
+    "adSlotBottom": "Bas de page · ad-bottom · Auto Ads ou responsive",
+    "adSlotSidebar": "Barre latérale · ad-sidebar-{n} · 300×250",
+    "emptyTitle": "Aucun résultat pour cette recherche",
+    "emptyButton": "Tout afficher",
+    "backToAll": "Retour à tous les sites"
+  },
+  "tips": [
+    "Appuyez sur <kbd>/</kbd> pour aller directement à la recherche",
+    "Appuyez sur <kbd>R</kbd> pour ouvrir un site aléatoire",
+    "Appuyez sur <kbd>Esc</kbd> pour fermer toute surimpression",
+    "Cliquez sur <span class=\"text-coral-500\">★</span> pour garder un favori"
+  ],
+  "submit": {
+    "title": "Proposer un site",
+    "subtitle": "Il en manque un ? Envoyez-le — chaque proposition est examinée par un humain avant publication.",
+    "fieldTitle": "Nom du site",
+    "fieldCategory": "Catégorie",
+    "fieldCategoryPlaceholder": "Choisir une catégorie",
+    "fieldUrl": "URL du site",
+    "fieldDesc": "Description en une ligne",
+    "fieldDescPlaceholder": "ex. Coller une image, récupérer le fond supprimé en cinq secondes",
+    "submitBtn": "Envoyer pour relecture",
+    "note": "La soumission ouvre un ticket GitHub prérempli avec vos informations (un compte GitHub gratuit est nécessaire). La rédaction le lit directement.",
+    "hintTitle": "Une dernière étape",
+    "hintBody": [
+      "① GitHub s'est ouvert dans un nouvel onglet avec le formulaire prérempli.",
+      "② Cliquez sur le bouton vert <span class=\"font-medium text-ink-800\">Submit new issue</span> — c'est tout."
+    ],
+    "hintLink": "Ça ne s'est pas ouvert ? Cliquez ici plutôt →",
+    "toastOpened": "Ouverture de GitHub — cliquez sur « Submit new issue » pour terminer",
+    "toastBlocked": "La fenêtre a été bloquée — utilisez le lien ci-dessous",
+    "toastNone": "Rien à envoyer pour l'instant — remplissez les champs requis"
+  },
+  "footer": {
+    "friendsTitle": "Amis du site",
+    "copyright": "© 2026 Moyu Paradise · un annuaire de choses à faire quand le travail ralentit",
+    "disclosure": "Site indépendant. Des publicités d'affichage pourront être introduites à l'avenir pour couvrir les frais de fonctionnement ; elles resteront séparées de la sélection éditoriale.",
+    "links": {
+      "submit": "Proposer un site",
+      "about": "À propos",
+      "privacy": "Confidentialité",
+      "faq": "FAQ",
+      "contact": "Contact"
+    }
+  },
+  "toast": {
+    "roll": "C'est parti : {title}",
+    "searchFocus": "Recherche activée",
+    "favOn": "Ajouté aux favoris",
+    "favOff": "Retiré des favoris",
+    "loadFail": "Certaines fonctions interactives n'ont pas chargé — rafraîchissez pour réessayer."
+  },
+  "langSwitch": {
+    "label": "Langue",
+    "title": "Choisir une langue",
+    "autoHint": "Détecté d'après les réglages de votre navigateur. Vous pouvez changer à tout moment — votre choix est mémorisé sur cet appareil.",
+    "backToEnglish": "Lire ce site en anglais"
+  },
+  "categoryFilter": {
+    "showAll": "Afficher toutes les catégories"
+  },
+  "pages": {
+    "about": {
+      "heading": "À propos de Moyu Paradise",
+      "intro": "Moyu (摸鱼) est un mot chinois qui signifie littéralement « tâter les poissons » : subtiliser un peu de temps personnel à la journée de travail, en gardant à la surface l'air bien occupé. La pause machine à café transformée en nom commun. Ce site est l'annuaire des endroits où l'on va vraiment quand on le pratique.",
+      "blocks": [
+        {
+          "h": "Ce qu'est ce site",
+          "p": [
+            "Moyu Paradise est une liste de sites web tenue à la main, qu'on peut ouvrir dans un onglet sans rien installer. Née des favoris personnels de quelqu'un, elle est devenue un annuaire véritable : chaque fiche a sa catégorie, sa description courte, et une note plus longue expliquant quand il vaut la peine de l'ouvrir.",
+            "Pas d'application, pas de compte, pas de mur d'inscription. On clique sur une carte, le site s'ouvre dans un nouvel onglet, et on en a fini avec nous jusqu'à la prochaine fois."
+          ]
+        },
+        {
+          "h": "Comment les sites entrent dans la liste",
+          "p": [
+            "Quatre règles, appliquées à chaque fiche sans exception :",
+            "1. Le site doit fonctionner. Chaque lien est ouvert et vérifié ; tout ce qui renvoie une erreur, redirige vers une page parking ou exige une installation est retiré plutôt que laissé en ligne morte.",
+            "2. Il doit être utilisable dans un onglet de navigateur. Les outils qui exigent un client lourd, une application mobile ou un abonnement payant pour faire quoi que ce soit sont exclus.",
+            "3. Il doit être assez sûr pour être ouvert. Pas de sites qui poussent des téléchargements trompeurs, pas de sites qui n'existent que pour empiler des publicités, pas de contenu adulte.",
+            "4. Il doit valoir le clic. « Il existe déjà un site pour ça » ne suffit pas — la fiche doit être celle que vous recommanderiez réellement à un collègue."
+          ]
+        },
+        {
+          "h": "Qui écrit les avis",
+          "p": [
+            "Chaque note de ce site est écrite par la rédaction, à partir d'une utilisation réelle du site. Les avis sont volontairement tranchés : ils disent quand quelque chose est le bon choix, et ils disent quand il ne l'est pas — un outil gratuit limité à deux fichiers par jour se voit l'écrire noir sur blanc plutôt que passé sous silence.",
+            "C'est un petit site indépendant, pas un agrégateur des descriptions des autres. Si une note sonne comme du remplissage générique, considérez-la comme une erreur à signaler."
+          ]
+        },
+        {
+          "h": "Indépendance éditoriale",
+          "p": [
+            "Figurer dans la liste ne coûte rien, et personne ne peut payer pour y entrer ou pour monter dans une catégorie. La publicité d'affichage, quand elle est présente, est servie de façon programmatique et reste visuellement séparée de la liste éditoriale ; un annonceur n'a aucune influence sur ce qui est recommandé.",
+            "Si une relation commerciale affectait un jour une recommandation, elle serait signalée comme telle sur la carte concernée."
+          ]
+        },
+        {
+          "h": "Corrections, retraits et signalements",
+          "p": [
+            "Les sites changent de mains, ajoutent des paywalls ou ferment sans prévenir. Si un lien est cassé, a été repris par quelqu'un d'autre ou s'est mis à mal se comporter, signalez-le via la page contact : ce sera vérifié, puis corrigé ou retiré.",
+            "Les propriétaires qui souhaitent voir leur site retiré de cet annuaire peuvent le demander de la même façon. Aucune raison n'est demandée, et le retrait se fait sans discussion — la fiche disparaît plutôt que d'être cachée."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "heading": "Politique de confidentialité",
+      "updatedLabel": "Dernière mise à jour",
+      "intro": "Cette page explique ce qu'il advient de vos données lorsque vous utilisez ce site. Version courte : nous ne vous demandons aucune information personnelle, et les seules choses stockées sont quelques préférences dans votre propre navigateur.",
+      "blocks": [
+        {
+          "h": "Ce que nous collectons directement",
+          "p": [
+            "Rien. Il n'y a pas de système de compte, pas de formulaire d'inscription et pas de base de contacts. Le formulaire « proposer un site » n'envoie rien vers les serveurs de ce site — il ouvre un ticket GitHub prérempli dans votre propre navigateur, sous votre propre compte GitHub, et la soumission relève alors de la politique de confidentialité de GitHub plutôt que de la nôtre.",
+            "Nous ne détenons donc ni noms, ni adresses e-mail, ni profils d'utilisation."
+          ]
+        },
+        {
+          "h": "Cookies et stockage du navigateur",
+          "p": [
+            "Ce site ne dépose pas de cookies de suivi propriétaires. Deux types de données sont conservés dans le stockage propre de votre navigateur, et les deux restent sur votre appareil :",
+            "• Votre liste de favoris, pour que les sites que vous avez étoilés le restent à la visite suivante.",
+            "• Votre préférence de langue, pour éviter que le site ne vous redirige sans cesse vers une langue que vous n'avez pas choisie.",
+            "Vous pouvez effacer les deux à tout moment via l'option « effacer les données de site » de votre navigateur, et le site se comportera simplement comme lors d'une première visite."
+          ]
+        },
+        {
+          "h": "Publicité tierce",
+          "p": [
+            "Ce site est gratuit et financé par la publicité d'affichage. Des prestataires tiers, dont Google, peuvent utiliser des cookies pour diffuser des annonces en fonction de vos visites antérieures sur ce site et sur d'autres sites web.",
+            "L'utilisation de cookies publicitaires par Google lui permet, ainsi qu'à ses partenaires, de vous diffuser des annonces en fonction de votre visite sur ce site et/ou d'autres sites d'internet. Vous pouvez désactiver la publicité personnalisée dans les paramètres des annonces Google à l'adresse <a class=\"text-mint-600 underline\" href=\"https://adssettings.google.com\" target=\"_blank\" rel=\"noopener nofollow\">adssettings.google.com</a>, ou refuser les cookies des prestataires tiers pour la publicité personnalisée sur <a class=\"text-mint-600 underline\" href=\"https://www.aboutads.info\" target=\"_blank\" rel=\"noopener nofollow\">aboutads.info</a>.",
+            "Les utilisateurs de l'Espace économique européen, du Royaume-Uni et de la Suisse voient s'afficher une demande de consentement avant tout cookie non essentiel, et peuvent retirer ce consentement à tout moment.",
+            "Les publicités sont servies de façon programmatique et ne sont pas choisies par la rédaction de ce site. La présence d'une publicité ici n'est en rien une recommandation du produit annoncé."
+          ]
+        },
+        {
+          "h": "Mesure d'audience",
+          "p": [
+            "Une mesure d'audience agrégée et respectueuse de la vie privée peut être utilisée pour comprendre quelles pages sont visitées et, par ordre de grandeur, par combien de personnes. Cela sert à décider quelles catégories méritent d'être développées. Lorsqu'une mesure d'audience est utilisée, elle est configurée pour éviter de stocker des adresses IP complètes et pour éviter de construire des profils inter-sites de visiteurs individuels."
+          ]
+        },
+        {
+          "h": "Liens vers des sites tiers",
+          "p": [
+            "Ce site est un annuaire : presque chaque clic vous emmène ailleurs. Ces sites ont leurs propres politiques de confidentialité et leurs propres cookies, et une fois que vous y êtes, la présente politique ne s'applique plus. Les liens s'ouvrent dans un nouvel onglet et sont marqués <code class=\"text-xs bg-cream-100 px-1 py-0.5 rounded\">rel=\"noopener noreferrer nofollow\"</code>, ce qui empêche aussi le site de destination d'apprendre d'où vous venez via l'en-tête référent."
+          ]
+        },
+        {
+          "h": "Sécurité des données",
+          "p": [
+            "Aucune donnée personnelle n'étant collectée, il n'existe aucune base d'informations utilisateurs à compromettre. La vraie question de sécurité pour un annuaire est plutôt la sûreté des destinations : c'est pourquoi chaque fiche est vérifiée, et pourquoi aucun service tiers de favicons ou de widgets n'est délibérément chargé depuis ce site."
+          ]
+        },
+        {
+          "h": "Enfants",
+          "p": [
+            "Ce site s'adresse à des adultes qui passent le temps au travail et n'est pas destiné aux enfants. Aucune information personnelle n'est collectée sciemment de qui que ce soit, enfants compris."
+          ]
+        },
+        {
+          "h": "Modifications de cette politique",
+          "p": [
+            "Si la publicité, la mesure d'audience ou le fonctionnement du site évoluent d'une manière qui touche cette politique, cette page sera mise à jour et sa date de « dernière mise à jour » modifiée. Continuer à utiliser le site après une mise à jour vaut acceptation de la politique révisée."
+          ]
+        }
+      ]
+    },
+    "contact": {
+      "heading": "Contact",
+      "intro": "Une seule personne lit tout ce qui est envoyé ici. Le gestionnaire de tickets GitHub est la voie la plus rapide et garde toute la conversation au même endroit.",
+      "blocks": [
+        {
+          "h": "Proposer un site",
+          "p": [
+            "Le chemin le plus rapide passe par le formulaire de la page d'accueil : il ouvre un ticket GitHub prérempli avec le nom, l'URL, la catégorie et la description déjà mis en place, et un compte GitHub gratuit suffit pour l'envoyer. Les propositions sont examinées à la main, donc une note courte expliquant pourquoi le site mérite sa place aide plus qu'une phrase de marketing."
+          ]
+        },
+        {
+          "h": "Signaler un problème",
+          "p": [
+            "Lien cassé, site repris par quelqu'un d'autre, paywall apparu, page qui a commencé à servir quelque chose de désagréable — ouvrez un ticket dans le gestionnaire et ce sera vérifié, puis corrigé ou retiré. La même voie traite les demandes de correction d'un propriétaire et les demandes de retrait de l'annuaire ; ces dernières sont exécutées sans demander de raison."
+          ]
+        },
+        {
+          "h": "Publicité et autres demandes",
+          "p": [
+            "Questions de publicité, de partenariat ou d'autre chose : ouvrez un ticket via le même gestionnaire et la réponse se fera là. Aucune adresse e-mail n'est volontairement publiée sur cette page, car les annuaires publics d'adresses attirent bien plus de spam automatisé que de courrier utile — le gestionnaire garde tout lisible et cherchable."
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "heading": "Foire aux questions",
+      "intro": "Les questions qui reviennent le plus souvent.",
+      "items": [
+        {
+          "q": "Moyu Paradise est-il gratuit ?",
+          "a": "Oui, entièrement. Pas d'offre payante, pas de catégories premium, pas de compte à créer. Le site est financé par la publicité d'affichage, d'où la présence possible d'annonces entre les fiches."
+        },
+        {
+          "q": "Faut-il installer quelque chose ou créer un compte ?",
+          "a": "Non. Chaque fiche est un site web qui fonctionne dans un onglet de navigateur normal. Vous n'avez jamais besoin de créer de compte chez nous — la seule inscription facultative est un compte GitHub gratuit, et uniquement pour proposer un site."
+        },
+        {
+          "q": "Comment les sites sont-ils choisis ?",
+          "a": "À la main, et selon une règle avant tout : le site doit fonctionner. Chaque lien est ouvert et vérifié avant publication, et tout ce qui est mort, redirige vers une page parking ou exige une application pour servir à quelque chose est écarté. Au-delà, les fiches sont choisies pour valoir le clic plutôt que pour exister — un site qui double une entrée existante n'entre que s'il fait mieux le travail."
+        },
+        {
+          "q": "Pourquoi certains sites de la liste ne s'ouvrent pas chez moi ?",
+          "a": "La cause habituelle est la géographie ou le réseau d'entreprise plutôt qu'un lien mort. Certains sites sont bloqués ou bridés depuis certains pays, et beaucoup de réseaux professionnels bloquent tout ce qui est classé jeu ou divertissement. Les liens sont revérifiés périodiquement, mais si l'un a réellement disparu, le signaler vaudra retrait plutôt que d'être laissé en place."
+        },
+        {
+          "q": "Est-ce sûr d'ouvrir ces sites au travail ?",
+          "a": "Chaque fiche est vérifiée contre les dangers évidents : pas de téléchargements trompeurs, pas de sites qui n'existent que pour empiler des publicités, pas de contenu adulte. Cela dit, ceci est un annuaire de choses à faire au lieu de travailler : ce qui est acceptable pour votre réseau et votre manager, c'est un jugement qui n'appartient qu'à vous — et c'est précisément pour ça que la catégorie « faire sérieux » existe."
+        },
+        {
+          "q": "Ma navigation est-elle suivie ici ?",
+          "a": "Ce site ne dépose aucun cookie de suivi propriétaire et ne vous demande aucune information personnelle. Vos favoris et votre choix de langue sont stockés dans votre propre navigateur et ne partent nulle part. Les régies publicitaires et de mesure d'audience tierces peuvent déposer leurs propres cookies ; la politique de confidentialité explique exactement comment les refuser."
+        },
+        {
+          "q": "Puis-je proposer un site, ou en faire retirer un ?",
+          "a": "Les deux. Les propositions passent par le formulaire de la page d'accueil et sont examinées une par une. Les propriétaires qui souhaitent un retrait peuvent passer par la page contact, et le retrait se fait sans discussion."
+        },
+        {
+          "q": "Que veut dire « moyu » ?",
+          "a": "« Moyu » (摸鱼) est le mot chinois pour subtiliser un peu de temps personnel à la journée de travail — littéralement « tâter les poissons », d'après l'image de celui qui garde l'air bien occupé à la surface pendant qu'il fait tout autre chose au fond. C'est un mot bien plus sympathique que « procrastiner », et c'est à peu près pour ça que ce site porte son nom."
+        }
+      ]
+    }
+  }
+}

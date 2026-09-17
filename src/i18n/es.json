@@ -1,0 +1,348 @@
+{
+  "code": "es",
+  "htmlLang": "es",
+  "hreflang": "es",
+  "ogLocale": "es_ES",
+  "nativeName": "Español",
+  "flag": "🇪🇸",
+  "dir": "ltr",
+  "pathPrefix": "/es",
+  "brand": "Moyu Paradise",
+  "brandTagline": "El arte de escaquearse en el trabajo",
+  "meta": {
+    "home": {
+      "title": "Moyu Paradise · 90 webs para matar el rato en el trabajo (juegos, memes y pantallas de camuflaje)",
+      "description": "Un directorio seleccionado a mano de 90 webs que puedes abrir en el trabajo: juegos de navegador, rincones raros de internet, pantallas para parecer ocupado, herramientas de verdad útiles, portadas de actualidad, sonidos de fondo y cosas que merecen aprenderse. Cada entrada incluye una nota honesta sobre cuándo usarla y qué hay que vigilar.",
+      "keywords": "webs para distraerse, qué hacer cuando estás aburrido en el trabajo, páginas divertidas, juegos de navegador, matar el rato, ruido blanco, parecer ocupado, perder el tiempo",
+      "h1Template": "Moyu Paradise · {count} webs para matar el rato en el trabajo",
+      "heroStat": "Abre {count} webs revisadas a mano: de portadas de actualidad y juegos de navegador a pantallas de camuflaje y sonido de lluvia. Escaquearse, pero con orden.",
+      "slogans": [
+        "Moyu Paradise · {count} webs para matar el rato en el trabajo",
+        "Una pestaña. Infinitas formas de escaquearse.",
+        "Tu descanso de cinco minutos empieza aquí.",
+        "Parece que trabajas. Te sientes en paz.",
+        "{count} webs de las que tu jefe no necesita enterarse"
+      ],
+      "ogImageAlt": "Moyu Paradise — un directorio de webs para matar el rato en el trabajo"
+    },
+    "about": {
+      "title": "Sobre Moyu Paradise — quién mantiene esta lista y cómo se eligen las webs",
+      "description": "Cómo está hecho Moyu Paradise: quién escribe las reseñas, por qué se rechaza una web, de dónde sale la información y cómo pedir una corrección o una eliminación."
+    },
+    "privacy": {
+      "title": "Política de privacidad — Moyu Paradise",
+      "description": "Qué guarda Moyu Paradise, cómo se usan las cookies y el almacenamiento local, qué hacen la publicidad y las analíticas de terceros, y cómo desactivar los anuncios personalizados."
+    },
+    "contact": {
+      "title": "Contactar con Moyu Paradise — sugiere una web, informa de un problema",
+      "description": "Escribe al editor de Moyu Paradise para sugerir una web, avisar de un enlace roto, pedir una corrección o una eliminación, o preguntar por la publicidad."
+    },
+    "faq": {
+      "title": "Preguntas frecuentes — Moyu Paradise",
+      "description": "Respuestas a las dudas habituales: si es gratis, si hace falta una cuenta, cómo se eligen las webs, por qué algunas no cargan y si es seguro usarlo en el trabajo."
+    }
+  },
+  "nav": {
+    "all": "Todas",
+    "searchPlaceholder": "Buscar webs...",
+    "searchTip": "Pulsa / para ir al buscador",
+    "searchBigPlaceholder": "Prueba: juegos, memes, lluvia, teclado...",
+    "submitBtn": "Sugerir una web",
+    "randomBtn": "Web al azar",
+    "randomTip": "Pulsa R para abrir una web al azar",
+    "escTip": "Pulsa Esc para cerrar los paneles",
+    "home": "Inicio",
+    "languageLabel": "Idioma"
+  },
+  "card": {
+    "open": "Abrir web ↗",
+    "favAdd": "Guardar en favoritos",
+    "favRemove": "Quitar de favoritos",
+    "newBadge": "NUEVA"
+  },
+  "categories": {
+    "games": {
+      "title": "Juegos de navegador",
+      "navTitle": "Juegos",
+      "desc": "Partidas de dos minutos en una pestaña"
+    },
+    "weird": {
+      "title": "Internet rara",
+      "navTitle": "Raras",
+      "desc": "Los rincones extraños que merecen una visita"
+    },
+    "cover": {
+      "title": "Parecer ocupado",
+      "navTitle": "Camuflaje",
+      "desc": "Pantallas que pasan por trabajo"
+    },
+    "tools": {
+      "title": "Herramientas de verdad",
+      "navTitle": "Herramientas",
+      "desc": "Deja algo hecho mientras estás aquí"
+    },
+    "trending": {
+      "title": "Actualidad y tendencias",
+      "navTitle": "Tendencias",
+      "desc": "De qué discute internet hoy"
+    },
+    "media": {
+      "title": "Ver y escuchar",
+      "navTitle": "Ver",
+      "desc": "Vídeo, música y radio en directo"
+    },
+    "relax": {
+      "title": "Tranquilizarse",
+      "navTitle": "Calma",
+      "desc": "Ruido, música y cosas lentas"
+    },
+    "learned": {
+      "title": "Aprender algo",
+      "navTitle": "Aprender",
+      "desc": "Diez minutos que te dejan más listo"
+    }
+  },
+  "sections": {
+    "featuredTitle": "Selección del editor",
+    "featuredNote": "Probadas por mí mismo, ninguno son pañales",
+    "categoriesTitle": "Todas las webs",
+    "guideTitle": "Guía de webs · cada entrada explicada",
+    "guideIntro": "Cada web de abajo tiene su párrafo: qué es en realidad, cuándo es el momento adecuado de abrirla y la trampa que conviene conocer antes. Leer esto es más rápido que abrirlas una a una.",
+    "hotTitle": "Tendencias de esta semana",
+    "hotBadge": "TOP 10",
+    "tipsTitle": "Consejos rápidos",
+    "adLabel": "Anuncio",
+    "adSponsored": "Patrocinado",
+    "adSlotTop": "Banner superior · ad-top-banner · 728×90 o adaptable",
+    "adSlotBottom": "Pie de página · ad-bottom · Auto Ads o adaptable",
+    "adSlotSidebar": "Barra lateral · ad-sidebar-{n} · 300×250",
+    "emptyTitle": "Nada coincide con esa búsqueda",
+    "emptyButton": "Mostrar todo",
+    "backToAll": "Volver a todas las webs"
+  },
+  "tips": [
+    "Pulsa <kbd>/</kbd> para saltar al buscador",
+    "Pulsa <kbd>R</kbd> para abrir una web al azar",
+    "Pulsa <kbd>Esc</kbd> para cerrar cualquier panel",
+    "Haz clic en <span class=\"text-coral-500\">★</span> para guardar un favorito"
+  ],
+  "submit": {
+    "title": "Sugerir una web",
+    "subtitle": "¿Tienes una que falte? Mándala: cada propuesta la revisa una persona antes de publicarse.",
+    "fieldTitle": "Nombre de la web",
+    "fieldCategory": "Categoría",
+    "fieldCategoryPlaceholder": "Elige una categoría",
+    "fieldUrl": "URL de la web",
+    "fieldDesc": "Descripción de una línea",
+    "fieldDescPlaceholder": "p. ej., pega una imagen y quita el fondo en cinco segundos",
+    "submitBtn": "Enviar para revisión",
+    "note": "Al enviar se abre una incidencia de GitHub con tus datos ya rellenados (hace falta una cuenta gratuita de GitHub). El editor la lee directamente.",
+    "hintTitle": "Falta un paso",
+    "hintBody": [
+      "① GitHub se ha abierto en una pestaña nueva con el formulario ya rellenado.",
+      "② Pulsa el botón verde <span class=\"font-medium text-ink-800\">Submit new issue</span> — y listo."
+    ],
+    "hintLink": "¿No se ha abierto? Pulsa aquí en su lugar →",
+    "toastOpened": "Abriendo GitHub — pulsa \"Submit new issue\" para terminar",
+    "toastBlocked": "El emergente fue bloqueado — usa el enlace de abajo",
+    "toastNone": "Todavía no hay nada que enviar — rellena los campos obligatorios"
+  },
+  "footer": {
+    "friendsTitle": "Amigos de la web",
+    "copyright": "© 2026 Moyu Paradise · un directorio de cosas que hacer cuando el trabajo va lento",
+    "disclosure": "Sitio independiente. En el futuro podría introducirse publicidad display para cubrir los gastos de mantenimiento; la publicidad se mantiene separada de la selección editorial.",
+    "links": {
+      "submit": "Sugerir una web",
+      "about": "Acerca de",
+      "privacy": "Privacidad",
+      "faq": "Preguntas frecuentes",
+      "contact": "Contacto"
+    }
+  },
+  "toast": {
+    "roll": "Ahí va: {title}",
+    "searchFocus": "Buscador activado",
+    "favOn": "Guardado en favoritos",
+    "favOff": "Eliminado de favoritos",
+    "loadFail": "Algunas funciones interactivas no cargaron — recarga para volver a intentarlo."
+  },
+  "langSwitch": {
+    "label": "Idioma",
+    "title": "Elige un idioma",
+    "autoHint": "Detectado según la configuración de tu navegador. Puedes cambiarlo cuando quieras: tu elección se recuerda en este dispositivo.",
+    "backToEnglish": "Lee este sitio en español"
+  },
+  "categoryFilter": {
+    "showAll": "Mostrar todas las categorías"
+  },
+  "pages": {
+    "about": {
+      "heading": "Sobre Moyu Paradise",
+      "intro": "Moyu (摸鱼) es una palabra china que significa literalmente \"tantear peces\": ir sacando un trocito de tiempo propio de la jornada laboral, con pinta de estar trabajando. La charla de la máquina del café convertida en sustantivo. Esta web es un directorio de los sitios a los que la gente va de verdad cuando lo hace.",
+      "blocks": [
+        {
+          "h": "Qué es esta web",
+          "p": [
+            "Moyu Paradise es una lista mantenida a mano de webs que puedes abrir en una pestaña del navegador sin instalar nada. Empezó como los marcadores personales de alguien y creció hasta convertirse en un directorio de verdad: cada entrada tiene su categoría, su descripción breve y una nota más larga que explica cuándo merece la pena abrirla.",
+            "No hay aplicación, ni cuenta, ni muro de boletín. Haces clic en una tarjeta, la web se abre en una pestaña nueva, y ya está: contigo hemos acabado hasta la próxima."
+          ]
+        },
+        {
+          "h": "Cómo entra una web en la lista",
+          "p": [
+            "Cuatro reglas, aplicadas a cada entrada sin excepción:",
+            "1. Tiene que funcionar de verdad. Cada enlace se abre y se comprueba; lo que devuelve un error, redirige a una página de parking o exige una instalación se descarta en vez de dejarse como fila muerta.",
+            "2. Tiene que poder usarse en una pestaña del navegador. Las herramientas que necesitan un programa de escritorio, una app de móvil o un plan de pago para hacer cualquier cosa quedan fuera.",
+            "3. Tiene que ser suficientemente segura para abrirla. Nada de webs que empujan descargas sospechosas, webs que existen solo para farmear impresiones de anuncios, ni contenido adulto.",
+            "4. Tiene que merecer el clic. Con que ya exista una web para eso no basta: la entrada debería ser la que de verdad recomendarías a un compañero."
+          ]
+        },
+        {
+          "h": "Quién escribe las reseñas",
+          "p": [
+            "Cada nota de esta web la escribe el editor, a partir de haber usado la web de verdad. Las reseñas son deliberadamente con carácter: dicen cuándo algo es la elección correcta y dicen cuándo no lo es: a una herramienta con un límite gratuito de dos archivos al día se lo apunta, en vez de omitirlo discretamente.",
+            "Este es un sitio pequeño e independiente, no un agregador de descripciones ajenas. Si una nota parece relleno genérico, trátala como un error digno de comunicar."
+          ]
+        },
+        {
+          "h": "Independencia editorial",
+          "p": [
+            "Salir en la lista no cuesta nada y nadie puede pagar por entrar o por subir de categoría. La publicidad display, cuando la hay, se sirve de forma programática y se mantiene visualmente separada del listado editorial; un anunciante no influye en lo que se recomienda.",
+            "Si una relación comercial llegara a afectar a una recomendación, se etiquetará como tal en la propia tarjeta."
+          ]
+        },
+        {
+          "h": "Correcciones, eliminaciones y retiradas",
+          "p": [
+            "Las webs cambian de dueño, ponen muros de pago o cierran sin previo aviso. Si un enlace está roto, lo ha tomado otra persona o ha empezado a portarse mal, repórtalo desde la página de contacto y se comprobará y arreglará o eliminará.",
+            "Los propietarios que quieran que su web salga del directorio pueden pedirlo por la misma vía. No hace falta dar motivo, y la retirada se hace sin discusión: la entrada desaparece, no se esconde."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "heading": "Política de privacidad",
+      "updatedLabel": "Última actualización",
+      "intro": "Esta página explica qué pasa con tus datos cuando usas la web. La versión corta: no te pedimos información personal y lo único que se guarda son un par de preferencias en tu propio navegador.",
+      "blocks": [
+        {
+          "h": "Lo que recogemos directamente",
+          "p": [
+            "Nada. No hay sistema de cuentas, ni formulario de registro, ni base de datos de contactos. El formulario de sugerir una web no envía nada a los servidores de este sitio: abre una incidencia de GitHub ya rellenada en tu propio navegador, con tu propia cuenta, y a partir de ahí manda la política de privacidad de GitHub, no la nuestra.",
+            "Por tanto, no guardamos por nuestra parte nombres, direcciones de correo ni perfiles de uso."
+          ]
+        },
+        {
+          "h": "Cookies y almacenamiento del navegador",
+          "p": [
+            "Este sitio no establece cookies de rastreo propias. En el almacenamiento de tu navegador se guardan dos tipos de datos, y ambos se quedan en tu dispositivo:",
+            "• Tu lista de favoritos, para que las webs que has marcado con estrella sigan marcadas en tu próxima visita.",
+            "• Tu preferencia de idioma, para que la web no te siga redirigiendo a un idioma que no has elegido.",
+            "Puedes borrar ambos cuando quieras desde la opción de tu navegador para borrar los datos del sitio, y la web simplemente se comportará como en una primera visita."
+          ]
+        },
+        {
+          "h": "Publicidad de terceros",
+          "p": [
+            "Esta web es gratuita y se mantiene con publicidad display. Los proveedores externos, incluido Google, pueden usar cookies para servir anuncios basados en tus visitas previas a esta y otras webs.",
+            "El uso de cookies publicitarias por parte de Google le permite a él y a sus socios servirte anuncios basados en tu visita a este sitio y/o a otras webs de internet. Puedes desactivar la publicidad personalizada visitando la configuración de anuncios de Google en <a class=\"text-mint-600 underline\" href=\"https://adssettings.google.com\" target=\"_blank\" rel=\"noopener nofollow\">adssettings.google.com</a>, o desactivar las cookies de proveedores externos para publicidad personalizada en <a class=\"text-mint-600 underline\" href=\"https://www.aboutads.info\" target=\"_blank\" rel=\"noopener nofollow\">aboutads.info</a>.",
+            "A los usuarios del Espacio Económico Europeo, el Reino Unido y Suiza se les muestra un aviso de consentimiento antes de usar cualquier cookie no esencial, y pueden retirar su consentimiento en cualquier momento.",
+            "Los anuncios se sirven de forma programática y no los selecciona el editor de este sitio. Que un anuncio aparezca aquí no es un respaldo al producto anunciado."
+          ]
+        },
+        {
+          "h": "Analítica",
+          "p": [
+            "Puede usarse una analítica agregada y respetuosa con la privacidad para entender qué páginas se visitan y cuántas personas lo hacen, a grandes rasgos. Esto sirve para decidir qué categorías merecen ampliarse. Cuando se usa analítica, se configura para no almacenar direcciones IP completas y para no construir perfiles individuales entre sitios."
+          ]
+        },
+        {
+          "h": "Enlaces a terceros",
+          "p": [
+            "Esta web es un directorio, así que casi cada clic te lleva a otro sitio. Esas webs tienen sus propias políticas de privacidad y sus propias cookies, y una vez estás en ellas esta política deja de aplicarse. Los enlaces se abren en una pestaña nueva y se marcan con <code class=\"text-xs bg-cream-100 px-1 py-0.5 rounded\">rel=\"noopener noreferrer nofollow\"</code>, lo que además impide que la web de destino sepa de dónde vienes mediante la cabecera referer."
+          ]
+        },
+        {
+          "h": "Seguridad de los datos",
+          "p": [
+            "Como no se recogen datos personales, no hay ninguna base de datos de usuarios que pueda filtrarse. La pregunta de seguridad que cabe hacerse sobre un directorio es otra: si es seguro hacer clic hacia los destinos. Por eso cada entrada se comprueba y deliberadamente no se cargan desde este sitio servicios de terceros como favicons o widgets externos."
+          ]
+        },
+        {
+          "h": "Menores",
+          "p": [
+            "Este sitio va dirigido a adultos que matan el rato en el trabajo y no está orientado a menores. No se recoge conscientemente información personal de nadie, menores incluidos."
+          ]
+        },
+        {
+          "h": "Cambios en esta política",
+          "p": [
+            "Si la publicidad, la analítica o el funcionamiento del sitio cambian de forma que afecte a esta política, esta página se actualizará junto con su fecha de última actualización. Seguir usando la web tras una actualización implica que aceptas la política revisada."
+          ]
+        }
+      ]
+    },
+    "contact": {
+      "heading": "Contacto",
+      "intro": "Una sola persona lee todo lo que se envía aquí. El gestor de incidencias de GitHub es la vía más rápida y mantiene toda la conversación en un solo sitio.",
+      "blocks": [
+        {
+          "h": "Sugerir una web",
+          "p": [
+            "La vía más rápida es el formulario de la página de inicio: abre una incidencia de GitHub ya rellenada con el nombre, la URL, la categoría y la descripción, y solo hace falta una cuenta gratuita de GitHub para enviarla. Las propuestas se revisan a mano, así que una nota breve sobre por qué la web merece estar sirve más que una frase de marketing."
+          ]
+        },
+        {
+          "h": "Informar de un problema",
+          "p": [
+            "Enlace roto, web tomada por otra persona, un muro de pago que apareció, una página que empezó a servir algo desagradable: abre una incidencia en el gestor y se comprobará y corregirá o eliminará. Por la misma vía se atienden las peticiones de corrección de un propietario y las peticiones de salir del directorio; estas últimas se ejecutan sin pedir explicaciones."
+          ]
+        },
+        {
+          "h": "Publicidad y otras consultas",
+          "p": [
+            "Preguntas sobre publicidad, colaboraciones o cualquier otra cosa: abre una incidencia en el mismo gestor y se responderá allí. Decididamente no se publica una dirección de correo en esta página, porque los directorios públicos de contactos atraen muchísimo más spam automatizado que correo útil: el gestor mantiene todo legible y buscable."
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "heading": "Preguntas frecuentes",
+      "intro": "Las dudas que aparecen más a menudo.",
+      "items": [
+        {
+          "q": "¿Moyu Paradise es gratis?",
+          "a": "Sí, entera. No hay plan de pago, ni categorías premium, ni cuenta que crear. El sitio se sostiene con publicidad display, por eso puede que veas anuncios entre las entradas."
+        },
+        {
+          "q": "¿Tengo que instalar algo o registrarme?",
+          "a": "No. Cada entrada es una web que funciona en una pestaña normal del navegador. Nunca necesitas crear una cuenta con nosotros; el único registro opcional es una cuenta gratuita de GitHub, y solo si quieres sugerir una web."
+        },
+        {
+          "q": "¿Cómo se eligen las webs?",
+          "a": "A mano, y con una regla por encima de todas: tiene que funcionar de verdad. Cada enlace se abre y se comprueba antes de publicarse, y lo que está muerto, redirige a una página de parking o necesita una aplicación de escritorio para servir de algo, se queda fuera. Aparte de eso, las entradas se eligen porque merecen el clic y no por existir: una web que repite algo ya listado solo entra si lo hace mejor."
+        },
+        {
+          "q": "¿Por qué algunas webs de la lista no se me abren?",
+          "a": "La causa habitual es la geografía o la red corporativa, antes que un enlace muerto. Algunas webs están bloqueadas o limitadas desde ciertos países, y muchas redes de empresa bloquean todo lo categorizado como juegos o entretenimiento. Los enlaces se vuelven a comprobar de vez en cuando, pero si uno ha desaparecido de verdad, al reportarlo se elimina en vez de dejarse ahí."
+        },
+        {
+          "q": "¿Es seguro abrir estas webs en el trabajo?",
+          "a": "Cada entrada se comprueba buscando los peligros evidentes: sin descargas sorpresa, sin webs que existan solo para farmear anuncios, sin contenido adulto. Dicho esto, esto es un directorio de cosas que hacer en lugar de trabajar, así que lo que sea seguro para tu red y tu jefe es un juicio que solo tú puedes hacer: exactamente para eso existe la categoría de camuflaje."
+        },
+        {
+          "q": "¿Se rastrea mi navegación aquí?",
+          "a": "Este sitio no establece cookies de rastreo propias y no te pide información personal. Tus favoritos y tu elección de idioma se guardan en tu propio navegador y no se envían a ningún sitio. Los proveedores de publicidad y analítica de terceros pueden poner sus propias cookies; la política de privacidad explica exactamente cómo desactivarlas."
+        },
+        {
+          "q": "¿Puedo sugerir una web, o pedir que se quite una?",
+          "a": "Ambas cosas. Las sugerencias pasan por el formulario de la página de inicio y se revisan una a una. Los propietarios que quieran salir pueden pedirlo por la página de contacto y se retirará sin discusión."
+        },
+        {
+          "q": "¿Qué significa \"moyu\"?",
+          "a": "\"Moyu\" (摸鱼) es el chino para ir sacando un trocito de tiempo propio de la jornada laboral: literalmente \"tantear peces\", por la idea de mantenerse aparentemente ocupado en la superficie mientras debajo se hace otra cosa bien distinta. Es una palabra mucho más simpática que \"procrastinar\", que es más o menos por lo que esta web lleva su nombre."
+        }
+      ]
+    }
+  }
+}
