@@ -11,9 +11,11 @@
 //   ③ 把 <code> 加进下面的 LANGUAGE_ORDER
 // 不需要改任何构建代码或模板代码。
 //
-// 语言包里的 categories.<id> 建议同时给 title 和 navTitle：
+// 语言包里的 categories.<id> 必须同时给 title 和 navTitle：
 //   title    —— 完整名，用在分类区块标题、站点指南小标题上
-//   navTitle —— 可选短标签，只用在顶部 tab 条（中文可以省略，字母语言基本都需要）
+//   navTitle —— 短标签（建议 ≤10 个字符），只用在顶部 tab 条
+//   顶部 tab 一行要排 8 个分类，字母语言给长名会直接溢出容器被裁掉，
+//   所以 6 个语言包一律都写 navTitle，`buildCategories()` 用 `c.navTitle || c.title` 兜底。
 
 export const LANGUAGE_ORDER = ['en', 'zh', 'es', 'fr', 'ja', 'ko'];
 

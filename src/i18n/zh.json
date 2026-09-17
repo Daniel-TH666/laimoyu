@@ -9,7 +9,6 @@
   "pathPrefix": "/zh",
   "brand": "摸鱼乐园",
   "brandTagline": "一个网址，摸遍所有鱼",
-
   "meta": {
     "home": {
       "title": "摸鱼乐园 · 95 个上班摸鱼网站导航｜小游戏 · 热榜 · 伪装办公",
@@ -43,7 +42,6 @@
       "description": "摸鱼乐园常见问题：是否免费、要不要注册、站点怎么挑的、打不开怎么办、上班用安不安全、有没有广告。"
     }
   },
-
   "nav": {
     "all": "全部",
     "searchPlaceholder": "搜索摸鱼网站...",
@@ -56,25 +54,54 @@
     "home": "首页",
     "languageLabel": "语言"
   },
-
   "card": {
     "open": "打开摸鱼 ↗",
     "favAdd": "加入收藏",
     "favRemove": "取消收藏",
     "newBadge": "NEW"
   },
-
   "categories": {
-    "games": { "title": "摸鱼小游戏", "desc": "偷偷玩一局，问题不大" },
-    "weird": { "title": "沙雕抽象", "desc": "脑洞网站，看着就摸鱼" },
-    "cover": { "title": "伪装办公", "desc": "表面在上班，实际在摸鱼" },
-    "tools": { "title": "实用工具", "desc": "摸鱼顺便干点正事" },
-    "trending": { "title": "热榜资讯", "desc": "吃瓜一线，永远不迟到" },
-    "media": { "title": "影音娱乐", "desc": "看视频听歌，摸鱼必备" },
-    "relax": { "title": "治愈放松", "desc": "白噪音小曲儿，松弛一下" },
-    "learned": { "title": "涨点芝士", "desc": "摸鱼顺便充充电" }
+    "games": {
+      "title": "摸鱼小游戏",
+      "desc": "偷偷玩一局，问题不大",
+      "navTitle": "小游戏"
+    },
+    "weird": {
+      "title": "沙雕抽象",
+      "desc": "脑洞网站，看着就摸鱼",
+      "navTitle": "沙雕"
+    },
+    "cover": {
+      "title": "伪装办公",
+      "desc": "表面在上班，实际在摸鱼",
+      "navTitle": "伪装"
+    },
+    "tools": {
+      "title": "实用工具",
+      "desc": "摸鱼顺便干点正事",
+      "navTitle": "工具"
+    },
+    "trending": {
+      "title": "热榜资讯",
+      "desc": "吃瓜一线，永远不迟到",
+      "navTitle": "热榜"
+    },
+    "media": {
+      "title": "影音娱乐",
+      "desc": "看视频听歌，摸鱼必备",
+      "navTitle": "影音"
+    },
+    "relax": {
+      "title": "治愈放松",
+      "desc": "白噪音小曲儿，松弛一下",
+      "navTitle": "放松"
+    },
+    "learned": {
+      "title": "涨点芝士",
+      "desc": "摸鱼顺便充充电",
+      "navTitle": "涨知识"
+    }
   },
-
   "sections": {
     "featuredTitle": "编辑精选",
     "featuredNote": "编辑人工挑的，不坑人",
@@ -93,14 +120,12 @@
     "emptyButton": "返回全部",
     "backToAll": "返回全部"
   },
-
   "tips": [
     "按 <kbd>/</kbd> 聚焦搜索框",
     "按 <kbd>R</kbd> 随机抽一个摸鱼网站",
     "按 <kbd>Esc</kbd> 关闭弹层",
     "点 <span class=\"text-coral-500\">★</span> 加入收藏，下次在热门榜找得到"
   ],
-
   "submit": {
     "title": "推荐摸鱼网站",
     "subtitle": "觉得还少？把你私藏的网址甩过来，<span class=\"text-mint-700 font-medium\">经人工审核后上架</span>",
@@ -118,11 +143,12 @@
       "② 点页面上的绿色按钮 <span class=\"font-medium text-ink-800\">Submit new issue</span> 就完成提交。"
     ],
     "hintLink": "没弹出来？点这里手动打开 →",
+    "issueHeading": "### 推荐摸鱼网站",
+    "issueTitlePrefix": "[推荐]",
     "toastOpened": "已在 GitHub 打开，点「Submit new issue」完成提交 🐟",
     "toastBlocked": "新标签页被拦了，点下面的链接继续 🐟",
     "toastNone": "先把必填项填完 🐟"
   },
-
   "footer": {
     "friendsTitle": "友情链接",
     "copyright": "© 2026 摸鱼乐园 · MoyuNav · 一个网址，摸遍所有鱼",
@@ -135,7 +161,6 @@
       "contact": "联系方式"
     }
   },
-
   "toast": {
     "roll": "🐟 出发！{title}",
     "searchFocus": "🐟 已聚焦搜索框",
@@ -143,18 +168,15 @@
     "favOff": "已取消收藏",
     "loadFail": "部分交互功能加载失败，刷新可重试。"
   },
-
   "langSwitch": {
     "label": "语言",
     "title": "选择语言",
     "autoHint": "当前语言是根据你的浏览器设置自动匹配的，随时可以更换，选择会记住在这台设备上。",
     "backToEnglish": "Read this site in English"
   },
-
   "categoryFilter": {
     "showAll": "显示全部分类"
   },
-
   "pages": {
     "about": {
       "heading": "关于摸鱼乐园",
@@ -204,7 +226,6 @@
         }
       ]
     },
-
     "privacy": {
       "heading": "隐私政策",
       "updatedLabel": "本页最后更新",
@@ -268,7 +289,6 @@
         }
       ]
     },
-
     "contact": {
       "heading": "联系方式",
       "intro": "本站没有客服团队，也没有在线表单后台。所有沟通都走下面这两条公开渠道，站长会定期查看并处理。",
@@ -306,7 +326,6 @@
         }
       ]
     },
-
     "faq": {
       "heading": "常见问题",
       "intro": "被问得最多的几个问题。",

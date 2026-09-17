@@ -143,6 +143,8 @@
       "② 緑の <span class=\"font-medium text-ink-800\">Submit new issue</span> ボタンを押せば完了です。"
     ],
     "hintLink": "開かなかった？代わりにここをクリック →",
+    "issueHeading": "### サイトの提案",
+    "issueTitlePrefix": "[提案]",
     "toastOpened": "GitHubを開いています。「Submit new issue」を押して完了させましょう",
     "toastBlocked": "ポップアップがブロックされました。下のリンクをお使いください",
     "toastNone": "まだ送るものがありません — 必須項目を入力してください"

@@ -143,6 +143,8 @@
       "② 초록색 <span class=\"font-medium text-ink-800\">새 이슈 제출</span> 버튼을 누르면 끝이다."
     ],
     "hintLink": "안 열렸다면 여기 대신 눌러라 →",
+    "issueHeading": "### 사이트 제안",
+    "issueTitlePrefix": "[제안]",
     "toastOpened": "GitHub를 여는 중이다 — \"새 이슈 제출\" 버튼을 눌러 마무리",
     "toastBlocked": "팝업이 차단됐다 — 아래 링크를 사용하라",
     "toastNone": "아직 보낼 내용이 없다 — 필수 항목을 채워라"

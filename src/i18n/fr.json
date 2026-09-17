@@ -143,6 +143,8 @@
       "② Cliquez sur le bouton vert <span class=\"font-medium text-ink-800\">Submit new issue</span> — c'est tout."
     ],
     "hintLink": "Ça ne s'est pas ouvert ? Cliquez ici plutôt →",
+    "issueHeading": "### Suggestion de site",
+    "issueTitlePrefix": "[Suggestion]",
     "toastOpened": "Ouverture de GitHub — cliquez sur « Submit new issue » pour terminer",
     "toastBlocked": "La fenêtre a été bloquée — utilisez le lien ci-dessous",
     "toastNone": "Rien à envoyer pour l'instant — remplissez les champs requis"

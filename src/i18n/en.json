@@ -9,7 +9,6 @@
   "pathPrefix": "",
   "brand": "Moyu Paradise",
   "brandTagline": "The art of slacking off at work",
-
   "meta": {
     "home": {
       "title": "Moyu Paradise · 100 Sites to Kill Time at Work (Games, Memes & Look-Busy Tools)",
@@ -43,7 +42,6 @@
       "description": "Answers to the usual questions: is it free, do I need an account, how sites are chosen, why some sites don't load, and whether it's safe to use at work."
     }
   },
-
   "nav": {
     "all": "All",
     "searchPlaceholder": "Search sites...",
@@ -56,25 +54,54 @@
     "home": "Home",
     "languageLabel": "Language"
   },
-
   "card": {
     "open": "Open site ↗",
     "favAdd": "Save to favourites",
     "favRemove": "Remove from favourites",
     "newBadge": "NEW"
   },
-
   "categories": {
-    "games": { "title": "Browser Games", "navTitle": "Games", "desc": "Two-minute rounds that run in a tab" },
-    "weird": { "title": "Weird Internet", "navTitle": "Weird", "desc": "The strange corners worth a look" },
-    "cover": { "title": "Look Busy", "navTitle": "Look Busy", "desc": "Screens that pass as work" },
-    "tools": { "title": "Actual Tools", "navTitle": "Tools", "desc": "Get something done while you're here" },
-    "trending": { "title": "Trending & News", "navTitle": "Trending", "desc": "What the internet is arguing about today" },
-    "media": { "title": "Watch & Listen", "navTitle": "Watch", "desc": "Video, music and live radio" },
-    "relax": { "title": "Calm Down", "navTitle": "Calm", "desc": "Noise, music and slow things" },
-    "learned": { "title": "Learn Something", "navTitle": "Learn", "desc": "Ten minutes that leave you smarter" }
+    "games": {
+      "title": "Browser Games",
+      "navTitle": "Games",
+      "desc": "Two-minute rounds that run in a tab"
+    },
+    "weird": {
+      "title": "Weird Internet",
+      "navTitle": "Weird",
+      "desc": "The strange corners worth a look"
+    },
+    "cover": {
+      "title": "Look Busy",
+      "navTitle": "Look Busy",
+      "desc": "Screens that pass as work"
+    },
+    "tools": {
+      "title": "Actual Tools",
+      "navTitle": "Tools",
+      "desc": "Get something done while you're here"
+    },
+    "trending": {
+      "title": "Trending & News",
+      "navTitle": "Trending",
+      "desc": "What the internet is arguing about today"
+    },
+    "media": {
+      "title": "Watch & Listen",
+      "navTitle": "Watch",
+      "desc": "Video, music and live radio"
+    },
+    "relax": {
+      "title": "Calm Down",
+      "navTitle": "Calm",
+      "desc": "Noise, music and slow things"
+    },
+    "learned": {
+      "title": "Learn Something",
+      "navTitle": "Learn",
+      "desc": "Ten minutes that leave you smarter"
+    }
   },
-
   "sections": {
     "featuredTitle": "Editor's Picks",
     "featuredNote": "Tried them myself, none of them are duds",
@@ -93,14 +120,12 @@
     "emptyButton": "Show everything",
     "backToAll": "Back to all sites"
   },
-
   "tips": [
     "Press <kbd>/</kbd> to jump to the search box",
     "Press <kbd>R</kbd> to open a random site",
     "Press <kbd>Esc</kbd> to close any overlay",
     "Click <span class=\"text-coral-500\">★</span> to save a favourite"
   ],
-
   "submit": {
     "title": "Suggest a site",
     "subtitle": "Got one we've missed? Send it over — every submission is looked at by a human before it goes live.",
@@ -118,11 +143,12 @@
       "② Click the green <span class=\"font-medium text-ink-800\">Submit new issue</span> button — that's it."
     ],
     "hintLink": "Didn't open? Click here instead →",
+    "issueHeading": "### Site suggestion",
+    "issueTitlePrefix": "[Suggestion]",
     "toastOpened": "Opening GitHub — click \"Submit new issue\" to finish",
     "toastBlocked": "The pop-up was blocked — use the link below",
     "toastNone": "Nothing to send yet — fill in the required fields"
   },
-
   "footer": {
     "friendsTitle": "Friends of the site",
     "copyright": "© 2026 Moyu Paradise · a curated directory of things to do when work is slow",
@@ -135,7 +161,6 @@
       "contact": "Contact"
     }
   },
-
   "toast": {
     "roll": "Off you go: {title}",
     "searchFocus": "Search box focused",
@@ -143,18 +168,15 @@
     "favOff": "Removed from favourites",
     "loadFail": "Some interactive features failed to load — refresh to try again."
   },
-
   "langSwitch": {
     "label": "Language",
     "title": "Choose a language",
     "autoHint": "Picked from your browser settings. You can change it any time — your choice is remembered on this device.",
     "backToEnglish": "Read this site in English"
   },
-
   "categoryFilter": {
     "showAll": "Show all categories"
   },
-
   "pages": {
     "about": {
       "heading": "About Moyu Paradise",
@@ -200,7 +222,6 @@
         }
       ]
     },
-
     "privacy": {
       "heading": "Privacy Policy",
       "updatedLabel": "Last updated",
@@ -263,7 +284,6 @@
         }
       ]
     },
-
     "contact": {
       "heading": "Contact",
       "intro": "One person reads everything sent here. The GitHub issue tracker is the fastest route and keeps the whole conversation in one place.",
@@ -288,7 +308,6 @@
         }
       ]
     },
-
     "faq": {
       "heading": "Frequently Asked Questions",
       "intro": "The questions that come up most often.",

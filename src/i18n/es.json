@@ -143,6 +143,8 @@
       "② Pulsa el botón verde <span class=\"font-medium text-ink-800\">Submit new issue</span> — y listo."
     ],
     "hintLink": "¿No se ha abierto? Pulsa aquí en su lugar →",
+    "issueHeading": "### Sugerencia de sitio",
+    "issueTitlePrefix": "[Sugerencia]",
     "toastOpened": "Abriendo GitHub — pulsa \"Submit new issue\" para terminar",
     "toastBlocked": "El emergente fue bloqueado — usa el enlace de abajo",
     "toastNone": "Todavía no hay nada que enviar — rellena los campos obligatorios"
