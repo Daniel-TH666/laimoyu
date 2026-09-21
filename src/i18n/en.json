@@ -160,6 +160,32 @@
     "autoHint": "Picked from your browser settings. You can change it any time — your choice is remembered on this device.",
     "backToEnglish": "Read this site in English"
   },
+  "share": {
+    "button": "Share",
+    "buttonTip": "Share this page with a colleague",
+    "title": "Share this page",
+    "subtitle": "The link is copied the moment this opens — paste it and send.",
+    "previewAlt": "Share image preview",
+    "copiedAuto": "Copied — paste it straight into the chat",
+    "copiedManual": "Copied",
+    "copyFailed": "Copying failed — select the text and copy it manually",
+    "copyText": "Copy this message",
+    "copyUrl": "Link only",
+    "linkOnlyCopied": "Link copied",
+    "copyImage": "Copy image",
+    "imageCopied": "Image copied — paste it into the chat",
+    "imageCopyFailed": "This browser won't copy images — use Download instead",
+    "download": "Download image",
+    "downloaded": "Image saved to your downloads",
+    "native": "More options",
+    "close": "Close",
+    "posterTitle": "{count} sites to kill time at work",
+    "posterSubtitle": "Hand-picked one by one. All free, no sign-up.",
+    "posterFooter": "Free · No sign-up · Opens right in a tab",
+    "posterSitesLabel": "A few of them",
+    "text": "Colleague still staring at a spreadsheet? {count} sites you could open instead — all free, no sign-up:\n{url}",
+    "imageName": "moyu-paradise-en"
+  },
   "categoryFilter": {
     "showAll": "Show all categories"
   },

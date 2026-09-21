@@ -160,6 +160,32 @@
     "autoHint": "当前语言是根据你的浏览器设置自动匹配的，随时可以更换，选择会记住在这台设备上。",
     "backToEnglish": "Read this site in English"
   },
+  "share": {
+    "button": "分享",
+    "buttonTip": "把这个页面发给同事",
+    "title": "分享给同事",
+    "subtitle": "打开就把链接复制好了，粘到聊天框直接发。",
+    "previewAlt": "分享图片预览",
+    "copiedAuto": "已复制，粘到聊天框就能发",
+    "copiedManual": "已复制",
+    "copyFailed": "复制失败，请手动选中文字复制",
+    "copyText": "复制这句话",
+    "copyUrl": "只复制链接",
+    "linkOnlyCopied": "链接已复制",
+    "copyImage": "复制图片",
+    "imageCopied": "图片已复制，直接粘进聊天框",
+    "imageCopyFailed": "这个浏览器不支持复制图片，用「下载图片」吧",
+    "download": "下载图片",
+    "downloaded": "图片已保存到下载文件夹",
+    "native": "更多分享方式",
+    "close": "关闭",
+    "posterTitle": "{count} 个上班摸鱼神站",
+    "posterSubtitle": "一个个亲手筛过，免费、免登录。",
+    "posterFooter": "免费 · 免登录 · 点开即用",
+    "posterSitesLabel": "随手挑几个",
+    "text": "同事还在盯着表格发呆？这 {count} 个网站打开就能摸鱼，免费免登录：\n{url}",
+    "imageName": "摸鱼乐园"
+  },
   "categoryFilter": {
     "showAll": "显示全部分类"
   },

@@ -160,6 +160,32 @@
     "autoHint": "Detectado según la configuración de tu navegador. Puedes cambiarlo cuando quieras: tu elección se recuerda en este dispositivo.",
     "backToEnglish": "Lee este sitio en español"
   },
+  "share": {
+    "button": "Compartir",
+    "buttonTip": "Comparte esta página con un compañero",
+    "title": "Comparte esta página",
+    "subtitle": "El enlace se copia al abrir esto: pégalo y envíalo.",
+    "previewAlt": "Vista previa de la imagen para compartir",
+    "copiedAuto": "Copiado: pégalo directamente en el chat",
+    "copiedManual": "Copiado",
+    "copyFailed": "No se pudo copiar; selecciona el texto y cópialo a mano",
+    "copyText": "Copiar este mensaje",
+    "copyUrl": "Solo el enlace",
+    "linkOnlyCopied": "Enlace copiado",
+    "copyImage": "Copiar imagen",
+    "imageCopied": "Imagen copiada: pégala en el chat",
+    "imageCopyFailed": "Este navegador no copia imágenes; usa «Descargar imagen»",
+    "download": "Descargar imagen",
+    "downloaded": "Imagen guardada en tus descargas",
+    "native": "Más opciones",
+    "close": "Cerrar",
+    "posterTitle": "{count} webs para matar el tiempo en el trabajo",
+    "posterSubtitle": "Seleccionadas una a una. Gratis y sin registro.",
+    "posterFooter": "Gratis · Sin registro · Se abre en una pestaña",
+    "posterSitesLabel": "Algunas de ellas",
+    "text": "¿Tu compañero sigue mirando una hoja de cálculo? {count} webs para matar el tiempo en el trabajo, gratis y sin registro:\n{url}",
+    "imageName": "moyu-paradise-es"
+  },
   "categoryFilter": {
     "showAll": "Mostrar todas las categorías"
   },

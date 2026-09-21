@@ -160,6 +160,32 @@
     "autoHint": "Détecté d'après les réglages de votre navigateur. Vous pouvez changer à tout moment — votre choix est mémorisé sur cet appareil.",
     "backToEnglish": "Lire ce site en anglais"
   },
+  "share": {
+    "button": "Partager",
+    "buttonTip": "Partager cette page avec un collègue",
+    "title": "Partager cette page",
+    "subtitle": "Le lien est copié dès l'ouverture : collez-le et envoyez.",
+    "previewAlt": "Aperçu de l'image à partager",
+    "copiedAuto": "Copié — collez-le directement dans la conversation",
+    "copiedManual": "Copié",
+    "copyFailed": "Copie impossible ; sélectionnez le texte et copiez-le à la main",
+    "copyText": "Copier ce message",
+    "copyUrl": "Lien seul",
+    "linkOnlyCopied": "Lien copié",
+    "copyImage": "Copier l'image",
+    "imageCopied": "Image copiée — collez-la dans la conversation",
+    "imageCopyFailed": "Ce navigateur ne copie pas les images — utilisez « Télécharger l'image »",
+    "download": "Télécharger l'image",
+    "downloaded": "Image enregistrée dans vos téléchargements",
+    "native": "Plus d'options",
+    "close": "Fermer",
+    "posterTitle": "{count} sites pour tuer le temps au boulot",
+    "posterSubtitle": "Sélectionnés un par un. Gratuits, sans inscription.",
+    "posterFooter": "Gratuit · Sans inscription · S'ouvre dans un onglet",
+    "posterSitesLabel": "Quelques-uns",
+    "text": "Un collègue qui fixe encore un tableur ? {count} sites pour tuer le temps au boulot, gratuits et sans inscription :\n{url}",
+    "imageName": "moyu-paradise-fr"
+  },
   "categoryFilter": {
     "showAll": "Afficher toutes les catégories"
   },

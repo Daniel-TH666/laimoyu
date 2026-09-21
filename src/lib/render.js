@@ -339,6 +339,79 @@ export function langSwitcherHtml(langs, currentCode, page = 'index', opts = {}) 
     </details>`;
 }
 
+// === 分享（页面右侧常驻入口 + 分享面板骨架）===
+// 位置与「始终可见」由 style.css 的 .share-rail 负责（position: fixed，滚动不动）。
+//
+// 渐进增强：HTML 里先带 hidden，由 main.js 在启动时显式去掉 ——
+// 没有 JS 时不会在页面右边缘留下一个「点了没反应」的死按钮。
+//
+// 面板里的链接、海报图都由 main.js 现算现画，这里只放骨架与全部按钮文案。
+export function shareRailHtml(t = {}) {
+  const tip = L(t, 'share.buttonTip', 'Share this page');
+  return `
+  <div id="share-rail" class="share-rail" hidden>
+    <button type="button" id="btn-share" class="share-btn"
+            title="${escapeHtml(tip)}" aria-label="${escapeHtml(tip)}"
+            aria-haspopup="dialog" aria-controls="share-modal">
+      <span class="share-btn-icon" aria-hidden="true">📤</span>
+      <span class="share-btn-text">${escapeHtml(L(t, 'share.button', 'Share'))}</span>
+    </button>
+  </div>`;
+}
+
+export function shareModalHtml(t = {}) {
+  return `
+  <div id="share-modal" class="share-mask hidden" role="dialog" aria-modal="true"
+       aria-labelledby="share-modal-title">
+    <div class="share-card">
+      <header class="flex items-start justify-between gap-3 mb-4">
+        <div class="min-w-0">
+          <h2 id="share-modal-title" class="text-lg font-bold text-ink-800">
+            ${escapeHtml(L(t, 'share.title', 'Share this page'))}
+          </h2>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            ${escapeHtml(L(t, 'share.subtitle', ''))}
+          </p>
+        </div>
+        <button type="button" id="share-close" class="share-close"
+                aria-label="${escapeHtml(L(t, 'share.close', 'Close'))}"
+                title="${escapeHtml(L(t, 'share.close', 'Close'))}">✕</button>
+      </header>
+
+      <div class="share-preview">
+        <img id="share-preview-img" alt="${escapeHtml(L(t, 'share.previewAlt', ''))}" />
+        <div id="share-preview-loading" class="share-preview-loading">
+          <span class="share-spinner" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <!-- 展示的就是剪贴板里那一份（一句话 + 链接），所见即所复制 -->
+      <div id="share-text-preview" class="share-text-preview"></div>
+
+      <div class="share-actions">
+        <button type="button" id="btn-copy-text" class="share-action share-action-primary">
+          📋 ${escapeHtml(L(t, 'share.copyText', 'Copy'))}
+        </button>
+        <button type="button" id="btn-copy-url" class="share-action">
+          🔗 ${escapeHtml(L(t, 'share.copyUrl', 'Link'))}
+        </button>
+        <button type="button" id="btn-copy-image" class="share-action">
+          🖼️ ${escapeHtml(L(t, 'share.copyImage', 'Copy image'))}
+        </button>
+        <button type="button" id="btn-download" class="share-action">
+          ⬇️ ${escapeHtml(L(t, 'share.download', 'Download image'))}
+        </button>
+      </div>
+
+      <button type="button" id="btn-native-share" class="share-action share-action-native hidden">
+        📱 ${escapeHtml(L(t, 'share.native', 'More options'))}
+      </button>
+
+      <p id="share-status" class="share-status" role="status" aria-live="polite"></p>
+    </div>
+  </div>`;
+}
+
 // === 内容页（about / privacy / contact / faq）的整页渲染 ===
 // 这些页面零脚本，构建期直接用 emitFile 写进 dist/<lang>/，所以资源用绝对路径。
 

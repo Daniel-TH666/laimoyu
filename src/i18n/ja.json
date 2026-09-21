@@ -160,6 +160,32 @@
     "autoHint": "ブラウザの設定から自動選択されています。いつでも変更でき、選択はこの端末に記憶されます。",
     "backToEnglish": "このサイトを英語で読む"
   },
+  "share": {
+    "button": "共有",
+    "buttonTip": "このページを同僚に共有する",
+    "title": "このページを共有",
+    "subtitle": "開いた時点でリンクはコピー済み。貼り付けて送るだけです。",
+    "previewAlt": "共有画像のプレビュー",
+    "copiedAuto": "コピーしました。チャットに貼るだけで送れます",
+    "copiedManual": "コピーしました",
+    "copyFailed": "コピーできませんでした。テキストを選択して手動でコピーしてください",
+    "copyText": "このメッセージをコピー",
+    "copyUrl": "リンクのみ",
+    "linkOnlyCopied": "リンクをコピーしました",
+    "copyImage": "画像をコピー",
+    "imageCopied": "画像をコピーしました。チャットに貼れます",
+    "imageCopyFailed": "このブラウザは画像のコピーに対応していません。「画像をダウンロード」をお使いください",
+    "download": "画像をダウンロード",
+    "downloaded": "画像をダウンロードフォルダに保存しました",
+    "native": "その他の方法",
+    "close": "閉じる",
+    "posterTitle": "仕事中にサボるための{count}サイト",
+    "posterSubtitle": "ひとつずつ手で選びました。無料・登録不要。",
+    "posterFooter": "無料 · 登録不要 · タブですぐ開く",
+    "posterSitesLabel": "一部を紹介",
+    "text": "隣の席の人はまだ表計算とにらめっこ？仕事中にサボれる{count}サイト、無料・登録不要です：\n{url}",
+    "imageName": "moyu-paradise-ja"
+  },
   "categoryFilter": {
     "showAll": "すべてのカテゴリを表示"
   },

@@ -160,6 +160,32 @@
     "autoHint": "브라우저 설정에 맞춰 골랐다. 언제든 바꿀 수 있고 선택은 이 기기에 저장된다.",
     "backToEnglish": "이 사이트를 영어로 읽기"
   },
+  "share": {
+    "button": "공유",
+    "buttonTip": "이 페이지를 동료에게 공유하기",
+    "title": "이 페이지 공유하기",
+    "subtitle": "여는 순간 링크가 복사됩니다. 붙여넣어 보내기만 하면 됩니다.",
+    "previewAlt": "공유 이미지 미리보기",
+    "copiedAuto": "복사했습니다. 채팅창에 바로 붙여넣으세요",
+    "copiedManual": "복사했습니다",
+    "copyFailed": "복사하지 못했습니다. 텍스트를 선택해 직접 복사해 주세요",
+    "copyText": "이 문구 복사",
+    "copyUrl": "링크만",
+    "linkOnlyCopied": "링크를 복사했습니다",
+    "copyImage": "이미지 복사",
+    "imageCopied": "이미지를 복사했습니다. 채팅창에 붙여넣으세요",
+    "imageCopyFailed": "이 브라우저는 이미지 복사를 지원하지 않습니다. '이미지 다운로드'를 이용하세요",
+    "download": "이미지 다운로드",
+    "downloaded": "이미지를 다운로드 폴더에 저장했습니다",
+    "native": "더 많은 방법",
+    "close": "닫기",
+    "posterTitle": "회사에서 딴짓할 {count}개 사이트",
+    "posterSubtitle": "하나씩 직접 골랐습니다. 무료, 가입 없음.",
+    "posterFooter": "무료 · 가입 없음 · 탭에서 바로 열림",
+    "posterSitesLabel": "몇 개만 소개",
+    "text": "옆자리 동료는 아직도 엑셀만 보고 있나요? 회사에서 딴짓할 {count}개 사이트, 무료·가입 없음:\n{url}",
+    "imageName": "moyu-paradise-ko"
+  },
   "categoryFilter": {
     "showAll": "모든 분류 보기"
   },

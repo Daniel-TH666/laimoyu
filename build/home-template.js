@@ -18,7 +18,9 @@ import {
   hotListHtml,
   allCategoriesHtml,
   siteGuideHtml,
-  langSwitcherHtml
+  langSwitcherHtml,
+  shareRailHtml,
+  shareModalHtml
 } from '../src/lib/render.js';
 
 export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
@@ -71,6 +73,9 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
   <script type="module" src="${escapeHtml(jsSrc)}"></script>
 </head>
 <body class="text-ink-800 font-sans antialiased">
+
+  <!-- ===== 分享：右侧常驻入口（滚动时始终可见） ===== -->
+  ${shareRailHtml(i18n)}
 
   <!-- ===== Header ===== -->
   <header class="sticky top-0 z-30 bg-cream-50/85 backdrop-blur border-b border-cream-200">
@@ -268,6 +273,9 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
        class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-ink-800 text-white px-5 py-3 rounded-full shadow-card-hover text-sm font-medium">
     ${escapeHtml((i18n.toast && i18n.toast.roll) || '').replace('{title}', '')}
   </div>
+
+  <!-- ===== 分享面板（骨架在构建期写好，链接与海报图由 main.js 现算） ===== -->
+  ${shareModalHtml(i18n)}
 
 </body>
 </html>`;

@@ -26,6 +26,7 @@ import {
   categorySectionHtml,
   buildCategories
 } from './lib/render.js';
+import { initShare } from './lib/share.js';
 
 // === 语言包与站点数据都按语言懒加载 ===
 // 非 eager 的 glob 会把每种语言拆成独立 chunk，只有当前语言的数据会被真正下载，
@@ -76,6 +77,15 @@ function readSavedLang() {
 
 function saveLang(code) {
   try { localStorage.setItem(LANG_KEY, code); } catch { /* 忽略 */ }
+}
+
+// 分享用的链接：优先取构建期写好的 canonical —— 它是这个页面唯一的正式地址
+// （绝对 https、带语言前缀、不带 index.html），比自己拼 location 更可靠。
+function canonicalUrl() {
+  const link = document.querySelector('link[rel="canonical"]');
+  const href = link && link.getAttribute('href');
+  if (href) return href;
+  return location.origin + location.pathname;
 }
 
 // 只有在「默认语言的根路径」上才做自动匹配跳转。
@@ -401,6 +411,20 @@ function bindTypewriter() {
   const lang = detectLang();
   document.documentElement.dataset.lang = lang;
   bindLangSwitch();
+
+  // 分享入口先挂上：它分享的是「这个页面」，不依赖站点数据。
+  // 文案与海报等真正点开那一刻才算（initShare 内部惰性构建），
+  // 所以即使下面 loadData 抛错，分享按钮照样能用。
+  try {
+    initShare(() => ({
+      t: state.t,
+      sites: state.sites,
+      brand: (state.t && state.t.brand) || document.title,
+      url: canonicalUrl()
+    }));
+  } catch (err) {
+    console.error('分享入口初始化失败：', err);
+  }
 
   try {
     await loadData(lang);

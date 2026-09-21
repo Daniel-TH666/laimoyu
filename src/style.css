@@ -93,6 +93,231 @@
   .rec-count.hot {
     @apply bg-rose-50 text-rose-600;
   }
+
+  /* ===== 分享：页面右侧常驻入口 =====
+     fixed + top:50% ⇒ 上下翻页时始终停在可见范围里。
+     HTML 里带 hidden，由 main.js 显式去掉（没 JS 时不留下点不动的死按钮）。 */
+  .share-rail {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+  }
+  .share-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 13px 11px;
+    border: 0;
+    border-radius: 16px 0 0 16px;
+    background: linear-gradient(135deg, #5BB29A 0%, #3D9882 100%);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: -6px 8px 26px -8px rgba(43, 122, 102, 0.75);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .share-btn:hover {
+    transform: translateX(-4px);
+    box-shadow: -8px 10px 30px -8px rgba(43, 122, 102, 0.85);
+  }
+  .share-btn:focus-visible {
+    outline: 3px solid #A4DBC5;
+    outline-offset: 2px;
+  }
+  .share-btn-icon {
+    font-size: 21px;
+    line-height: 1;
+  }
+  .share-btn-text {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    max-width: 62px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* 呼吸光圈：不刺眼，但足够让人注意到右边缘挂着个东西 */
+  .share-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 0 0 rgba(91, 178, 154, 0.5);
+    animation: sharePulse 3.2s ease-out infinite;
+    pointer-events: none;
+  }
+  @keyframes sharePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(91, 178, 154, 0.5); }
+    70%  { box-shadow: 0 0 0 16px rgba(91, 178, 154, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(91, 178, 154, 0); }
+  }
+  /* 窄屏：竖排 tab 会压住正文，改成右下角圆角胶囊（同样常驻可见）。
+     bottom 让开 88px，避免和底部居中的 toast 叠在一起。 */
+  @media (max-width: 767px) {
+    .share-rail {
+      top: auto;
+      bottom: 88px;
+      right: 14px;
+      transform: none;
+    }
+    .share-btn {
+      flex-direction: row;
+      border-radius: 999px;
+      padding: 12px 16px;
+      box-shadow: 0 8px 24px -6px rgba(43, 122, 102, 0.7);
+    }
+    .share-btn:hover {
+      transform: translateY(-2px);
+    }
+    .share-btn-icon { font-size: 18px; }
+    .share-btn-text { max-width: none; }
+  }
+
+  /* ===== 分享面板 ===== */
+  .share-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(31, 45, 61, 0.55);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  /* 只在没有 .hidden 时显示 —— 双保险，防止覆盖掉 Tailwind 的 hidden */
+  .share-mask:not(.hidden) { display: flex; }
+
+  .share-card {
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    width: 100%;
+    max-width: 430px;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+  .share-close {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid #EBE0CC;
+    background: #fff;
+    color: #64748B;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .share-close:hover { background: #F6F0E5; color: #1F2D3D; }
+
+  .share-preview {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #F6F0E5;
+    border: 1px solid #EBE0CC;
+  }
+  .share-preview img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 42vh;
+    object-fit: contain;
+  }
+  .share-preview img:not(.is-ready) { visibility: hidden; }
+  .share-preview-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F6F0E5;
+  }
+  .share-spinner {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    border: 3px solid #D1EBE0;
+    border-top-color: #5BB29A;
+    animation: shareSpin 0.8s linear infinite;
+  }
+  @keyframes shareSpin { to { transform: rotate(360deg); } }
+
+  /* 展示的就是剪贴板里那一份（一句话 + 链接），所见即所复制 */
+  .share-text-preview {
+    margin-top: 12px;
+    padding: 11px 13px;
+    border-radius: 12px;
+    background: #FBF7F1;
+    border: 1px dashed #A4DBC5;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #2C3E50;
+    /* 复制出去的文案里链接独占一行；pre-line 让预览框里的换行如实显示，
+       不然用户看到的预览和实际粘出去的不一致（所见非所得）。 */
+    white-space: pre-line;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+
+  .share-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .share-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 11px 10px;
+    border-radius: 12px;
+    border: 1px solid #EBE0CC;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2C3E50;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .share-action:hover { background: #F6F0E5; border-color: #A4DBC5; }
+  .share-action-primary {
+    background: #5BB29A;
+    border-color: #5BB29A;
+    color: #fff;
+  }
+  .share-action-primary:hover {
+    background: #3D9882;
+    border-color: #3D9882;
+    color: #fff;
+  }
+  .share-action-native {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .share-status {
+    margin-top: 10px;
+    min-height: 18px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #64748B;
+  }
+  .share-status.is-ok { color: #2A7A66; font-weight: 600; }
+  .share-status.is-warn { color: #B45309; }
 }
 
 @layer utilities {
