@@ -251,18 +251,32 @@ npm run dev
 
 ---
 
-## 分享功能（2026-09-17）
+## 分享功能（2026-09-17，09-21 增强链接可点）
 
 每个语言页面右侧都有一个**常驻的分享入口**，点击后弹出面板：**自动把一段带钩子的文案 + 链接复制到剪贴板**，
 同时给出一张现画的海报，可以「复制图片」或「下载图片」。
+
+**接收方拿到链接后能不能直接点**（2026-09-21）分两层保证：
+
+1. **链接独占一行**：六语言 `share.text` 的 `{url}` 单独占最后一行（`audit-data.py` 有护栏）。
+   这是微信 / QQ / Telegram 等聊天软件把纯文本 URL 自动识别成可点链接的最稳格式；
+   面板预览框用 `white-space: pre-line` 如实显示换行，所见即所得。
+2. **富文本锚链接**：`copyRich()` 把 `text/plain` 和 `text/html` **同时**写进剪贴板 ——
+   邮件、在线文档、Word、Telegram 等支持富文本粘贴的目标拿到的是真 `<a href>` 超链接，
+   不用等它自动识别。失败逐级回落纯文本 → `execCommand` 兜底。
+   （注意：降级测试必须把 `clipboard.write` **和** `writeText` 一起 stub 掉，
+   只断 `writeText` 会走主路径「假绿」。）
+
+> ⚠️ Windows 剪贴板会把 LF 规范化成 CRLF（系统约定）——测试比对前先
+> `replace(/\r\n/g, '\n')` 还原，别把环境行为误报成产品 bug。
 
 | 要求 | 实现 |
 |---|---|
 | 每个语言页面都有 | 骨架由构建期写进 6 个语言的 HTML（`shareRailHtml()` / `shareModalHtml()`） |
 | 按钮在右侧、滚动时始终可见 | `src/style.css` 的 `.share-rail { position: fixed; right: 0; top: 50% }` |
-| 点开后「直接复制」 | `open()` 里**第一件事就是同步调 `copyText()`**，不等海报画完 |
+| 点开后「直接复制」 | `open()` 里**第一件事就是同步调 `copyRich()`**，不等海报画完 |
 | 图片可复制可下载 | 1080×1440 的 Canvas 海报 → `blob` → `ClipboardItem` / `<a download>` |
-| 让人有点击的冲动 | 文案带钩子（`同事还在盯着表格发呆？这 95 个网站打开就能摸鱼，免费免登录：<链接>`），海报是大字号标题 + 站点名 + 薄荷绿品牌条 |
+| 让人有点击的冲动 | 文案带钩子（`同事还在盯着表格发呆？这 95 个网站打开就能摸鱼，免费免登录：`+ 换行 + `<链接>`），海报是大字号标题 + 站点名 + 薄荷绿品牌条 |
 
 ### 渐进增强：骨架在 HTML 里，但默认是隐藏的
 
@@ -287,7 +301,7 @@ npm run dev
 图片写剪贴板（`ClipboardItem`）**只有 Chromium 系支持**，失败时引导用户改用「下载图片」，
 所以「下载图片」这个按钮是**必须保留的兜底**，不是可选装饰。
 
-> ⚠️ `open()` 里的 `copyText()` 必须留在**任何 `await` 之前**。
+> ⚠️ `open()` 里的 `copyRich()` 必须留在**任何 `await` 之前**。
 > 剪贴板 API 对「用户手势」有硬要求，一旦中间隔了异步等待，浏览器就可能判定手势已过期而拒绝写入。
 
 ### 海报是现画的（Canvas，零依赖零外网）
@@ -453,11 +467,11 @@ laimoyu/
 PY=python
 
 # ① 数据审计：条数 / 字段 / 分类配比 / review 长度 / 语言包 key 一致性 / 语言纯度 / 分享文案
-$PY _diag/audit-data.py              # 期望 168/168
+$PY _diag/audit-data.py              # 期望 174/174
 
 # ② 静态产物检查：hreflang、canonical、sitemap（含每条 <loc> 能否落到真实文件）、点评是否真在 HTML 里、
 #    分享面板骨架是否由构建期写入
-$PY _diag/verify-dist.py             # 期望 144/144
+$PY _diag/verify-dist.py             # 期望 145/145
 
 # ③ 产物泄露检查：dist 里有没有混进仓库地址 / 用户名 / 令牌；广告位文案是否「当下为真」
 $PY _diag/check-leak.py              # 期望 7 类判据 0 命中 + 内容抽查全绿
@@ -470,14 +484,14 @@ node _diag/check-i18n.mjs            # 期望 56/56，JS 错误数 0
 #    另外：MOYU_PAT=<令牌> node _diag/check-admin-langs.mjs 可用真令牌端到端核对后台 6 语言条数
 
 # ⑤ 分享功能专项（需要 Chrome）：滚动时是否始终可见 / 剪贴板里是否真有内容 / 海报是否真的画出来了
-node _diag/check-share.mjs           # 期望 55/55
+node _diag/check-share.mjs           # 期望 57/57
 #    覆盖：6 语言入口与面板 / 滚动前→滚动 3000px→滚动到底，按钮视口坐标是否完全不变 /
 #          打开面板即自动复制（读回剪贴板逐字比对）/ 海报 1080×1440 + 像素采样（防止空白画布）/
 #          复制降级路径（stub 掉 clipboard API 后 execCommand 是否兜住）/ 窄屏右下角胶囊 / 禁 JS 时按钮保持隐藏
 #    取图供肉眼过目：node _diag/shot-share.mjs  → _diag/share-poster-<lang>.png + share-panel-<lang>.png
 
 # ⑥ 线上核验（推完等 Actions 绿了再跑）
-$PY _diag/check-live.py              # 期望 108/108
+$PY _diag/check-live.py              # 期望 114/114（含六语言首页含分享入口骨架）
 #    含「五、线上泄露与文案」：7 个线上页面逐个断言不含仓库用户名/仓库地址/旧 Pages 地址/
 #    真令牌格式/ghp_/第三方 favicon 服务/旧 Issue 端点，并逐语言核对「有更新区块、无旧投稿表单、
 #    广告文案当下为真」。线上才是用户看到的那一份，产物过了不代表线上过了。
