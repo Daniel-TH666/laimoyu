@@ -183,6 +183,7 @@
     "posterSubtitle": "ひとつずつ手で選びました。無料・登録不要。",
     "posterFooter": "無料 · 登録不要 · タブですぐ開く",
     "posterSitesLabel": "一部を紹介",
+    "posterScanHint": "スキャンして開く",
     "text": "隣の席の人はまだ表計算とにらめっこ？仕事中にサボれる{count}サイト、無料・登録不要です：\n{url}",
     "imageName": "moyu-paradise-ja"
   },

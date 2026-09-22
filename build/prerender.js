@@ -58,9 +58,22 @@ function alternateLinks(page, langs) {
 
 // canonical + hreflang + OG + twitter + JSON-LD
 function seoHead(lang, page, langs, ctx) {
-  const meta = (lang.meta || {})[page] || {};
+  // ⚠️ 首页的 page 标识是 'index'（sitemap / 文件名判定都用它），
+  //    但语言包里 meta 的 key 是 'home' —— 两套命名不一致。
+  //    不加这层映射时 `lang.meta['index']` 恒为 undefined：
+  //    title 有 lang.brand 兜底所以看不出来，description 却直接取到空字符串，
+  //    于是 6 个语言的 og:description / twitter:description 全是 content=""。
+  //    （页面能正常显示、构建也不报错，属于典型的静默失败。）
+  const metaKey = page === 'index' ? 'home' : page;
+  const meta = (lang.meta || {})[metaKey] || {};
   const title = meta.title || lang.brand;
   const desc = meta.description || '';
+  if (!desc) {
+    throw new Error(
+      `[prerender] ${lang.code} 的 ${metaKey} 页缺少 meta.${metaKey}.description —— ` +
+      `og:description 会是空的，社交平台卡片没有摘要。请补齐 src/i18n/${lang.code}.json。`
+    );
+  }
   const canonical = pageUrl(lang, page);
   const esc = escapeHtml;
 
@@ -75,9 +88,18 @@ function seoHead(lang, page, langs, ctx) {
     `<meta property="og:title" content="${esc(title)}" />`,
     `<meta property="og:description" content="${esc(desc)}" />`,
     `<meta property="og:url" content="${canonical}" />`,
-    `<meta name="twitter:card" content="summary" />`,
+    // og:image 必须用绝对 URL；爬虫不会执行 JS，所以只能用 public/ 里的静态图。
+    // 每个语言一张（由 _diag/shot-share.mjs 拍好海报后复制进 public/og/），
+    // 英文页给中文海报、中文页给英文海报都很别扭，所以按语言分别给。
+    `<meta property="og:image" content="${SITE_URL}/og/og-${lang.code}.png" />`,
+    `<meta property="og:image:width" content="1080" />`,
+    `<meta property="og:image:height" content="1440" />`,
+    `<meta property="og:image:alt" content="${esc(title)}" />`,
+    `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${esc(title)}" />`,
-    `<meta name="twitter:description" content="${esc(desc)}" />`
+    `<meta name="twitter:description" content="${esc(desc)}" />`,
+    `<meta name="twitter:image" content="${SITE_URL}/og/og-${lang.code}.png" />`,
+    `<meta name="twitter:image:alt" content="${esc(title)}" />`
   ];
 
   // ---- JSON-LD ----

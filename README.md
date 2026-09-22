@@ -251,10 +251,58 @@ npm run dev
 
 ---
 
-## 分享功能（2026-09-17，09-21 增强链接可点）
+## 分享功能（2026-09-17 上线，09-22 加 QR 码与 og: 卡片）
 
 每个语言页面右侧都有一个**常驻的分享入口**，点击后弹出面板：**自动把一段带钩子的文案 + 链接复制到剪贴板**，
 同时给出一张现画的海报，可以「复制图片」或「下载图片」。
+
+### 为什么海报上要放二维码和大字网址
+
+**聊天软件里的图片本身不能带可点击超链接** —— 这是平台限制，跟代码无关。微信、QQ、钉钉都不会
+把图片做成链接入口。美团 / 京东那种「点图片就跳转」靠的是微信开放平台白名单 + 企业资质域名，
+个人站做不到。
+
+所以海报上给了两条真正走得通的路径：
+
+| 方式 | 用户动作 | 覆盖 |
+|---|---|---|
+| **二维码** | 长按图片 → 「识别图中二维码」 | 微信 / QQ / 钉钉 / 支付宝 |
+| **大字网址** | 直接看着图输一遍 / 复制 | 任何场景（含截图转发后对方无原链） |
+
+品牌条因此重排成：**左侧 152×152 二维码 + 右侧 58px 大字 URL**，底色用**深薄荷绿 `#0F6E56`**
+（与白字和 QR 的对比度最高）。
+
+> ⚠️ 二维码的**静默区（quiet zone）是 4 个模块宽**，这是 QR 规范要求。
+> 少一圈会让识别率明显下降，而**画出来的码看上去完全正常** —— 肉眼根本发现不了。
+> `_diag/check-qr.py` 会把 6 张海报真解一遍（见下）。
+
+### og: 标签：让卡片在 QQ / 钉钉 / Telegram / Twitter 里能渲染
+
+聊天软件和社交平台拿链接去渲染卡片时读的是 `og:` 一套标签（爬虫不执行 JS，所以必须在构建期写进 HTML）。
+
+| 标签 | 值 | 作用 |
+|---|---|---|
+| `og:type` | `website` | 卡片类型 |
+| `og:site_name` | 语言包 `brand` | 卡片上的站点名 |
+| `og:locale` + 5 个 `og:locale:alternate` | `zh_CN` 等 | 语言归属 |
+| `og:title` | `meta.home.title` | 卡片标题 |
+| `og:description` | `meta.home.description` | **卡片摘要** |
+| `og:url` | 自指 canonical | 规范地址 |
+| `og:image` | `https://laimoyu.top/og/og-<lang>.png` | **卡片缩略图**（每语言一张） |
+| `og:image:width` / `:height` | `1080` / `1440` | 避免平台先按小图排版再跳变 |
+| `og:image:alt` | 标题 | 无障碍 |
+| `twitter:card` | `summary_large_image` | 用大图卡片（小图在 1080×1440 海报上几乎看不清） |
+| `twitter:title` / `:description` / `:image` / `:image:alt` | 同上 | Twitter 专用 |
+
+**每语言一张 og 图**（`public/og/og-<lang>.png`，共 6 张）：直接用该语言的分享海报。
+英文页配中文海报、中文页配英文海报都很别扭，所以按语言分开。
+
+> ⚠️ **标签「存在」不等于「有内容」。** 曾经 `seoHead()` 里首页传 `page='index'`，
+> 而语言包的 key 是 `home` —— 取不到就回落成空串，产物里赫然写着
+> `<meta property="og:description" content="" />`，而验收脚本只查「标签在不在」
+> （字符串匹配只看属性名、不看值）**照样全绿**，于是所有卡片都没有摘要文字。
+> 现在 `verify-dist.py` / `check-live.py` 都会**把 content 读出来验非空**，
+> 且 `prerender.js` 在描述为空时**直接让构建失败**。
 
 **接收方拿到链接后能不能直接点**（2026-09-21）分两层保证：
 
@@ -309,6 +357,14 @@ npm run dev
 海报走 `canvas.toBlob()` 生成，**不引入任何图形库、不发任何外网请求** ——
 这是延续「图标自托管」那条约定（第三方服务挂一次就是全站破图，见上文「图标策略」）。
 
+> 二维码也一样：**没有引 npm 包**，而是把 `qrcode-generator`（kazuhikoarase，MIT）
+> 整个文件 vendor 进 `src/lib/qrcode.js`（约 56 KB），构建期随主 bundle 一起打包，
+> 运行时不发任何请求。选它是因为它是纯 JS、无依赖、无 WASM，符合上面那条约定。
+>
+> ⚠️ vendor 进来后**必须在文件末尾补一句 `export default qrcode;`** ——
+> 该库结尾是 `module.exports = factory()`，在 ESM 上下文里会被 Rollup 当成死代码删掉，
+> 构建时报 `"default" is not exported by qrcode.js`。补上这行即可。
+
 几个专门为多语言踩过的点：
 
 - **字号自适应**：`fitBlock()` 从 92px 起逐步降到 46px（步长 2），直到标题能在限定行数内排下。
@@ -358,12 +414,32 @@ node _diag/zoom-poster.mjs zh 320 100 3      # 中文海报 y=320 起 100px 高�
 
 | 文件 | 作用 |
 |---|---|
-| `src/lib/share.js` | 全部逻辑：海报绘制、复制/下载、面板交互（约 470 行） |
+| `src/lib/share.js` | 全部逻辑：海报绘制（含 `drawQR()`）、复制/下载、面板交互（约 500 行） |
+| `src/lib/qrcode.js` | vendored QR 生成库（qrcode-generator，MIT，约 56 KB，无依赖无外网） |
 | `src/lib/render.js` | `shareRailHtml()` 入口骨架 + `shareModalHtml()` 面板骨架 |
 | `build/home-template.js` | 在 `<body>` 开头放入口、`</body>` 前放面板 |
+| `build/prerender.js` | `seoHead()` 注入 og: / twitter: 全套；首页 `meta` key 映射 `index`→`home` |
+| `public/og/og-<lang>.png` | 6 张 og:image（各语言分享海报，由 `shot-share.mjs` 拍好后复制过来） |
 | `src/main.js` | `initShare()` —— **先挂分享，再 `loadData()`**，数据加载失败也不影响分享可用 |
 | `src/style.css` | `.share-rail` / `.share-btn` / `.share-mask` / `.share-card` 等约 190 行 |
-| `src/i18n/*.json` | `share` 节点，24 个 key × 6 语言 |
+| `src/i18n/*.json` | `share` 节点，**25 个 key**（含 `posterScanHint`）× 6 语言 |
+
+### 换海报 / 换 og:image 的完整流程
+
+og:image 就是各语言的分享海报，所以**改完海报要重新导出**，三步：
+
+```bash
+# ① 重新拍 6 张海报（写到 _diag/share-poster-<lang>.png）
+node _diag/shot-share.mjs
+
+# ② 同步到 public/og/og-<lang>.png，并校验字节一致 + dist 是否同步
+python _diag/sync-og.py
+
+# ③ 核验二维码真能扫出本语言 URL（zxing-cpp 真解码，不是「看着像」）
+python _diag/check-qr.py
+```
+
+改完再 `npm run build`，`public/og/` 会被原样复制到 `dist/og/`（构建日志里不列出来，属正常）。
 
 ---
 
@@ -383,6 +459,7 @@ laimoyu/
 ├── postcss.config.js
 ├── public/
 │   ├── favicon.svg
+│   ├── og/              # og:image —— 每语言一张分享海报（og-<lang>.png，见「分享功能」）
 │   └── icons/
 │       └── sites/       # 站点的真实图标（自托管），见下「图标策略」
 └── src/
@@ -399,6 +476,7 @@ laimoyu/
     │   └── ko.json
     ├── lib/
     │   ├── render.js    # 渲染模板（浏览器与构建期共用，改这里就够）
+    │   ├── qrcode.js    # vendored QR 生成库（qrcode-generator，MIT）
     │   └── share.js     # 分享：右侧常驻入口 + 复制/下载 + Canvas 海报（零依赖）
     └── data/
         └── sites/
@@ -436,6 +514,14 @@ laimoyu/
 > 现在 sitemap 循环开头有构建期断言：缺 `page` 直接让构建失败，不再产出「看着正常其实全坏」的 sitemap。
 > **同一个概念只允许一个字段名** —— 这类静默错误靠肉眼走查发现不了。
 
+> ⚠️ **首页的 `page` 标识是 `index`，但语言包里 `meta` 的 key 是 `home`。**
+> `seoHead()` 里已经用 `page === 'index' ? 'home' : page` 做了映射，**别把这行删了**。
+> 不映射时 `lang.meta['index']` 恒为 `undefined`：`title` 有 `lang.brand` 兜底所以看不出来，
+> `description` 却直接取到空字符串 → 6 个语言的 `og:description` / `twitter:description`
+> 全是 `content=""`，**而「标签齐全」的验收断言照样全绿**（字符串匹配只看属性名，不看值）。
+> 两条防线：`seoHead()` 描述为空时**直接抛错让构建失败**；
+> `verify-dist.py` / `check-live.py` **把 content 读出来验非空**。
+
 ---
 
 ## 搜索引擎与广告变现基础
@@ -460,7 +546,7 @@ laimoyu/
 
 ### 验收脚本
 
-改完前台结构、语言包或 SEO 相关代码，按顺序跑这六个：
+改完前台结构、语言包或 SEO 相关代码，按顺序跑这几个：
 
 ```bash
 # 有 python 的环境直接用；本机 bash 退化（ls/git 都 command not found）时改用解释器绝对路径
@@ -470,28 +556,47 @@ PY=python
 $PY _diag/audit-data.py              # 期望 174/174
 
 # ② 静态产物检查：hreflang、canonical、sitemap（含每条 <loc> 能否落到真实文件）、点评是否真在 HTML 里、
-#    分享面板骨架是否由构建期写入
-$PY _diag/verify-dist.py             # 期望 145/145
+#    分享面板骨架是否由构建期写入、og:/twitter: 13 项标签 + 内容非空 + 图真存在且是 PNG
+$PY _diag/verify-dist.py             # 期望 205/205
 
 # ③ 产物泄露检查：dist 里有没有混进仓库地址 / 用户名 / 令牌；广告位文案是否「当下为真」
 $PY _diag/check-leak.py              # 期望 7 类判据 0 命中 + 内容抽查全绿
 
 # ④ 浏览器行为检查（需要 Chrome，原生 CDP，不依赖 puppeteer）
-node _diag/check-i18n.mjs            # 期望 56/56，JS 错误数 0
+node _diag/check-i18n.mjs            # 期望 55/56（1 个已知假警报，见下），JS 错误数 0
 #    覆盖：11 种浏览器语言自动匹配 / 手动选择优先 / 切换器点击与记忆 /
 #          搜索-分类-收藏不回归 / 页面无「本仓库」链接 / 禁 JS 爬虫视角 / 6 语言截图 /
 #          后台不暴露仓库（含「切语言真的去拉对应数据文件」与「令牌不回显」两组回归）
 #    另外：MOYU_PAT=<令牌> node _diag/check-admin-langs.mjs 可用真令牌端到端核对后台 6 语言条数
+#
+#    ⚠️ 已知假警报：D 段「搜索框能过滤结果」用的关键词是**从页面上第一张卡的标题取前 3 个字**
+#       （日语页恰好是 GeoGuessr → "Geo"），而这个事件是紧跟 `goto()` 之后立刻发的，
+#       此时 `loadData()` 还没跑完、`bindSearch()` 尚未挂上监听器，事件被丢掉 →
+#       报「剩 90 张（原 90）」。产品逻辑本身是好的（手动隔 2 秒再发同样的 input，
+#       实测 90 → 1 张）。属脚本时序问题，与产品无关，暂不修。
 
 # ⑤ 分享功能专项（需要 Chrome）：滚动时是否始终可见 / 剪贴板里是否真有内容 / 海报是否真的画出来了
-node _diag/check-share.mjs           # 期望 57/57
+node _diag/check-share.mjs           # 期望 58/58
 #    覆盖：6 语言入口与面板 / 滚动前→滚动 3000px→滚动到底，按钮视口坐标是否完全不变 /
-#          打开面板即自动复制（读回剪贴板逐字比对）/ 海报 1080×1440 + 像素采样（防止空白画布）/
+#          打开面板即自动复制（读回剪贴板逐字比对）/ 海报 1080×1440 + 像素采样（防止空白画布）
+#          ＋ 深薄荷绿品牌条 + 二维码区域深色像素占比 /
 #          复制降级路径（stub 掉 clipboard API 后 execCommand 是否兜住）/ 窄屏右下角胶囊 / 禁 JS 时按钮保持隐藏
 #    取图供肉眼过目：node _diag/shot-share.mjs  → _diag/share-poster-<lang>.png + share-panel-<lang>.png
 
-# ⑥ 线上核验（推完等 Actions 绿了再跑）
-$PY _diag/check-live.py              # 期望 114/114（含六语言首页含分享入口骨架）
+# ⑥ 二维码可扫性（不需要浏览器，纯 Python 解码）
+$PY _diag/check-qr.py                # 期望 18/18
+#    为什么要它：「画出来了」和「扫得出来」是两件事 —— 模块尺寸取整、静默区不够、
+#    对比度不足、纠错级别不对，任何一个都会让码看着正常却扫不出来，肉眼完全看不出。
+#    用 zxing-cpp（工业级解码库，许多商业扫码 App 同源）把 6 张海报真解一遍，
+#    断言解出的 URL == 本语言页面地址。
+#    ⚠️ 不要试图用 Chrome 的 BarcodeDetector 做这件事：桌面 Chrome 只在
+#       ChromeOS / macOS / Android 上提供它，Windows 上无论加什么 flag 都是 undefined。
+
+# ⑦ 海报与 og:image 同步
+$PY _diag/sync-og.py                 # 期望 18/18（复制 + 字节一致 + dist 一致性）
+
+# ⑧ 线上核验（推完等 Actions 绿了再跑）
+$PY _diag/check-live.py              # 期望 130/130（含六语言首页分享骨架 + og: 标签内容非空 + og:image 线上 HTTP 200）
 #    含「五、线上泄露与文案」：7 个线上页面逐个断言不含仓库用户名/仓库地址/旧 Pages 地址/
 #    真令牌格式/ghp_/第三方 favicon 服务/旧 Issue 端点，并逐语言核对「有更新区块、无旧投稿表单、
 #    广告文案当下为真」。线上才是用户看到的那一份，产物过了不代表线上过了。
@@ -692,10 +797,13 @@ npm run dev
 
 > ⚠️ **`_diag/` 被 gitignore 了，所以换设备时这几个验收脚本不会跟着走。**
 > 它们是排查问题的主力工具（`audit-data.py` / `verify-dist.py` / `check-i18n.mjs` /
-> `check-share.mjs` / `check-live.py` / `zoom-poster.mjs` / `shot-share.mjs` /
-> `fetch-favicons.py` / `push-via-api.py`）。
+> `check-share.mjs` / `check-qr.py` / `check-live.py` / `sync-og.py` / `zoom-poster.mjs` /
+> `shot-share.mjs` / `fetch-favicons.py` / `push-via-api.py`）。
+> 其中 `check-qr.py` 还需要 `pip install zxing-cpp Pillow`（`sync-og.py` 只要 Pillow 就够）。
 > 换设备前记得单独把它们复制走，或者跟维护者确认是否要把 `_diag/*.py` `_diag/*.mjs`
 > 从 `.gitignore` 里放出来、只忽略截图。
+>
+> 注意 `public/og/` **不是** `_diag/` 的一部分，它在仓库里，会跟着 clone 一起走。
 
 **唯一要额外记的**：后台地址 `bookmarks.html` 和你的 GitHub 令牌（建议存密码管理器）。
 

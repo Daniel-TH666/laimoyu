@@ -183,6 +183,7 @@
     "posterSubtitle": "Seleccionadas una a una. Gratis y sin registro.",
     "posterFooter": "Gratis · Sin registro · Se abre en una pestaña",
     "posterSitesLabel": "Algunas de ellas",
+    "posterScanHint": "Escanea para abrir",
     "text": "¿Tu compañero sigue mirando una hoja de cálculo? {count} webs para matar el tiempo en el trabajo, gratis y sin registro:\n{url}",
     "imageName": "moyu-paradise-es"
   },

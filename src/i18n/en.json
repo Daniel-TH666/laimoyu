@@ -183,6 +183,7 @@
     "posterSubtitle": "Hand-picked one by one. All free, no sign-up.",
     "posterFooter": "Free · No sign-up · Opens right in a tab",
     "posterSitesLabel": "A few of them",
+    "posterScanHint": "Scan to open",
     "text": "Colleague still staring at a spreadsheet? {count} sites you could open instead — all free, no sign-up:\n{url}",
     "imageName": "moyu-paradise-en"
   },

@@ -183,6 +183,7 @@
     "posterSubtitle": "一个个亲手筛过，免费、免登录。",
     "posterFooter": "免费 · 免登录 · 点开即用",
     "posterSitesLabel": "随手挑几个",
+    "posterScanHint": "扫码访问",
     "text": "同事还在盯着表格发呆？这 {count} 个网站打开就能摸鱼，免费免登录：\n{url}",
     "imageName": "摸鱼乐园"
   },

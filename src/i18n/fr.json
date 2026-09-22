@@ -183,6 +183,7 @@
     "posterSubtitle": "Sélectionnés un par un. Gratuits, sans inscription.",
     "posterFooter": "Gratuit · Sans inscription · S'ouvre dans un onglet",
     "posterSitesLabel": "Quelques-uns",
+    "posterScanHint": "Scanner pour ouvrir",
     "text": "Un collègue qui fixe encore un tableur ? {count} sites pour tuer le temps au boulot, gratuits et sans inscription :\n{url}",
     "imageName": "moyu-paradise-fr"
   },

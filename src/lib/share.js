@@ -9,6 +9,9 @@
 //      不做「点了没反应」的静默失败。
 
 import { fmt } from './render.js';
+// QR 码生成（kazuhikoarase/qrcode-generator，vendored 详见 qrcode.js 头部）。
+// 用法：const qr = qrcode(0, 'M'); qr.addData(url); qr.make();
+import qrcode from './qrcode.js';
 
 // 海报尺寸 3:4。这个比例在聊天软件里预览不会被裁成一条。
 const POSTER_W = 1080;
@@ -19,7 +22,9 @@ const C = {
   ink: '#1F2D3D',
   slate: '#64748B',
   mint: '#5BB29A',
-  mintDeep: '#3D9882'
+  mintDeep: '#3D9882',
+  // 品牌条深薄荷绿（用户偏好的对比色，确保白字 + QR 码边框在缩略图里也清晰）
+  brandDark: '#0F6E56'
 };
 
 // 字体栈：emoji 字体放最后 —— 前面的字体没有对应码位时会自动往后退，
@@ -126,6 +131,49 @@ function softBlob(ctx, x, y, r, color) {
 }
 
 // ============================================================
+// QR 码绘制（vendored kazuhikoarase/qrcode-generator）
+// ============================================================
+//
+// 把指定 URL 画成 size×size 的 QR 码，填到 (x,y) 的左上角。
+//
+// 设计选择：
+//   - 误差纠错 'M' (15% 恢复率)：比 'L' 更安全，但仍能让生成的模块数在 URL 长度下保持
+//     较小 —— QR 越密越好扫，但也越占空间，'M' 是经验上的甜点位。
+//   - 白底加 4 像素静默区（QR 规范要求 ≥ 4 模块宽）：不加的话贴边识别率掉 10%+。
+function drawQR(ctx, x, y, size, url, opts = {}) {
+  const ec = opts.ec || 'M';
+  const qr = qrcode(0, ec);
+  qr.addData(String(url || ''));
+  qr.make();
+  const n = qr.getModuleCount();
+  // 静默区：QR 规范要求 4 单位、四边都要
+  const QUIET = 4;
+  const total = n + QUIET * 2;
+  const cell = size / total;
+
+  // 白底圆角矩形
+  roundRect(ctx, x, y, size, size, 10);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fill();
+
+  // 黑色 QR 单元
+  ctx.fillStyle = '#1F2D3D';
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      if (qr.isDark(r, c)) {
+        ctx.fillRect(
+          x + Math.round((c + QUIET) * cell),
+          y + Math.round((r + QUIET) * cell),
+          Math.ceil(cell),
+          Math.ceil(cell)
+        );
+      }
+    }
+  }
+  return { moduleCount: n, cell };
+}
+
+// ============================================================
 // 画海报
 // ============================================================
 // d: { brand, url, count, title, subtitle, footer, sitesLabel, sites:[{title}] }
@@ -214,22 +262,37 @@ function drawPoster(ctx, d) {
     });
   }
 
-  // ---- 底部条：网址 + 一句话 ----
-  const band = ctx.createLinearGradient(PAD, bandTop, W - PAD, bandTop + bandH);
-  band.addColorStop(0, C.mint);
-  band.addColorStop(1, C.mintDeep);
+  // ---- 底部条：左侧 QR 码，右侧大字 URL + footer ----
+  // 品牌条改成深薄荷绿实色（无渐变）—— 白字 + 白底 QR 在深色上对比度更强，
+  // 即使在缩略图里也能一秒认出品牌区。
   roundRect(ctx, PAD, bandTop, innerW, bandH, 36);
-  ctx.fillStyle = band;
+  ctx.fillStyle = C.brandDark;
   ctx.fill();
 
-  const shownUrl = String(d.url || '').replace(/^https?:\/\//i, '').replace(/\/+$/, '');
-  ctx.font = font(800, 46);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillText(ellipsize(ctx, shownUrl, innerW - 88), PAD + 44, bandTop + 36);
+  // QR 码：左侧 152×152，纵向居中。预留 4 单位静默区让微信/Telegram 都能扫。
+  const qrSize = 152;
+  const qrX = PAD + 28;
+  const qrY = bandTop + Math.round((bandH - qrSize) / 2);
+  drawQR(ctx, qrX, qrY, qrSize, d.url || '');
 
-  ctx.font = font(500, 28);
-  ctx.fillStyle = 'rgba(255,255,255,0.88)';
-  ctx.fillText(ellipsize(ctx, d.footer || '', innerW - 88), PAD + 44, bandTop + 100);
+  // 「扫码访问」小提示（在 QR 上方右侧，或下方右侧，让国内用户一看就懂）
+  ctx.font = font(600, 22);
+  ctx.fillStyle = 'rgba(255,255,255,0.82)';
+  const hintText = (d.scanHint || 'Scan to open · 扫码访问');
+  const textX = PAD + 28 + qrSize + 32;
+  ctx.fillText(hintText, textX, bandTop + 26);
+
+  // URL 主行（字号从 46→58，缩略图里一眼看清）
+  const shownUrl = String(d.url || '').replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+  const textMaxW = innerW - (qrSize + 28 + 32 + 28);
+  ctx.font = font(800, 58);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillText(ellipsize(ctx, shownUrl, textMaxW), textX, bandTop + 64);
+
+  // Footer（版权 / 价值点）
+  ctx.font = font(500, 26);
+  ctx.fillStyle = 'rgba(255,255,255,0.78)';
+  ctx.fillText(ellipsize(ctx, d.footer || '', textMaxW), textX, bandTop + 138);
 }
 
 async function renderPoster(d) {
@@ -396,6 +459,7 @@ export function initShare(getData) {
         subtitle: snap.s.posterSubtitle || '',
         footer: snap.s.posterFooter || '',
         sitesLabel: snap.s.posterSitesLabel || '',
+        scanHint: snap.s.posterScanHint || '',
         sites: snap.sites
       });
     } catch (err) {
