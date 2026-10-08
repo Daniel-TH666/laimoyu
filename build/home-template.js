@@ -20,7 +20,8 @@ import {
   siteGuideHtml,
   langSwitcherHtml,
   shareRailHtml,
-  shareModalHtml
+  shareModalHtml,
+  articleNavBlockHtml
 } from '../src/lib/render.js';
 
 export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
@@ -45,12 +46,16 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
       `<button data-cat="${escapeHtml(c.id)}" class="cat-tab">${escapeHtml(c.icon)} ${escapeHtml(c.short || c.title)}</button>`)
   ].join('\n        ');
 
-  // 长读文章页链接（footer 「长读/Articles」→「全部文章」聚合）。
-  // ⚠️ 没专门的聚合页 —— 文章只有两篇（best-browser-games + free-online-tools），
-  // 直接列两个 slug。后续文章多了再建 articles.html 索引页。
-  const articlesLinksHtml = `
-          <a href="${escapeHtml(p + '/best-browser-games.html')}" class="hover:text-white transition">🎮 ${escapeHtml((foot.links && foot.links.articles) || '')} · ①</a>
-          <a href="${escapeHtml(p + '/free-online-tools.html')}" class="hover:text-white transition">🛠️ ${escapeHtml((foot.links && foot.links.articles) || '')} · ②</a>`.trim();
+  // 长读文章页入口。走 render.js 里的 articleNavBlockHtml —— 和内容页/文章页页脚是**同一份实现**。
+  // ⚠️ 2026-10-08 踩过：这里原先自己拼了一个 articlesLinksHtml 字符串，却忘了插进返回的模板里
+  //    （变量声明后从未被引用 = 死代码）→ 12 个文章页全站零内链（孤儿页），
+  //    Google 抓到了也长期停在「已抓取 - 尚未编入索引」。现已改为共用函数并真正插值。
+  const articlesHtml = articleNavBlockHtml(i18n, {
+    linkCls: 'hover:text-white transition',
+    blockCls: 'mb-10 pb-8 border-b border-slate-700',
+    titleCls: 'text-sm font-bold text-white mb-4 uppercase tracking-wider',
+    listCls: 'flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-2.5 text-sm'
+  });
 
   // 友情链接（各语言可不同，没有就整块不渲染）
   const friends = Array.isArray(foot.friends) ? foot.friends : [];
@@ -254,6 +259,7 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
   <footer class="bg-ink-800 text-slate-300 pt-14 pb-6">
     <div class="max-w-7xl mx-auto px-5 lg:px-8">
       ${friendsHtml}
+      ${articlesHtml}
 
       <section class="mb-10 pb-8 border-b border-slate-700">
         ${langSwitcherHtml(langs, i18n.code, 'index', { variant: 'footer', t: i18n })}

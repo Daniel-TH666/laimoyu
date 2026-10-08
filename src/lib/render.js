@@ -425,6 +425,48 @@ export function contentNavPages(i18n) {
   ];
 }
 
+// === 长读文章页的站内导航 ===
+// ⚠️ 这里是「文章链接」的**唯一来源**。build/prerender.js 的 ARTICLES 只管 sitemap / JSON-LD 配置，
+//    「页面之间怎么互相链」必须都走下面这个函数。
+//    2026-10-08 踩过：home-template.js 里声明了 articlesLinksHtml 却忘了插进模板 →
+//    12 个文章页全站零内链（孤儿页），Google 抓到了也只能停在「已抓取 - 尚未编入索引」。
+//    所以：任何新增文章，改这里一处，首页页脚 + 内容页/文章页页脚自动都有入口。
+export const ARTICLE_NAV = [
+  { page: 'best-browser-games', icon: '🎮' },
+  { page: 'free-online-tools', icon: '🛠️' }
+];
+
+// 整块「文章入口」= 小标题 + 若干链接。首页页脚、内容页页脚、文章页页脚共用同一个实现，
+// 避免出现「一处有、另一处漏」。
+// anchor 文案取各语言 pages.<slug>.heading（自带关键词，比「长读」这类泛词对 SEO 有用）。
+// excludePage 传当前页 slug —— 文章页不给自己一个自链接。
+export function articleNavBlockHtml(i18n, opts = {}) {
+  const p = i18n.pathPrefix || '';
+  const excludePage = opts.excludePage || '';
+  const linkCls = opts.linkCls || 'hover:text-mint-200 transition';
+  const title = ((i18n.footer || {}).links || {}).articles || 'Articles';
+
+  const items = ARTICLE_NAV
+    .filter(a => a.page !== excludePage)
+    .map(a => {
+      const pg = (i18n.pages || {})[a.page] || {};
+      return `<a href="${escapeHtml(`${p}/${a.page}.html`)}" class="${linkCls}">${a.icon} ${escapeHtml(pg.heading || a.page)}</a>`;
+    });
+  if (!items.length) return '';
+
+  const blockCls = opts.blockCls || 'mb-6 pt-5 border-t border-slate-700';
+  const titleCls = opts.titleCls || 'text-xs uppercase tracking-wider font-bold text-slate-500 mb-2.5';
+  const listCls = opts.listCls || 'flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-2 text-sm';
+
+  return `
+      <div class="${blockCls}">
+        <p class="${titleCls}">📖 ${escapeHtml(title)}</p>
+        <div class="${listCls}">
+          ${items.join('\n          ')}
+        </div>
+      </div>`;
+}
+
 function contentHeaderHtml(i18n, langs, page) {
   const navPages = contentNavPages(i18n);
   const p = i18n.pathPrefix || '';
@@ -463,6 +505,7 @@ function contentFooterHtml(i18n, langs, page) {
         <a href="${escapeHtml(p + '/faq.html')}" class="hover:text-mint-200 transition">${escapeHtml(links.faq || '')}</a>
         <a href="${escapeHtml(p + '/contact.html')}" class="hover:text-mint-200 transition">${escapeHtml(links.contact || '')}</a>
       </div>
+      ${articleNavBlockHtml(i18n, { excludePage: page })}
       <div class="mb-8 pb-6 border-t border-slate-700 pt-6">
         ${langSwitcherHtml(langs, i18n.code, page, { variant: 'footer', t: i18n })}
       </div>
