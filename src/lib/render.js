@@ -534,6 +534,147 @@ ${contentFooterHtml(i18n, langs, kind)}
 </html>`;
 }
 
+// 文章页（best-browser-games / free-online-tools 等）整页渲染。
+// 与 contentPageHtml（关于/隐私/FAQ/联系）的区别：
+//   - 多 sections 结构（每段有 tag、可选 highlights 列表）
+//   - 有可选 catId：渲染末尾给出"→ 站内对应分类"的反向链接，让爬虫把权重传回首页分类
+//   - 有可选 updated：渲染发布时间
+//   - 段落更重视 H2 + 小段叙述，符合长尾博客文章的阅读节奏
+//
+// 数据形态在 i18n.pages.<slug>：
+//   {
+//     heading, intro,
+//     readTime, updated, catId,              // 可选
+//     sections: [{ h, tag, p: [...], highlights?: [...] }, ...],
+//     conclusion                             // 可选：文末段落
+//   }
+// SEO meta 在 i18n.meta.<slug>。
+
+const READING_WORDS_PER_MIN = 200; // 估读速（英文/CJK 都按 200 字 / 200 词 / 分钟）
+
+// 估算阅读时长。中日韩按字符算；英文按词；其它欧洲语言按空白分词。
+function estimateReadingMinutes(i18n, text) {
+  const lang = (i18n && i18n.code) || 'en';
+  const cjkLangs = new Set(['zh', 'ja', 'ko']);
+  const tokens = cjkLangs.has(lang) ? [...text].length : text.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(tokens / READING_WORDS_PER_MIN));
+}
+
+export function articlePageHtml(slug, i18n, langs, opts = {}) {
+  const page = (i18n.pages || {})[slug] || {};
+  const sections = Array.isArray(page.sections) ? page.sections : [];
+  const today = opts.today || new Date().toISOString().slice(0, 10);
+  const p = i18n.pathPrefix || '';
+
+  // 重新组织 sections：把"目录（heading 区）"也放在文首，方便跳读。
+  const fullText = [
+    page.heading || '',
+    page.intro || '',
+    ...sections.flatMap(s => [s.h || '', s.tag || '', ...(s.p || [])]),
+    page.conclusion || ''
+  ].join(' ');
+  const readTime = page.readTime || `~${estimateReadingMinutes(i18n, fullText)} min`;
+
+  const sectionsHtml = sections.map((s, i) => {
+    const tagHtml = s.tag
+      ? `<span class="inline-block text-[11px] uppercase tracking-wider text-mint-600 font-semibold bg-mint-50 border border-mint-100 rounded-full px-2.5 py-0.5 mb-3">${escapeHtml(s.tag)}</span>`
+      : '';
+    const highlightsHtml = Array.isArray(s.highlights) && s.highlights.length
+      ? `<ul class="mt-4 space-y-1.5 text-sm text-slate-600">
+          ${s.highlights.map(h => `<li class="flex items-start gap-2"><span class="text-mint-500 flex-shrink-0 mt-0.5">•</span><span>${escapeHtml(h)}</span></li>`).join('\n          ')}
+        </ul>`
+      : '';
+    return `
+    <section id="sec-${escapeHtml(slug)}-${i + 1}" class="bg-white rounded-card p-6 lg:p-8 shadow-card border border-cream-200 mb-6 scroll-mt-32">
+      <h2 class="text-xl lg:text-2xl font-bold mb-3 text-ink-800 leading-snug">
+        <span class="text-mint-500 font-mono text-base mr-2">${i + 1}.</span>${escapeHtml(s.h)}
+      </h2>
+      ${tagHtml}
+      <div class="text-sm lg:text-base text-slate-700 space-y-3 leading-relaxed">
+        ${(s.p || []).map(par => `<p>${escapeHtml(par)}</p>`).join('')}
+      </div>
+      ${highlightsHtml}
+    </section>`;
+  }).join('');
+
+  // 目录（TOC）：仅当 sections >= 3 时显示，跳转锚点
+  const tocHtml = sections.length >= 3 ? `
+    <nav class="bg-cream-100 rounded-card p-5 lg:p-6 border border-cream-200 mb-8" aria-label="Table of contents">
+      <p class="text-xs uppercase tracking-wider font-bold text-slate-500 mb-3">📑 ${escapeHtml(page.tocLabel || 'In this guide')}</p>
+      <ol class="space-y-1.5 text-sm text-slate-700">
+        ${sections.map((s, i) => `
+        <li>
+          <a href="#sec-${escapeHtml(slug)}-${i + 1}" class="hover:text-mint-600 transition flex items-baseline gap-2">
+            <span class="text-mint-500 font-mono text-xs w-5 flex-shrink-0">${i + 1}.</span>
+            <span class="truncate">${escapeHtml(s.h)}</span>
+          </a>
+        </li>`).join('')}
+      </ol>
+    </nav>` : '';
+
+  // 文末 CTA：跳回站内对应分类（如果设了 catId）。给爬虫一个反向链接、把文章权重传到首页分类。
+  const ctaHtml = page.catId ? `
+    <aside class="bg-gradient-to-br from-mint-50 to-cream-100 rounded-card p-6 lg:p-8 border border-mint-100 text-center mb-6">
+      <p class="text-base lg:text-lg font-semibold text-ink-800 mb-2">${escapeHtml(page.ctaTitle || 'Want more like this?')}</p>
+      <p class="text-sm text-slate-600 mb-4 max-w-xl mx-auto">${escapeHtml(page.ctaSubtitle || '')}</p>
+      <a href="${escapeHtml(p + '/#cat-' + page.catId)}" class="inline-block bg-mint-500 hover:bg-mint-600 text-white px-5 py-2.5 rounded-full font-medium transition shadow-card">
+        ${escapeHtml(page.ctaButton || 'See the full collection →')}
+      </a>
+    </aside>` : '';
+
+  const updatedHtml = page.updated ? `
+    <div class="flex items-center gap-3 text-xs text-slate-400 mb-6">
+      <span>📅 ${escapeHtml(page.updatedLabel || 'Last updated')}: ${escapeHtml(page.updated)}</span>
+      <span>⏱️ ${escapeHtml(readTime)}</span>
+    </div>` : '';
+
+  const conclusionHtml = page.conclusion ? `
+    <section class="bg-cream-50 rounded-card p-6 lg:p-8 border border-cream-200 mb-6">
+      <h2 class="text-xl font-bold mb-3 text-ink-800">${escapeHtml(page.conclusionTitle || 'Final note')}</h2>
+      <div class="text-sm lg:text-base text-slate-700 space-y-3 leading-relaxed">
+        ${page.conclusion.split(/\n\n+/).map(par => `<p>${escapeHtml(par)}</p>`).join('')}
+      </div>
+    </section>` : '';
+
+  const backLabel = (i18n.pages && i18n.pages.backHome) || '← Back to the homepage';
+
+  return `<!DOCTYPE html>
+<html lang="${escapeHtml(i18n.htmlLang)}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- @prerender:head -->
+  <link rel="stylesheet" href="${escapeHtml(opts.cssHref || '/assets/style.css')}" />
+</head>
+<body class="text-ink-800 font-sans antialiased">
+${contentHeaderHtml(i18n, langs, slug)}
+  <main class="max-w-4xl mx-auto px-5 lg:px-8 py-10 lg:py-14">
+    <nav class="text-xs text-slate-400 mb-5" aria-label="Breadcrumb">
+      <a href="${escapeHtml(p + '/')}" class="hover:text-mint-600 transition">${escapeHtml(i18n.nav.home)}</a>
+      <span class="mx-1.5">/</span>
+      <span class="text-slate-500">${escapeHtml(page.heading || '')}</span>
+    </nav>
+
+    <header class="mb-8">
+      <h1 class="text-3xl lg:text-4xl font-bold tracking-tight mb-3 leading-tight">${escapeHtml(page.heading || '')}</h1>
+      <p class="text-base lg:text-lg text-slate-500 leading-relaxed max-w-2xl">${escapeHtml(page.intro || '')}</p>
+    </header>
+
+    ${updatedHtml}
+    ${tocHtml}
+    ${sectionsHtml}
+    ${conclusionHtml}
+    ${ctaHtml}
+
+    <div class="text-center mt-10">
+      <a href="${escapeHtml(p + '/')}" class="text-sm text-mint-600 hover:text-mint-700 transition font-medium">${escapeHtml(backLabel)}</a>
+    </div>
+  </main>
+${contentFooterHtml(i18n, langs, slug)}
+</body>
+</html>`;
+}
+
 // === 分类定义（id/icon 固定，title/desc 从 i18n 取）===
 export const CATEGORY_DEFS = [
   { id: 'games', icon: '🎮' },

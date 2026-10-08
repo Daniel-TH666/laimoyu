@@ -40,6 +40,14 @@
     "faq": {
       "title": "FAQ — Moyu Paradise",
       "description": "Les réponses aux questions habituelles : est-ce gratuit, faut-il un compte, comment les sites sont choisis, pourquoi certains ne se chargent pas, et si c'est sûr au travail."
+    },
+    "best-browser-games": {
+      "title": "6 jeux de navigateur gratuits à garder en 2026 — Moyu Paradise",
+      "description": "Six jeux de navigateur gratuits qui s'ouvrent dans un onglet : Wordle quotidien, Cookie Clicker idle, Neal.fun expériences, GeoGuessr géographie, Krunker.io shooter, Little Alchemy combinaisons. Sélection de la section Jeux de Moyu Paradise."
+    },
+    "free-online-tools": {
+      "title": "8 outils en ligne gratuits à garder en 2026 — Moyu Paradise",
+      "description": "Huit outils gratuits qui remplacent des logiciels payants : Photopea éditeur, Excalidraw diagrammes, Tldraw tableau blanc, Remove.bg détourage, Squoosh compression, 10MinuteMail, Pomodoro, bruit blanc. Sélection de la section Outils de Moyu Paradise."
     }
   },
   "nav": {
@@ -144,7 +152,8 @@
       "about": "À propos",
       "privacy": "Confidentialité",
       "faq": "FAQ",
-      "contact": "Contact"
+      "contact": "Contact",
+      "articles": "Articles"
     }
   },
   "toast": {
@@ -367,6 +376,220 @@
         {
           "q": "Puis-je faire retirer mon site de la liste ?",
           "a": "Oui. Le propriétaire d'un site listé peut en demander le retrait sans donner de raison, et la fiche est supprimée plutôt que masquée. Les demandes des propriétaires passent avant tout le reste."
+        }
+      ]
+    },
+    "best-browser-games": {
+      "heading": "6 jeux de navigateur gratuits à garder en favori en 2026",
+      "intro": "Pas d'installateur, pas de compte, pas de didacticiel de cinq minutes. Ces six jeux de navigateur s'ouvrent dans un onglet, tournent sur n'importe quel portable et sont tous triés à la main depuis la section Jeux de notre page d'accueil.",
+      "readTime": "~4 min",
+      "updated": "2026-10-08",
+      "updatedLabel": "Dernière mise à jour",
+      "catId": "games",
+      "tocLabel": "Sommaire",
+      "conclusionTitle": "Pour finir",
+      "ctaTitle": "Tu veux plus de jeux de navigateur ?",
+      "ctaSubtitle": "La liste complète est sur la page d'accueil — une bonne dizaine de plus, chacun avec une note rapide sur ce que c'est vraiment.",
+      "ctaButton": "Voir tous les jeux →",
+      "conclusion": "Aucun ne demande de compte pour commencer, ils ont tous peu de publicité, et la plupart se met en pause quand tu changes d'onglet (oui, compatible avec le travail). Ils sont tous dans la section Jeux de la page d'accueil si tu veux la liste complète — et oui, la page d'accueil est faite à la main, pas aspirée par un moteur de recherche.",
+      "sections": [
+        {
+          "h": "Wordle — le puzzle quotidien à cinq lettres",
+          "tag": "Puzzle · Quotidien",
+          "p": [
+            "Wordle a été racheté par le New York Times, mais la version web gratuite reste le même puzzle à six essais dont tout le monde a été accro en 2022. Chaque jour il y a un nouveau mot ; tout le monde joue le même ; tu peux comparer ton score sur la grille colorée à la fin.",
+            "C'est le rare jeu de navigateur qui devient meilleur moins tu y joues. Une partie prend trois minutes si tu vas doucement, soixante secondes si tu ne traînes pas. Pas de compte, pas de série à maintenir, pas d'incitation cachée à payer — juste le puzzle du jour."
+          ],
+          "highlights": [
+            "Pas de compte ni d'email",
+            "Une partie par jour",
+            "Clavier uniquement"
+          ]
+        },
+        {
+          "h": "Cookie Clicker — un empire oisif dans un onglet",
+          "tag": "Idle · Sans fin",
+          "p": [
+            "Cookie Clicker ressemble à une blague — clique sur un grand cookie, obtiens plus de cookies, achète des grand-mères qui font des cookies — mais c'est en fait l'un des jeux oisifs les plus poussés jamais publiés. Il y a des grand-mères, des usines, des portails vers d'autres dimensions, et un système 'Wrath' (Colère) si tu pousses assez loin.",
+            "C'est la forme la plus sûre de perdre du temps : la progression continue même avec l'onglet réduit. Tu peux travailler une heure, revenir, et trouver que des trillions de cookies ont été générés pendant que tu réfléchissais."
+          ],
+          "highlights": [
+            "Sauvegarde via le navigateur",
+            "Idle vrai — ferme et reprends",
+            "Impossible à finir"
+          ]
+        },
+        {
+          "h": "Neal.fun — petites curiosités par un développeur solo",
+          "tag": "Curiosité · Multi-jeux",
+          "p": [
+            "Neal.fun est un site personnel d'un développeur unique (Neal Agarwal) qui publie une ou deux 'petites expériences' par an. Récemment : une carte en temps réel de chaque visage d'internet, une visualisation de 50 ans d'élections américaines, un labyrinthe 'des profondeurs de Wikipédia'.",
+            "Chaque pièce est indépendante — pas de compte, pas de progression, pas de boucle d'engagement. C'est l'internet comme en 2009 : quelqu'un a fait un truc cool, et l'URL c'est juste neal.fun."
+          ],
+          "highlights": [
+            "100% gratuit, zéro pub dedans",
+            "Nouvelles expériences tous les quelques mois",
+            "Pour tous les âges"
+          ]
+        },
+        {
+          "h": "GeoGuessr — où dans le monde est-ce ?",
+          "tag": "Géographie · Solo ou Multijoueur",
+          "p": [
+            "GeoGuessr te dépose sur un panorama aléatoire de Google Street View quelque part sur Terre et te demande de deviner où. Plus ta réponse est proche, plus tu marques. Le jeu existe depuis 2013 mais le multijoueur (Battle Royale, 100 joueurs, dernier debout) le garde vif.",
+            "Le mode solo a un défi quotidien gratuit ; le multijoueur demande un compte gratuit. Effet secondaire : tu commences à remarquer les marquages au sol, les couleurs des bornes et les angles du soleil en voyage."
+          ],
+          "highlights": [
+            "Défi quotidien gratuit, sans compte",
+            "Battle Royale multijoueur",
+            "Mieux à la souris qu'au tactile"
+          ]
+        },
+        {
+          "h": "Krunker.io — un FPS de navigateur étonnamment bon",
+          "tag": "Shooter · Multijoueur",
+          "p": [
+            "Krunker a été le premier jeu de navigateur qui a vraiment rivalisé avec un FPS de bureau. Le pixel art fait penser casual, puis on se fait démonter par quelqu'un qui tire à 144 fps. La prise en main à la souris est la meilleure de tous les shooters en navigateur.",
+            "Il y a toujours le problème des serveurs pleins de gamins, mais le mode classé et le navigateur de mods permettent de trouver une partie propre en moins d'une minute."
+          ],
+          "highlights": [
+            "Pas d'install, pas de téléchargement",
+            "Des tonnes de mods et cartes",
+            "Gratuit ; achats cosmétiques uniquement"
+          ]
+        },
+        {
+          "h": "Little Alchemy — combine des choses pour tout faire",
+          "tag": "Casual · Découverte",
+          "p": [
+            "Little Alchemy te donne quatre éléments de départ (air, terre, feu, eau) et te dit de les glisser ensemble. Eau + terre = boue. Boue + feu = brique. Brique + brique = mur. Mur + mur = maison. Maison + ... tu finis par obtenir un 'univers'.",
+            "Il y a environ 700 objets dans l'original, tous débloqués par combinaison. Progression sauvegardée en local dans le navigateur, pas de compte. Divertissement pur et sans pression."
+          ],
+          "highlights": [
+            "Pas de compte, sauvegarde locale",
+            "Puzzle de combinaison pur",
+            "Tous âges, zéro violence"
+          ]
+        }
+      ]
+    },
+    "free-online-tools": {
+      "heading": "8 outils en ligne gratuits à garder en favori en 2026",
+      "intro": "Huit outils qui ont remplacé un logiciel payant dans mon propre flux de travail — éditeurs d'image, tableaux blancs, coupeurs vidéo, emails jetables. Tous vivent dans la section Outils de la page d'accueil.",
+      "readTime": "~5 min",
+      "updated": "2026-10-08",
+      "updatedLabel": "Dernière mise à jour",
+      "catId": "tools",
+      "tocLabel": "Sommaire",
+      "conclusionTitle": "Pour finir",
+      "ctaTitle": "Tu veux plus d'outils sans inscription ?",
+      "ctaSubtitle": "La section Outils de la page d'accueil en a une vingtaine d'autres — éditeurs d'image, terrains de jeu de code, timers Pomodoro, générateurs de bruit blanc.",
+      "ctaButton": "Voir tous les outils →",
+      "conclusion": "Huit est le bon nombre pour une liste de favoris — assez petit pour que tu l'utilises vraiment, assez large pour couvrir la plupart des moments 'je veux juste faire ça' d'une journée de travail. Aucun ne demande de compte pour 90% de ce pour quoi tu es venu. Si tu en veux plus, c'est dans la section Outils de la page d'accueil.",
+      "sections": [
+        {
+          "h": "Photopea — Photoshop dans le navigateur",
+          "tag": "Image · Éditeur",
+          "p": [
+            "Photopea est ce qui se rapproche le plus d'un 'vrai Photoshop' sans abonnement Adobe. Les raccourcis correspondent, les boîtes de dialogue correspondent, il ouvre les fichiers PSD / XCF / Sketch nativement, et le système de calques utilise le même vocabulaire. Pas aussi poli que Photoshop, mais gratuit, sans compte, et utilisable hors ligne une fois chargé.",
+            "Pour des tâches ponctuelles ('juste recadrer et réexporter ce PNG', 'ouvrir ce fichier AI pour une édition rapide'), Photopea est plus rapide que lancer le gros logiciel."
+          ],
+          "highlights": [
+            "Sans compte, ouvre PSD, AI, XCF, Sketch",
+            "Raccourcis comme Photoshop",
+            "Fonctionne hors ligne après chargement"
+          ]
+        },
+        {
+          "h": "Excalidraw — diagrammes dessinés à la main",
+          "tag": "Diagramme · Collaboratif",
+          "p": [
+            "Excalidraw affiche les diagrammes dans un style volontairement dessiné à la main. L'esthétique seule met les gens à l'aise — ton diagramme ressemble à un croquis sur tableau blanc, ce qui est le but. La collaboration en direct est intégrée (ouvrez la même URL tous les deux).",
+            "Très utilisé pour les diagrammes techniques, les croquis dans les articles de blog, et les explications d'architecture rapides. Export en PNG, SVG, ou copier le XML sous-jacent."
+          ],
+          "highlights": [
+            "Gratuit, sans compte, multi-utilisateur en direct",
+            "Open source, auto-hébergeable",
+            "Exporte PNG / SVG, copie en XML"
+          ]
+        },
+        {
+          "h": "Tldraw — tableau blanc infini",
+          "tag": "Tableau blanc · Libre",
+          "p": [
+            "Tldraw est ce qui se rapproche le plus d'un 'Miro mais gratuit' qui est vraiment bon. Le canevas est vraiment infini, tu peux y mettre des post-its, des flèches, des formes, du dessin libre, et les mises à jour récentes ont ajouté un prompt IA qui transforme un croquis en diagramme d'icônes.",
+            "Le niveau gratuit est pleinement utilisable ; le payant ajoute des salles de collaboration plus grandes et des crédits IA, dont tu n'auras pas besoin en solo."
+          ],
+          "highlights": [
+            "Canevas vraiment infini",
+            "Gratuit en solo",
+            "IA intégrée croquis-vers-diagramme"
+          ]
+        },
+        {
+          "h": "Remove.bg — supprime les fonds d'image instantanément",
+          "tag": "Image · Détourage",
+          "p": [
+            "Remove.bg supprime l'arrière-plan d'une image en un clic via un modèle entraîné. Pour les personnes et les produits, le résultat est essentiellement parfait. Les bords de cheveux, lunettes et animaux duveteux sont là où il galère parfois — et là où le 'Sélectionner le sujet' manuel de Photoshop reste meilleur.",
+            "Le niveau gratuit plafonne la résolution. Pour la pleine résolution tu paies par image (bon marché), ou utilise la 'baguette magique' de Photopea gratuitement."
+          ],
+          "highlights": [
+            "En un clic, pas de détourage manuel",
+            "Meilleur sur personnes / produits",
+            "Gratuit basse résolution, payant haute"
+          ]
+        },
+        {
+          "h": "Squoosh — compresse les images sans perdre en qualité",
+          "tag": "Image · Compression",
+          "p": [
+            "Squoosh est le compresseur d'images open source de Google en version web. Il fait tourner l'encodeur réel dans ton navigateur (l'image n'est pas uploadée, tout reste local), donc tu peux compresser une photo de téléphone de 12 Mo à 1 Mo sans différence visible.",
+            "L'aperçu côte à côte te laisse glisser un curseur pour comparer avant/après au même recadrage. Supporte WebP, AVIF, JPEG XL, MozJPEG, OxiPNG."
+          ],
+          "highlights": [
+            "Compression dans le navigateur, rien n'est uploadé",
+            "Curseur avant/après",
+            "Codecs modernes (WebP, AVIF, JPEG XL)"
+          ]
+        },
+        {
+          "h": "10MinuteMail — email jetable",
+          "tag": "Confidentialité · Email",
+          "p": [
+            "10MinuteMail te donne une vraie adresse email fonctionnelle pendant 10 minutes. Un compte à rebours tourne ; copie l'adresse, colle-la dans le formulaire d'inscription, rafraîchis la page de boîte de réception pour lire le lien de vérification. Quand le chrono atteint zéro, l'adresse cesse d'exister.",
+            "C'est la façon la plus simple de gérer les 90% d'inscriptions qui n'existent que pour t'envoyer du marketing que tu n'ouvriras jamais."
+          ],
+          "highlights": [
+            "Vraie boîte, reçoit les mails de vérification",
+            "10 minutes (extensible)",
+            "Sans compte, rien n'est stocké"
+          ]
+        },
+        {
+          "h": "Pomofocus — un timer Pomodoro dans le navigateur",
+          "tag": "Productivité · Timer",
+          "p": [
+            "Pomofocus est le timer Pomodoro le plus simple qui ait encore les fonctionnalités que les gens veulent vraiment : il enregistre les sessions complétées (aujourd'hui / semaine / total), il affiche la tâche sur laquelle tu travailles, et l'interface est assez calme pour ne pas te presser.",
+            "Si tu utilises déjà Pomodoro, c'est celui qui ne demande aucun effort mental. Sinon, c'est un engagement de 25 minutes pour découvrir si ça te convient."
+          ],
+          "highlights": [
+            "Compte les sessions jour / semaine",
+            "Liste de tâches avec compte Pomodoro par tâche",
+            "Sans compte, réglages en localStorage"
+          ]
+        },
+        {
+          "h": "A Soft Murmur — mélange ton propre bruit blanc",
+          "tag": "Son · Ambiance",
+          "p": [
+            "A Soft Murmur te laisse construire un paysage sonore avec des curseurs individuels : pluie, tonnerre, feu, vent, océan, oiseaux, café, tableau. Chacun a son volume. Les préréglages ('Café', 'Bibliothèque', 'Tempête') sont étonnamment bien réglés.",
+            "Pour le travail en profondeur c'est souvent pluie + café à bas volume. Pour se détendre, feu + vent. Pas de fioritures, juste efficace."
+          ],
+          "highlights": [
+            "Mélange 8 couches indépendantes",
+            "Mobile-friendly, tourne dans n'importe quel onglet",
+            "Sans compte, sans pub, sans tracking"
+          ]
         }
       ]
     }

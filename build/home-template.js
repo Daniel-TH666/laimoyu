@@ -45,6 +45,13 @@ export function homePageHtml(i18n, langs, sites, categories, opts = {}) {
       `<button data-cat="${escapeHtml(c.id)}" class="cat-tab">${escapeHtml(c.icon)} ${escapeHtml(c.short || c.title)}</button>`)
   ].join('\n        ');
 
+  // 长读文章页链接（footer 「长读/Articles」→「全部文章」聚合）。
+  // ⚠️ 没专门的聚合页 —— 文章只有两篇（best-browser-games + free-online-tools），
+  // 直接列两个 slug。后续文章多了再建 articles.html 索引页。
+  const articlesLinksHtml = `
+          <a href="${escapeHtml(p + '/best-browser-games.html')}" class="hover:text-white transition">🎮 ${escapeHtml((foot.links && foot.links.articles) || '')} · ①</a>
+          <a href="${escapeHtml(p + '/free-online-tools.html')}" class="hover:text-white transition">🛠️ ${escapeHtml((foot.links && foot.links.articles) || '')} · ②</a>`.trim();
+
   // 友情链接（各语言可不同，没有就整块不渲染）
   const friends = Array.isArray(foot.friends) ? foot.friends : [];
   const friendsHtml = friends.length ? `

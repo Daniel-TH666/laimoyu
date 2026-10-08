@@ -11,7 +11,7 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { LANGUAGE_ORDER, DEFAULT_LANG } from '../src/i18n/languages.js';
-import { buildCategories, contentPageHtml, escapeHtml } from '../src/lib/render.js';
+import { buildCategories, contentPageHtml, articlePageHtml, escapeHtml } from '../src/lib/render.js';
 import { homePageHtml } from './home-template.js';
 
 // 正式域名。换域名时改这里一处。
@@ -29,6 +29,16 @@ const CONTENT_PAGES = [
   { page: 'contact', priority: '0.5', changefreq: 'yearly' },
   { page: 'privacy', priority: '0.3', changefreq: 'yearly' }
 ];
+
+// 长读文章（厚内容页，2026-10 上线）。priority 给 0.8（高于 about / faq，
+// 低于首页 1.0）—— AdSense + 搜索流量目标，需要比一般内容页更被爬虫认真对待。
+// ⚠️ 同步在 src/lib/render.js 里通过 articlePageHtml(slug) 渲染，
+//    这里只是清单，dispatch 在 generateBundle 里做。
+const ARTICLES = [
+  { page: 'best-browser-games', priority: '0.8', changefreq: 'monthly' },
+  { page: 'free-online-tools', priority: '0.8', changefreq: 'monthly' }
+];
+const ARTICLE_SLUGS = new Set(ARTICLES.map(a => a.page));
 
 function readJson(root, rel) {
   return JSON.parse(readFileSync(resolve(root, rel), 'utf-8'));
@@ -169,6 +179,30 @@ function seoHead(lang, page, langs, ctx) {
     });
   }
 
+  // 文章页（ARTICLES 清单里那批）给 BlogPosting 结构化数据 —— 比 WebPage 更明确
+  // 是「有时间戳的内容文章」而不是「导航聚合」，长尾搜索把页面算进"内容"分类。
+  // ⚠️ ARTICLE_SLUGS 在模块顶层 const 里；seoHead 是普通 function declaration，
+  //    执行时 ARTICLES 早已初始化，所以可正常引用。
+  if (ARTICLE_SLUGS.has(page)) {
+    const article = (lang.pages || {})[page] || {};
+    const pageTitle = article.heading || title;
+    const articleBody = (article.sections || []).flatMap(s => s.p || []).join(' ');
+    graph.push({
+      '@type': 'BlogPosting',
+      '@id': canonical + '#article',
+      headline: pageTitle,
+      description: desc,
+      inLanguage: lang.htmlLang,
+      datePublished: article.updated || today,
+      dateModified: article.updated || today,
+      author: { '@type': 'Organization', name: lang.brand },
+      publisher: { '@type': 'Organization', name: lang.brand },
+      isPartOf: { '@id': websiteId },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonical + '#webpage' },
+      articleBody: articleBody || undefined
+    });
+  }
+
   // 内容页补一层 BreadcrumbList
   if (page !== 'index') {
     graph.push({
@@ -279,18 +313,32 @@ export default function prerenderPlugin() {
         }
       }
 
-      // ================= 2. 各语言内容页 =================
-      for (const l of langs) {
-        for (const cp of CONTENT_PAGES) {
-          let html = contentPageHtml(cp.page, l, langsMeta, {
-            cssHref: assets.cssHref,
-            today
-          });
-          html = html.replace('<!-- @prerender:head -->',
-            seoHead(l, cp.page, langsMeta, { sites: sitesByLang[l.code] || [] }));
+      // dispatch helper：内容页走 contentPageHtml，文章页走 articlePageHtml，
+  // 两者都共用同一份 header 挂载点（`<!-- @prerender:head -->`）。
+  // 把这块抽出来同时去重两个循环里的 emit 逻辑。
+  function renderContentOrArticle(page, l, langsMeta, assets, today) {
+    const isArticle = ARTICLE_SLUGS.has(page);
+    const base = isArticle
+      ? articlePageHtml(page, l, langsMeta, { cssHref: assets.cssHref, today })
+      : contentPageHtml(page, l, langsMeta, { cssHref: assets.cssHref, today });
+    return base.replace(
+      '<!-- @prerender:head -->',
+      seoHead(l, page, langsMeta, { sites: sitesByLang[l.code] || [] })
+    );
+  }
 
-          const prefix = l.pathPrefix || '';   // '' 或 '/zh'
-          const file = prefix ? `${prefix.slice(1)}/${cp.page}.html` : `${cp.page}.html`;
+  // ================= 2. 各语言内容页 + 文章页 =================
+      // CONTENT_PAGES 是 about/privacy/faq/contact 这类导航型内容页；
+      // ARTICLES 是 2026-10 加进来的长读文章页（独立渲染 + BlogPosting JSON-LD）。
+      // 两者 URL 形状一样（/<lang>/<slug>.html），sitemap 也会合并进 allPages 一起出。
+      const allContentEntries = [...CONTENT_PAGES, ...ARTICLES];
+      for (const l of langs) {
+        for (const cp of allContentEntries) {
+          const html = renderContentOrArticle(cp.page, l, langsMeta, assets, today);
+          const prefix = l.pathPrefix || '';
+          const file = prefix
+            ? `${prefix.slice(1)}/${cp.page}.html`
+            : `${cp.page}.html`;
           this.emitFile({ type: 'asset', fileName: file, source: html });
         }
       }
@@ -315,7 +363,8 @@ export default function prerenderPlugin() {
       // ================= 4. sitemap.xml（带 hreflang 注解） =================
       const allPages = [
         { page: 'index', priority: '1.0', changefreq: 'daily' },
-        ...CONTENT_PAGES
+        ...CONTENT_PAGES,
+        ...ARTICLES
       ];
 
       const entries = [];

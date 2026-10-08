@@ -40,6 +40,14 @@
     "faq": {
       "title": "FAQ — Moyu Paradise",
       "description": "Answers to the usual questions: is it free, do I need an account, how sites are chosen, why some sites don't load, and whether it's safe to use at work."
+    },
+    "best-browser-games": {
+      "title": "6 Free Browser Games Worth Bookmarking in 2026 — Moyu Paradise",
+      "description": "Six free browser games you can open in any tab — from the daily Wordle puzzle to a deep idle game you can leave running all afternoon. Picks from the Moyu Paradise games list."
+    },
+    "free-online-tools": {
+      "title": "8 Free Online Tools Worth Bookmarking in 2026 — Moyu Paradise",
+      "description": "Eight free online tools that replace paid software in everyday work: image editor, hand-drawn diagrams, infinite whiteboard, image compression, disposable email, Pomodoro timer, white-noise mixer. Picks from the Moyu Paradise tools list."
     }
   },
   "nav": {
@@ -144,7 +152,8 @@
       "about": "About",
       "privacy": "Privacy",
       "faq": "FAQ",
-      "contact": "Contact"
+      "contact": "Contact",
+      "articles": "Articles"
     }
   },
   "toast": {
@@ -367,6 +376,220 @@
         {
           "q": "Can I get my site removed from the list?",
           "a": "Yes. Owners of listed sites can have an entry removed without giving a reason, and it is deleted rather than hidden. Requests from owners take priority over everything else here."
+        }
+      ]
+    },
+    "best-browser-games": {
+      "heading": "6 Free Browser Games Worth Bookmarking in 2026",
+      "intro": "No installer, no account, no five-minute tutorial. These six browser games open in a tab, run on any laptop, and are all genuinely good — all hand-picked from the Games section of our homepage.",
+      "readTime": "~4 min",
+      "updated": "2026-10-08",
+      "updatedLabel": "Last updated",
+      "catId": "games",
+      "tocLabel": "In this guide",
+      "conclusionTitle": "Where to go from here",
+      "ctaTitle": "Want more browser games?",
+      "ctaSubtitle": "The full list is on the homepage — about a dozen more, each with a quick note on what it actually is.",
+      "ctaButton": "See all browser games →",
+      "conclusion": "None of these need an account to start, all of them are ad-light, and most of them pause when you switch tabs (yes, even boss-aware). They all live in the Games section of the homepage if you want the full list — and yes, the homepage is curated by a human, not scraped from a search engine.",
+      "sections": [
+        {
+          "h": "Wordle — the daily five-letter puzzle",
+          "tag": "Puzzle · Daily",
+          "p": [
+            "Wordle was bought by The New York Times, but the free-to-play web version is still the same six-guess puzzle everyone got hooked on in 2022. Each day there's one new word; everyone in the world is on the same one; you can compare your result on the little colour grid at the end.",
+            "It's the rare browser game that gets better the less you play it. A round takes three minutes if you go slow, sixty seconds if you don't. There is no account, no streak to maintain, no dark-pattern upsell — just the daily puzzle."
+          ],
+          "highlights": [
+            "No account or email required",
+            "One round per day, resets at midnight local",
+            "Keyboard-only, mouse never needed"
+          ]
+        },
+        {
+          "h": "Cookie Clicker — an idle empire in a tab",
+          "tag": "Idle · Endless",
+          "p": [
+            "Cookie Clicker looks like a joke — click a giant cookie, get more cookies, buy grandmas who bake cookies — but it's actually one of the deepest idle games ever shipped. The economy has grandmas, factories, portals to other dimensions, and a 'Wrath' prestige layer once you push far enough.",
+            "It's the safest kind of time-sink: passive progress continues even with the tab minimised. You can do real work for an hour, switch back, and find trillions of cookies were generated while you were thinking."
+          ],
+          "highlights": [
+            "Save syncs via your browser",
+            "Idle — minimises the tab and progress keeps going",
+            "Refuses to be beaten; this is the game"
+          ]
+        },
+        {
+          "h": "Neal.fun — weird little hubs by one developer",
+          "tag": "Curiosity · Multi-game",
+          "p": [
+            "Neal.fun is a personal site by a single developer (Neal Agarwal) that publishes one or two new 'little experiments' a year. Recent entries include a real-time map of every face on the internet, a polling-station visualisation that scrolls through 50 years of US presidential history, and a 'depths of Wikipedia' maze.",
+            "Each piece is standalone — no account, no progression, no engagement loop. It's what the internet used to feel like in 2009: a person made something cool, and the URL is just neal.fun."
+          ],
+          "highlights": [
+            "100% free, zero ads inside",
+            "New experiments every few months",
+            "All ages; nothing iffy"
+          ]
+        },
+        {
+          "h": "GeoGuessr — where in the world is this?",
+          "tag": "Geography · Solo or Multiplayer",
+          "p": [
+            "GeoGuessr drops you on a random Google Street View panorama somewhere on Earth and asks you to guess where. Closer guess, more points. The game has been around since 2013 but the multiplayer (Battle Royale, 100 players, last one standing) keeps it sharp.",
+            "Single-player has a free daily challenge; multiplayer needs a free account. Strong side-effect: you start noticing road markings, bollard colours and sun angles while travelling in real life."
+          ],
+          "highlights": [
+            "Free daily challenge, no account needed",
+            "Multiplayer Battle Royale on the free tier",
+            "Plays on a phone, but better with a mouse"
+          ]
+        },
+        {
+          "h": "Krunker.io — a surprisingly sharp browser FPS",
+          "tag": "Shooter · Multiplayer",
+          "p": [
+            "Krunker was the first browser game that genuinely competed with desktop FPS. The pixel-art look fools you into thinking it's casual, then you get rolled by someone flick-shotting at 144 fps. The mouse feel is the best of any browser shooter released since.",
+            "It still has a kids-on-some-servers problem (it always did), but ranked mode and the mod browser mean you can find a clean match in under a minute."
+          ],
+          "highlights": [
+            "No install, no download",
+            "Tons of community mods and maps",
+            "Free; cosmetics-only purchases"
+          ]
+        },
+        {
+          "h": "Little Alchemy — combine things into everything",
+          "tag": "Casual · Discovery",
+          "p": [
+            "Little Alchemy gives you four starting elements (air, earth, fire, water) and tells you to drag them together. Water + earth = mud. Mud + fire = brick. Brick + brick = wall. Wall + wall = house. House + ... eventually you get a 'universe'.",
+            "There are around 700 items in the original, all unlocked by combinations. Saves progress to local browser storage, no account. Pure, low-stakes quiet entertainment."
+          ],
+          "highlights": [
+            "No account, saves locally",
+            "Pure combination puzzle; no timer",
+            "All ages, zero violence"
+          ]
+        }
+      ]
+    },
+    "free-online-tools": {
+      "heading": "8 Free Online Tools Worth Bookmarking in 2026",
+      "intro": "Eight tools that have replaced paid software in my own workflow — image editors, whiteboards, video trimmers, disposables. They all live in the Tools section of the homepage too.",
+      "readTime": "~5 min",
+      "updated": "2026-10-08",
+      "updatedLabel": "Last updated",
+      "catId": "tools",
+      "tocLabel": "In this guide",
+      "conclusionTitle": "Where to go from here",
+      "ctaTitle": "Want more no-signup tools?",
+      "ctaSubtitle": "The Tools section of the homepage has around twenty more — image editors, code playgrounds, Pomodoro timers, white-noise generators.",
+      "ctaButton": "See all online tools →",
+      "conclusion": "Eight feels like the right number for a bookmark list — small enough that you'll actually use it, wide enough that something here covers most 'I just need to do this one thing' moments in a working day. None of them needs an account to do 90% of what you came for. If you want the longer list (there are more good ones than this), the homepage Tools section has it.",
+      "sections": [
+        {
+          "h": "Photopea — Photoshop in your browser",
+          "tag": "Image · Editor",
+          "p": [
+            "Photopea is the closest thing to 'real Photoshop' you'll find without an Adobe subscription. The keyboard shortcuts match, the file dialogs match, PSD / XCF / Sketch files open natively, and the layer system is the same vocabulary. It's not as polished as Photoshop, but it's free, no account, and works offline once loaded.",
+            "For one-off tasks ('just crop and re-export this PNG', 'open this AI file for a quick edit'), Photopea is faster than launching the heavy software. Theads and Twitter demos rely on it constantly."
+          ],
+          "highlights": [
+            "No account; opens PSD, AI, XCF, Sketch",
+            "Keyboard shortcuts match Photoshop",
+            "Works offline once loaded"
+          ]
+        },
+        {
+          "h": "Excalidraw — hand-drawn diagrams",
+          "tag": "Diagram · Collaborative",
+          "p": [
+            "Excalidraw renders diagrams in a deliberately hand-drawn style. The aesthetic alone puts people at ease — your diagram looks like it's been sketched on a whiteboard, which is the point. Live collaboration is built in (open the same URL with someone else).",
+            "It's used heavily for technical diagrams, sketches in blog posts, and quick architecture explanations. Exports PNG, SVG, or copy-pastes the underlying XML."
+          ],
+          "highlights": [
+            "Free, no account, real-time multi-user",
+            "Open-source; self-hostable",
+            "Export PNG / SVG, copy as XML"
+          ]
+        },
+        {
+          "h": "Tldraw — infinite whiteboard",
+          "tag": "Whiteboard · Free-form",
+          "p": [
+            "Tldraw is the closest thing to a 'Miro but free' that's actually good. The canvas is genuinely infinite, you can drop in sticky notes / arrows / shapes / free-hand, and recent updates added an AI prompt that turns a rough sketch into a diagram of icons.",
+            "The free tier is fully usable; the paid tier adds bigger collaboration rooms and AI credits, neither of which you'll need for solo work."
+          ],
+          "highlights": [
+            "Genuinely infinite canvas",
+            "Free for solo use",
+            "Built-in AI 'sketch to diagram' (small free allowance)"
+          ]
+        },
+        {
+          "h": "Remove.bg — strip image backgrounds instantly",
+          "tag": "Image · Background removal",
+          "p": [
+            "Remove.bg removes image backgrounds in one click using a trained model. For people in photos and product photos, the result is essentially perfect. Hair edges, glasses and fuzzy animals are where it occasionally struggles — and where Photoshop's manual 'Select Subject' still beats it.",
+            "The free tier caps you at lower resolution. For full-res you pay per image (cheap), or use Photopea's 'magic wand' for the same effect for free."
+          ],
+          "highlights": [
+            "One-click; no manual masking",
+            "Best for people / product photos",
+            "Free lower-res, paid for full-res"
+          ]
+        },
+        {
+          "h": "Squoosh — shrink images without killing quality",
+          "tag": "Image · Compression",
+          "p": [
+            "Squoosh is Google's open-source image compressor in browser form. It runs the actual encoder in your browser (lib image happens locally, no upload), so you can compress a 12MB phone photo to 1MB at the same visible quality and not worry about a server seeing your pictures.",
+            "Side-by-side preview lets you drag a slider to see before/after at the exact same crop. Supports WebP, AVIF, JPEG XL, MozJPEG, OxiPNG."
+          ],
+          "highlights": [
+            "Compression happens in browser, nothing uploaded",
+            "Side-by-side before/after slider",
+            "Modern codecs (WebP, AVIF, JPEG XL)"
+          ]
+        },
+        {
+          "h": "10MinuteMail — disposable email",
+          "tag": "Privacy · Email",
+          "p": [
+            "10MinuteMail gives you a real, working email address for 10 minutes. A timer counts down; copy the address, paste it into whatever signup form is asking for an email, refresh the inbox page to read the verification link. When the timer hits zero, the address stops existing.",
+            "It's the easiest way to deal with the 90% of signups that exist solely to email you marketing you'll never open. For real accounts you intend to keep, use a real email."
+          ],
+          "highlights": [
+            "Real inbox; receives verification emails",
+            "10-minute timer (extendable)",
+            "No account, nothing stored"
+          ]
+        },
+        {
+          "h": "Pomofocus — a browser-based Pomodoro timer",
+          "tag": "Productivity · Timer",
+          "p": [
+            "Pomofocus is the simplest Pomodoro timer that still has the features people actually want: it logs completed sessions (today / week / total), it shows the task you're working on, and the UI is calm enough that you don't feel nagged.",
+            "If you already use a Pomodoro workflow, this is the one that requires zero mental overhead. If you don't, it's a 25-minute commitment to find out if focus sprints work for you."
+          ],
+          "highlights": [
+            "Tracks daily / weekly session count",
+            "Tasks list with per-task Pomodoro count",
+            "No account, settings in localStorage"
+          ]
+        },
+        {
+          "h": "A Soft Murmur — mix your own white noise",
+          "tag": "Sound · Ambient",
+          "p": [
+            "A Soft Murmur lets you build a soundscape from individual sliders: rain, thunder, fire, wind, ocean, birds, coffee shop, whiteboard. Each one has its own volume. The presets ('Coffee Shop', 'Library', 'Storm') are surprisingly good.",
+            "For deep work, the favourite is usually rain + coffee shop on low. For winding down, fire + wind. Nothing fancy, just works."
+          ],
+          "highlights": [
+            "Mix 8 independent layers at custom volumes",
+            "Mobile-friendly, runs in any browser tab",
+            "No account, no ads, no tracking"
+          ]
         }
       ]
     }
